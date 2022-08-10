@@ -4,7 +4,6 @@ body {
   visibility: hidden;
   user-select: none;
   white-space: nowrap;
-  visibility: visible;
   margin: 0;
   user-select: none;
 }
