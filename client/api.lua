@@ -16,25 +16,25 @@ local function addGlobal(target, options, resource)
     end
 end
 
-Peds = {}
+local Peds = {}
 
 exports('addGlobalPed', function(options)
     addGlobal(Peds, options, GetInvokingResource())
 end)
 
-Vehicles = {}
+local Vehicles = {}
 
 exports('addGlobalVehicle', function(options)
     addGlobal(Vehicles, options, GetInvokingResource())
 end)
 
-Objects = {}
+local Objects = {}
 
 exports('addGlobalObject', function(options)
     addGlobal(Objects, options, GetInvokingResource())
 end)
 
-Players = {}
+local Players = {}
 
 exports('addGlobalPlayer', function(options)
     addGlobal(Objects, options, GetInvokingResource())
@@ -54,7 +54,7 @@ local function addTarget(target, options, resource)
     end
 end
 
-Models = {}
+local Models = {}
 
 exports('addModel', function(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
@@ -71,7 +71,7 @@ exports('addModel', function(arr, options)
     end
 end)
 
-Entities = {}
+local Entities = {}
 
 exports('addEntity', function(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
@@ -89,7 +89,7 @@ exports('addEntity', function(arr, options)
     end
 end)
 
-LocalEntities = {}
+local LocalEntities = {}
 
 exports('addLocalEntity', function(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
@@ -123,3 +123,34 @@ exports('remove', function(tbl, index, name)
         end
     end
 end)
+
+local NetworkGetEntityIsNetworked = NetworkGetEntityIsNetworked
+local NetworkGetNetworkIdFromEntity = NetworkGetNetworkIdFromEntity
+
+function GetEntityOptions(entity, _type, model)
+    if _type == 1 then
+        if IsPedAPlayer(entity) then
+            return {
+                global = Players
+            }
+        end
+    end
+
+    local netId = NetworkGetEntityIsNetworked(entity) and NetworkGetNetworkIdFromEntity(entity)
+    local global
+
+    if _type == 1 then
+        global = Peds
+    elseif _type == 2 then
+        global = Vehicles
+    elseif _type == 3 then
+        global = Objects
+    end
+
+    return {
+        global = { global },
+        model = Models[model],
+        entity = netId and Entities[netId] or nil,
+        localEntity = LocalEntities[entity],
+    }
+end

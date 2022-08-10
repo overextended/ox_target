@@ -1,4 +1,3 @@
-local RaycastFromCamera = RaycastFromCamera
 local isActive = false
 local isDisabled = false
 
@@ -10,32 +9,66 @@ exports('disableTargeting', function(state)
     isDisabled = state
 end)
 
+local hasFocus = false
+
+local function setNuiFocus(state)
+    if state then SetCursorLocation(0.5, 0.5) end
+
+    hasFocus = state
+    SetNuiFocus(state, state)
+    SetNuiFocusKeepInput(state)
+end
+
+local DrawSprites = DrawSprites
+local RaycastFromCamera = RaycastFromCamera
+local GetEntityType = GetEntityType
+local GetEntityModel = GetEntityModel
+local GetEntityOptions = GetEntityOptions
+local SendNUIMessage = SendNUIMessage
+
 local function enableTargeting()
     if isDisabled or isActive or IsNuiFocused() then return end
 
     isActive = true
     local getNearbyZones, drawSprites = DrawSprites()
-    local nearbyZones
-    local lastEntity
+    local nearbyZones, lastEntity, entityType, entityModel
+    local options
 
     while isActive do
         local entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera()
-        local entityType
 
         if lastEntity ~= entityHit then
             entityType = entityHit ~= 0 and GetEntityType(entityHit)
+            local success, result = pcall(GetEntityModel, entityHit)
+
+            if success then
+                entityModel = result
+            end
+
+            if entityType == 0 and entityModel then
+                entityType = 3
+            end
 
             if Debug then
                 if lastEntity then
                     SetEntityDrawOutline(lastEntity, false)
                 end
 
-                if entityType ~= 0 then
+                if entityType ~= 1 then
                     SetEntityDrawOutline(entityHit, true)
                 end
 
                 lastEntity = entityHit
             end
+
+            options = GetEntityOptions(entityHit, entityType, entityModel)
+        end
+
+        if options then
+            SendNUIMessage({
+                event = 'setTarget',
+                options = options
+            })
         end
 
         if getNearbyZones then
@@ -43,7 +76,8 @@ local function enableTargeting()
         end
 
         for i = 1, 20 do
-            DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24,
+            DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42,
+                24,
                 100, false, false, 0, true, false, false, false)
 
             if nearbyZones then
@@ -72,7 +106,7 @@ local hotkey = GetConvar('ox_target:defaultHotkey', 'LMENU')
 
 if toggleHotkey then
     RegisterCommand('ox_target', function() return isActive and disableTargeting() or enableTargeting() end)
-	RegisterKeyMapping("ox_target", "Toggle targeting", "keyboard", hotkey)
+    RegisterKeyMapping("ox_target", "Toggle targeting", "keyboard", hotkey)
 else
     RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end)
     RegisterCommand('-ox_target', disableTargeting)
