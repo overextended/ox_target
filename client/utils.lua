@@ -3,6 +3,7 @@ local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
 
 ---@param flag? number Defaults to -1
+---@return boolean hit
 ---@return number entityHit
 ---@return vector3 endCoords
 ---@return vector3 surfaceNormal
@@ -15,11 +16,11 @@ function RaycastFromCamera(flag)
 
     while true do
         Wait(0)
-        local retval, _, endCoords, surfaceNormal, materialHash, entityHit = GetShapeTestResultIncludingMaterial(handle)
+        local retval, hit, endCoords, surfaceNormal, materialHash, entityHit = GetShapeTestResultIncludingMaterial(handle)
 
         if retval ~= 1 then
             ---@diagnostic disable-next-line: return-type-mismatch
-            return entityHit, endCoords, surfaceNormal, materialHash
+            return hit, entityHit, endCoords, surfaceNormal, materialHash
         end
     end
 end

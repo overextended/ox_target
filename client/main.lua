@@ -38,18 +38,17 @@ local function enableTargeting()
     local nearbyZones, lastEntity, entityType, entityModel
 
     while isActive do
-        local entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera()
+        local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera()
 
         if lastEntity ~= entityHit then
-            entityType = entityHit ~= 0 and GetEntityType(entityHit)
-            local success, result = pcall(GetEntityModel, entityHit)
+            if hit then
+                entityType = entityHit ~= 0 and GetEntityType(entityHit)
+                local success, result = pcall(GetEntityModel, entityHit)
+                entityModel = success and result
 
-            if success then
-                entityModel = result
-            end
-
-            if entityType == 0 and entityModel then
-                entityType = 3
+                if entityType == 0 and entityModel then
+                    entityType = 3
+                end
             end
 
             if Debug then
@@ -64,14 +63,14 @@ local function enableTargeting()
                 lastEntity = entityHit
             end
 
-            options = GetEntityOptions(entityHit, entityType, entityModel)
+            options = hit and GetEntityOptions(entityHit, entityType, entityModel)
         end
 
         if options then
-            SendNUIMessage({
+            SendNuiMessage(json.encode({
                 event = 'setTarget',
                 options = options
-            })
+            }, { sort_keys=true }))
         end
 
         if getNearbyZones then
