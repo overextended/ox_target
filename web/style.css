@@ -1,12 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
 
 body {
-<<<<<<< refs/remotes/origin/main
   visibility: hidden;
   user-select: none;
   white-space: nowrap;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-=======
   visibility: visible;
   margin: 0;
   user-select: none;
@@ -25,50 +22,7 @@ p {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-<<<<<<< refs/remotes/origin/main
   font-size: 22pt;
-}
-
-#menu {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(10%, -50%);
-  width: 150pt;
-  font-size: 10.35pt;
-  color: #fdfdfd;
-  line-height: 10.35pt;
-}
-
-.fas {
-  color: #275786;
-}
-
-.child {
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.6) 66%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  border: 0;
-  border-left: 3pt solid #275786;
-  margin: 1pt;
-  padding: 4pt;
-  padding-left: 5pt;
-}
-
-.child:hover {
-  background: linear-gradient(
-    90deg,
-    rgba(10, 10, 10, 0.7) 0%,
-    rgba(10, 10, 10, 0.6) 66%,
-    rgba(10, 10, 10, 0) 100%
-  );
-  border-left: 5pt solid #295d91;
-}
-=======
-  font-size: 30;
 }
 
 #options-wrapper {
