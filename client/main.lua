@@ -39,7 +39,9 @@ local function enableTargeting()
     local flag = 30
 
     while isActive do
-        if flag == 30 then flag = -1 else flag = 30 end
+        if not options then
+            if flag == 30 then flag = -1 else flag = 30 end
+        end
 
         local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera(flag)
 
@@ -56,7 +58,17 @@ local function enableTargeting()
                 if entityType == 0 and entityModel then
                     entityType = 3
                 end
-            end
+
+                local newOptions = GetEntityOptions(entityHit, entityType, entityModel)
+
+                if newOptions and next(newOptions) then
+                    options = newOptions
+                    SendNuiMessage(json.encode({
+                        event = 'setTarget',
+                        options = options
+                    }, { sort_keys=true }))
+                end
+            else SendNuiMessage('{"event": "leftTarget"}') end
 
             if Debug then
                 if lastEntity then
@@ -69,15 +81,6 @@ local function enableTargeting()
 
                 lastEntity = entityHit
             end
-
-            options = hit and GetEntityOptions(entityHit, entityType, entityModel)
-
-            if options then
-                SendNuiMessage(json.encode({
-                    event = 'setTarget',
-                    options = options
-                }, { sort_keys=true }))
-            end
         end
 
         if getNearbyZones then
@@ -85,9 +88,11 @@ local function enableTargeting()
         end
 
         for i = 1, 20 do
-            DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42,
-                24,
-                100, false, false, 0, true, false, false, false)
+            if Debug then
+                DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42,
+                    24,
+                    100, false, false, 0, true, false, false, false)
+            end
 
             if nearbyZones then
                 drawSprites(endCoords)
