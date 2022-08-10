@@ -61,7 +61,7 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
 
                 return n > 0 and inRange, options
             end
-        end, function(coords)
+        end, function()
             for i = 1, #inRange do
                 local zone = inRange[i]
 

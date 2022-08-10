@@ -71,9 +71,9 @@ local function enableTargeting()
                 if entityType ~= 1 then
                     SetEntityDrawOutline(entityHit, true)
                 end
-
-                lastEntity = entityHit
             end
+
+            lastEntity = entityHit
         end
 
         if getNearbyZones then
