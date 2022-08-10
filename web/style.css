@@ -1,8 +1,12 @@
 body {
+<<<<<<< refs/remotes/origin/main
   visibility: hidden;
   user-select: none;
   white-space: nowrap;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+=======
+  visibility: visible;
+>>>>>>> test(web): horrible vanilla js
 }
 
 #eye {
@@ -10,6 +14,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+<<<<<<< refs/remotes/origin/main
   font-size: 22pt;
 }
 
@@ -51,3 +56,11 @@ body {
   );
   border-left: 5pt solid #295d91;
 }
+=======
+  font-size: 30;
+}
+
+.child {
+  color: palevioletred;
+}
+>>>>>>> test(web): horrible vanilla js
