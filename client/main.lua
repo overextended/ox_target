@@ -3,18 +3,23 @@ local isActive = false
 
 local function enableTargetting()
     isActive = true
-    local drawSprites = DrawSprites and DrawSprites()
+    local getNearbyZones, drawSprites = DrawSprites()
+    local nearbyZones
     local lastEntity
 
     while isActive do
         local entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera()
 
+        if getNearbyZones then
+            nearbyZones = getNearbyZones(endCoords)
+        end
+
         for i = 1, 20 do
             DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24,
                 100, false, false, 0, true, false, false, false)
 
-            if drawSprites then
-                drawSprites(Zones, endCoords)
+            if nearbyZones then
+                drawSprites(endCoords)
             end
 
             if Debug then

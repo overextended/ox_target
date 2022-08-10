@@ -34,15 +34,30 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
     local hover = { 98, 135, 236, 255 }
 
     function DrawSprites()
+        local inRange
         local width = 0.02
         local height = width * GetAspectRatio()
 
         lib.requestStreamedTextureDict(dict)
 
-        return function(zones, coords)
-            for _, zone in pairs(zones) do
+        return function(coords)
+            inRange = {}
+            local n = 0
+
+            for _, zone in pairs(Zones) do
                 if zone.drawSprite ~= false and zone.distance < 7 then
-                    ---@todo Only check for contains every ~100ms rather than every frame
+                    zone.colour = zone:contains(coords) and hover or colour
+                    n += 1
+                    inRange[n] = zone
+                end
+            end
+
+            return n > 0 and inRange
+        end, function(coords)
+            for i = 1, #inRange do
+                local zone = inRange[i]
+
+                if zone.drawSprite ~= false and zone.distance < 7 then
                     local drawSprite = zone:contains(coords) and hover or colour
 
                     SetDrawOrigin(zone.coords.x, zone.coords.y, zone.coords.z)
@@ -52,4 +67,4 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
             end
         end
     end
-end
+else function DrawSprites() end end
