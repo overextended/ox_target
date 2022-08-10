@@ -36,12 +36,19 @@ local function enableTargeting()
     isActive = true
     local getNearbyZones, drawSprites = DrawSprites()
     local nearbyZones, lastEntity, entityType, entityModel
+    local flag = 30
 
     while isActive do
-        local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera()
+        if flag == 30 then flag = -1 else flag = 30 end
+
+        local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera(flag)
 
         if lastEntity ~= entityHit then
             if hit then
+                if flag == 30 and entityHit then
+                    entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
+                end
+
                 entityType = entityHit ~= 0 and GetEntityType(entityHit)
                 local success, result = pcall(GetEntityModel, entityHit)
                 entityModel = success and result
