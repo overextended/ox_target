@@ -44,13 +44,9 @@ end)
 ---@param options table
 ---@param resource string
 local function addTarget(target, options, resource)
-    if not target.options then
-        target.options = {}
-    end
-
     for i = 1, #options do
         options[i].resource = resource
-        table.insert(target.options, options[i])
+        table.insert(target, options[i])
     end
 end
 
@@ -148,7 +144,7 @@ function GetEntityOptions(entity, _type, model)
     end
 
     return {
-        global = { global },
+        global = global,
         model = Models[model],
         entity = netId and Entities[netId] or nil,
         localEntity = LocalEntities[entity],
