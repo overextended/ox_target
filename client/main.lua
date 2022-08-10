@@ -64,13 +64,13 @@ local function enableTargeting()
             end
 
             options = hit and GetEntityOptions(entityHit, entityType, entityModel)
-        end
 
-        if options then
-            SendNuiMessage(json.encode({
-                event = 'setTarget',
-                options = options
-            }, { sort_keys=true }))
+            if options then
+                SendNuiMessage(json.encode({
+                    event = 'setTarget',
+                    options = options
+                }, { sort_keys=true }))
+            end
         end
 
         if getNearbyZones then
