@@ -44,6 +44,7 @@ local function enableTargeting()
         end
 
         local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera(flag)
+        local newOptions
 
         if lastEntity ~= entityHit then
             if hit then
@@ -57,17 +58,9 @@ local function enableTargeting()
 
                 if entityType == 0 and entityModel then
                     entityType = 3
-                end
+                else SendNuiMessage('{"event": "leftTarget"}') end
 
-                local newOptions = GetEntityOptions(entityHit, entityType, entityModel)
-
-                if newOptions and next(newOptions) then
-                    options = newOptions
-                    SendNuiMessage(json.encode({
-                        event = 'setTarget',
-                        options = options
-                    }, { sort_keys=true }))
-                end
+                newOptions = entityType > 0 and GetEntityOptions(entityHit, entityType, entityModel)
             else SendNuiMessage('{"event": "leftTarget"}') end
 
             if Debug then
@@ -84,7 +77,15 @@ local function enableTargeting()
         end
 
         if getNearbyZones then
-            nearbyZones = getNearbyZones(endCoords)
+            nearbyZones, newOptions = getNearbyZones(endCoords, newOptions)
+        end
+
+        if newOptions and next(newOptions) then
+            options = newOptions
+            SendNuiMessage(json.encode({
+                event = 'setTarget',
+                options = options
+            }, { sort_keys=true }))
         end
 
         for i = 1, 20 do

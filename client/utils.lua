@@ -41,7 +41,7 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
 
         lib.requestStreamedTextureDict(dict)
 
-        return function(coords)
+        return function(coords, options)
             if Zones then
                 inRange = {}
                 local n = 0
@@ -52,10 +52,14 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
                         zone.colour = contains and hover or colour
                         n += 1
                         inRange[n] = zone
+
+                        if not options and contains then
+                            options = { options = zone.options }
+                        end
                     end
                 end
 
-                return n > 0 and inRange
+                return n > 0 and inRange, options
             end
         end, function(coords)
             for i = 1, #inRange do
