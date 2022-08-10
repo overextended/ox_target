@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
+
 body {
 <<<<<<< refs/remotes/origin/main
   visibility: hidden;
@@ -6,7 +8,16 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 =======
   visibility: visible;
->>>>>>> test(web): horrible vanilla js
+  margin: 0;
+  user-select: none;
+}
+
+p {
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 40;
 }
 
 #eye {
@@ -60,7 +71,47 @@ body {
   font-size: 30;
 }
 
-.child {
-  color: palevioletred;
+#options-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-left: 140px;
+  margin-top: 50px;
 }
->>>>>>> test(web): horrible vanilla js
+
+.option-container {
+  color: #909296;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: 'Nunito';
+  text-transform: uppercase;
+  background-color: rgba(37, 38, 43, 0.8);
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 8px;
+  transition: 300ms;
+  transform-origin: left top;
+  scale: 1;
+  height: 25px;
+  width: 200px;
+}
+
+.option-container:hover {
+  background-color: rgba(37, 38, 43, 1);
+  transform-origin: left top;
+  color: white;
+}
+
+.option-icon {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.option-label {
+  font-weight: 500;
+}
