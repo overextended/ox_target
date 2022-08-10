@@ -20,6 +20,23 @@ local function enableTargeting()
 
     while isActive do
         local entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera()
+        local entityType
+
+        if lastEntity ~= entityHit then
+            entityType = entityHit ~= 0 and GetEntityType(entityHit)
+
+            if Debug then
+                if lastEntity then
+                    SetEntityDrawOutline(lastEntity, false)
+                end
+
+                if entityType ~= 0 then
+                    SetEntityDrawOutline(entityHit, true)
+                end
+
+                lastEntity = entityHit
+            end
+        end
 
         if getNearbyZones then
             nearbyZones = getNearbyZones(endCoords)
@@ -31,20 +48,6 @@ local function enableTargeting()
 
             if nearbyZones then
                 drawSprites(endCoords)
-            end
-
-            if Debug then
-                if lastEntity ~= entityHit then
-                    if lastEntity then
-                        SetEntityDrawOutline(lastEntity, false)
-                    end
-
-                    if GetEntityType(entityHit) ~= 0 then
-                        SetEntityDrawOutline(entityHit, true)
-                    end
-
-                    lastEntity = entityHit
-                end
             end
 
             if i ~= 20 then Wait(0) end
