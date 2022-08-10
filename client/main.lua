@@ -46,21 +46,21 @@ local function enableTargetting()
 end
 
 ---@param forceDisable boolean
-local function disableTargetting(forceDisable)
+local function disableTargeting(forceDisable)
     isActive = false
 end
 
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
 
--- Default keybind to toggle targetting (https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard)
+-- Default keybind to toggle targeting (https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard)
 local hotkey = GetConvar('ox_target:defaultHotkey', 'LMENU')
 
 if toggleHotkey then
-    RegisterCommand('ox_target', function() return isActive and disableTargetting() or enableTargetting() end)
-	RegisterKeyMapping("ox_target", "Toggle targetting", "keyboard", hotkey)
+    RegisterCommand('ox_target', function() return isActive and disableTargeting() or enableTargeting() end)
+	RegisterKeyMapping("ox_target", "Toggle targeting", "keyboard", hotkey)
 else
-    RegisterCommand('+ox_target', function() CreateThread(enableTargetting) end)
-    RegisterCommand('-ox_target', disableTargetting)
-    RegisterKeyMapping('+ox_target', 'Toggle targetting', 'keyboard', hotkey)
+    RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end)
+    RegisterCommand('-ox_target', disableTargeting)
+    RegisterKeyMapping('+ox_target', 'Toggle targeting', 'keyboard', hotkey)
 end

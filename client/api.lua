@@ -1,8 +1,8 @@
-exports('AddBoxZone', function(data)
+exports('addBoxZone', function(data)
     return lib.zones.box(data).id
 end)
 
-exports('AddSphereZone', function(data)
+exports('addSphereZone', function(data)
     return lib.zones.sphere(data).id
 end)
 
@@ -18,25 +18,25 @@ end
 
 Peds = {}
 
-exports('AddGlobalPed', function(options)
+exports('addGlobalPed', function(options)
     addGlobal(Peds, options, GetInvokingResource())
 end)
 
 Vehicles = {}
 
-exports('AddGlobalVehicle', function(options)
+exports('addGlobalVehicle', function(options)
     addGlobal(Vehicles, options, GetInvokingResource())
 end)
 
 Objects = {}
 
-exports('AddGlobalObject', function(options)
+exports('addGlobalObject', function(options)
     addGlobal(Objects, options, GetInvokingResource())
 end)
 
 Players = {}
 
-exports('AddGlobalPlayer', function(options)
+exports('addGlobalPlayer', function(options)
     addGlobal(Objects, options, GetInvokingResource())
 end)
 
@@ -56,7 +56,7 @@ end
 
 Models = {}
 
-exports('AddModel', function(arr, options)
+exports('addModel', function(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
 
     for i = 1, #arr do
@@ -73,7 +73,7 @@ end)
 
 Entities = {}
 
-exports('AddEntity', function(arr, options)
+exports('addEntity', function(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
 
     for i = 1, #arr do
@@ -91,7 +91,7 @@ end)
 
 LocalEntities = {}
 
-exports('AddLocalEntity', function(arr, options)
+exports('addLocalEntity', function(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
 
     for i = 1, #arr do
@@ -109,7 +109,7 @@ exports('AddLocalEntity', function(arr, options)
     end
 end)
 
-exports('Remove', function(tbl, index, name)
+exports('remove', function(tbl, index, name)
     if not name then
         index, name = nil, index
     end

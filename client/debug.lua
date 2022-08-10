@@ -8,7 +8,7 @@ end)
 local ox_target = exports.ox_target
 local drawZones = false
 
-ox_target:AddBoxZone({
+ox_target:addBoxZone({
     coords = vec3(442.5363, -1017.666, 28.65637),
     size = vec3(2, 2, 2),
     rotation = 45,
@@ -25,7 +25,7 @@ ox_target:AddBoxZone({
     }
 })
 
-ox_target:AddSphereZone({
+ox_target:addSphereZone({
     coords = vec3(440.5363, -1015.666, 27.65637),
     radius = 1,
     debug = drawZones,
@@ -40,7 +40,7 @@ ox_target:AddSphereZone({
     }
 })
 
-ox_target:AddModel(`police`, {
+ox_target:addModel(`police`, {
     {
         name = 'police',
         event = 'ox_target:debug',
@@ -49,7 +49,7 @@ ox_target:AddModel(`police`, {
     }
 })
 
-ox_target:AddGlobalPed({
+ox_target:addGlobalPed({
     {
         name = 'vehicle',
         event = 'ox_target:debug',
@@ -58,7 +58,7 @@ ox_target:AddGlobalPed({
     }
 })
 
-ox_target:AddGlobalVehicle({
+ox_target:addGlobalVehicle({
     {
         name = 'vehicle',
         event = 'ox_target:debug',
@@ -67,7 +67,7 @@ ox_target:AddGlobalVehicle({
     }
 })
 
-ox_target:AddGlobalObject({
+ox_target:addGlobalObject({
     {
         name = 'vehicle',
         event = 'ox_target:debug',
