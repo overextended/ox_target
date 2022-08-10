@@ -1,7 +1,18 @@
 local RaycastFromCamera = RaycastFromCamera
 local isActive = false
+local isDisabled = false
 
-local function enableTargetting()
+exports('disableTargeting', function(state)
+    if state then
+        isActive = false
+    end
+
+    isDisabled = state
+end)
+
+local function enableTargeting()
+    if isDisabled or isActive or IsNuiFocused() then return end
+
     isActive = true
     local getNearbyZones, drawSprites = DrawSprites()
     local nearbyZones
