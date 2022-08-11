@@ -26,7 +26,6 @@ local SendNuiMessage = SendNuiMessage
 local GetCurrentZone = GetCurrentZone
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
-local CanInteract = CanInteract
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
@@ -47,93 +46,102 @@ local function enableTargeting()
         end
 
         local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera(flag)
-        local newOptions
+        local playerCoords = GetEntityCoords(cache.ped)
+        local distance = #(playerCoords - endCoords)
 
-        if lastEntity ~= entityHit then
-            if hit then
-                if flag == 30 and entityHit then
-                    entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
-                end
+        if distance < 7 then
+            local newOptions
 
-                entityType = entityHit ~= 0 and GetEntityType(entityHit)
-                local success, result = pcall(GetEntityModel, entityHit)
-                entityModel = success and result
+            if lastEntity ~= entityHit then
+                if hit then
+                    if flag == 30 and entityHit then
+                        entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
+                    end
 
-                if entityType == 0 and entityModel then
-                    entityType = 3
+                    entityType = entityHit ~= 0 and GetEntityType(entityHit)
+                    local success, result = pcall(GetEntityModel, entityHit)
+                    entityModel = success and result
+
+                    if entityType == 0 and entityModel then
+                        entityType = 3
+                    else SendNuiMessage('{"event": "leftTarget"}') end
+
+                    if entityType > 0 then
+                        newOptions = GetEntityOptions(entityHit, entityType, entityModel)
+                    elseif options then
+                        options = table.wipe(options)
+                    end
                 else SendNuiMessage('{"event": "leftTarget"}') end
 
-                newOptions = entityType > 0 and GetEntityOptions(entityHit, entityType, entityModel)
-            else SendNuiMessage('{"event": "leftTarget"}') end
+                if Debug then
+                    if lastEntity then
+                        SetEntityDrawOutline(lastEntity, false)
+                    end
 
-            if Debug then
-                if lastEntity then
-                    SetEntityDrawOutline(lastEntity, false)
-                end
-
-                if entityType ~= 1 then
-                    SetEntityDrawOutline(entityHit, true)
-                end
-            end
-
-            lastEntity = entityHit
-        end
-
-        if getNearbyZones then
-            nearbyZones, currentZone, newOptions = getNearbyZones(endCoords, currentZone, newOptions)
-        elseif not newOptions then
-            currentZone, newOptions = GetCurrentZone(endCoords, currentZone)
-        end
-
-        if newOptions or options then
-            for k, v in pairs(newOptions or options) do
-                for i = 1, #v do
-                    local option = v[i]
-
-                    if option.canInteract then
-                        local hide = not option.canInteract(entityHit)
-
-                        if not newOptions and hide ~= option.hide then
-                            newOptions = options
-                        end
-
-                        v[i].hide = hide
+                    if entityType ~= 1 then
+                        SetEntityDrawOutline(entityHit, true)
                     end
                 end
+
+                lastEntity = entityHit
             end
 
-            if newOptions and next(newOptions) then
-                options = newOptions
-                SendNuiMessage(json.encode({
-                    event = 'setTarget',
-                    options = options
-                }, { sort_keys=true }))
-            end
-        end
-
-        for i = 1, 20 do
-            if Debug then
-                DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42,
-                    24,
-                    100, false, false, 0, true, false, false, false)
+            if getNearbyZones then
+                nearbyZones, currentZone, newOptions = getNearbyZones(endCoords, currentZone, newOptions)
+            elseif not newOptions then
+                currentZone, newOptions = GetCurrentZone(endCoords, currentZone)
             end
 
-            if nearbyZones then
-                drawSprites(endCoords)
+            if newOptions or options then
+                for k, v in pairs(newOptions or options) do
+                    for i = 1, #v do
+                        local option = v[i]
+
+                        if option.canInteract then
+                            local hide = not option.canInteract(entityHit, endCoords, distance)
+
+                            if not newOptions and hide ~= option.hide then
+                                newOptions = options
+                            end
+
+                            v[i].hide = hide
+                        end
+                    end
+                end
+
+                if newOptions and next(newOptions) then
+                    options = newOptions
+                    SendNuiMessage(json.encode({
+                        event = 'setTarget',
+                        options = options
+                    }, { sort_keys=true }))
+                end
             end
 
-            if options and not hasFocus and IsDisabledControlJustPressed(0, 25) then
-                setNuiFocus(true, true)
+            for i = 1, 20 do
+                if Debug then
+                    DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42,
+                        24,
+                        100, false, false, 0, true, false, false, false)
+                end
+
+                if nearbyZones then
+                    drawSprites(endCoords)
+                end
+
+                if options and not hasFocus and IsDisabledControlJustPressed(0, 25) then
+                    setNuiFocus(true, true)
+                end
+
+                if hasFocus then
+                    DisableControlAction(0, 1, true)
+                    DisableControlAction(0, 2, true)
+                end
+
+                DisablePlayerFiring(cache.playerId, true)
+
+                if i ~= 20 then Wait(0) end
             end
-
-            if hasFocus then
-                DisableControlAction(0, 1, true)
-                DisableControlAction(0, 2, true)
-            end
-
-            DisablePlayerFiring(cache.playerId, true)
-
-            if i ~= 20 then Wait(0) end
         end
     end
 
