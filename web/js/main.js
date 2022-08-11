@@ -2,7 +2,7 @@ import { createOptions } from './createOptions.js';
 
 const optionsWrapper = document.getElementById('options-wrapper');
 const body = document.body;
-const eye = document.getElementById('eye');
+const eye = document.getElementById('eyeSvg');
 
 window.addEventListener('message', (event) => {
   optionsWrapper.innerHTML = '';
@@ -10,15 +10,15 @@ window.addEventListener('message', (event) => {
   switch (event.data.event) {
     case 'visible': {
       body.style.visibility = event.data.state ? 'visible' : 'hidden';
-      return (eye.style.color = 'black');
+      return (eye.style.fill = 'black');
     }
 
     case 'leftTarget': {
-      return (eye.style.color = 'black');
+      return (eye.style.fill = 'black');
     }
 
     case 'setTarget': {
-      eye.style.color = '#fdfdfd';
+      eye.style.fill = '#cfd2da';
 
       if (event.data.options) {
         for (const type in event.data.options) {

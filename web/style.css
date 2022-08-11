@@ -26,43 +26,52 @@ p {
 
 #options-wrapper {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin-left: 140px;
-  margin-top: 50px;
+  top: calc(48.4%);
+  left: calc(50% + 18pt);
 }
 
 .option-container {
-  color: #909296;
+  color: #cfd2da;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   font-family: 'Nunito';
-  text-transform: uppercase;
-  background-color: rgba(37, 38, 43, 0.8);
-  border-radius: 5px;
-  font-size: 16px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  padding: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(20, 20, 20, 0.7) 0%,
+    rgba(20, 20, 20, 0.6) 66%,
+    rgba(47, 48, 53, 0) 100%
+  );
+  font-size: 11pt;
+  line-height: 22pt;
+  vertical-align: middle;
+  margin: 2pt;
   transition: 300ms;
   transform-origin: left top;
   scale: 1;
-  height: 25px;
-  width: 200px;
+  height: 22pt;
+  width: 150pt;
+  top: 0;
 }
 
 .option-container:hover {
-  background-color: rgba(37, 38, 43, 1);
+  background: linear-gradient(
+    90deg,
+    rgba(30, 30, 30, 0.7) 0%,
+    rgba(30, 30, 30, 0.6) 66%,
+    rgba(57, 58, 63, 0) 100%
+  );
   transform-origin: left top;
   color: white;
+  margin-left: 4pt;
 }
 
 .option-icon {
-  font-size: 18px;
-  margin-right: 10px;
+  font-size: 12pt;
+  line-height: 22pt;
+  width: 14pt;
+  margin: 5pt;
 }
 
 .option-label {
