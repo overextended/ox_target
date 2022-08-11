@@ -30,6 +30,7 @@ local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local options
+local currentTarget = {}
 
 local function enableTargeting()
     if isDisabled or isActive or IsNuiFocused() then return end
@@ -91,12 +92,21 @@ local function enableTargeting()
             end
 
             if newOptions or options then
+                if currentZone then
+                    currentTarget.zone = Zones[currentZone]
+                else
+                    currentTarget.entity = entityHit
+                end
+
+                currentTarget.coords = endCoords
+                currentTarget.distance = distance
+
                 for k, v in pairs(newOptions or options) do
                     for i = 1, #v do
                         local option = v[i]
 
                         if option.canInteract then
-                            local hide = not option.canInteract(entityHit, endCoords, distance)
+                            local hide = not option.canInteract(option.name, entityHit, endCoords, distance)
 
                             if not newOptions and hide ~= option.hide then
                                 newOptions = options
@@ -153,6 +163,7 @@ local function enableTargeting()
 
     setNuiFocus(false)
     SendNuiMessage('{"event": "visible", "state": false}')
+    table.wipe(currentTarget)
     options = nil
 end
 
@@ -178,17 +189,18 @@ end
 
 RegisterNUICallback('select', function(data, cb)
     cb(1)
-    local selection = options?[data[1]][data[2]]
-    isActive = false
+    local option = options?[data[1]][data[2]]
 
-    if selection then
-        if selection.export then
-            local resource, method = string.strsplit('.', selection.export)
-            exports[resource](nil, method, selection)
-        end
-
-        if selection.event then
-            TriggerEvent(selection.event, selection)
+    if option then
+        if option.onSelect then
+            option.onSelect(option.name, currentTarget.entity or currentTarget.zone, currentTarget.coords, currentTarget.distance)
+        elseif option.export then
+            local resource, method = string.strsplit('.', option.export)
+            exports[resource](nil, method, option.name, currentTarget.entity or currentTarget.zone, currentTarget.coords, currentTarget.distance)
+        elseif option.event then
+            TriggerEvent(option.event, option.name, currentTarget.entity or currentTarget.zone, currentTarget.coords, currentTarget.distance)
         end
     end
+
+    isActive = false
 end)
