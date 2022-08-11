@@ -49,29 +49,27 @@ local function enableTargeting()
         local playerCoords = GetEntityCoords(cache.ped)
         local distance = #(playerCoords - endCoords)
 
-        if distance < 7 then
+        if hit and distance < 7 then
             local newOptions
 
             if lastEntity ~= entityHit then
-                if hit then
-                    if flag == 30 and entityHit then
-                        entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
-                    end
+                if flag == 30 and entityHit then
+                    entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
+                end
 
-                    entityType = entityHit ~= 0 and GetEntityType(entityHit)
-                    local success, result = pcall(GetEntityModel, entityHit)
-                    entityModel = success and result
+                entityType = entityHit ~= 0 and GetEntityType(entityHit)
+                local success, result = pcall(GetEntityModel, entityHit)
+                entityModel = success and result
 
-                    if entityType == 0 and entityModel then
-                        entityType = 3
-                    else SendNuiMessage('{"event": "leftTarget"}') end
-
-                    if entityType > 0 then
-                        newOptions = GetEntityOptions(entityHit, entityType, entityModel)
-                    elseif options then
-                        options = table.wipe(options)
-                    end
+                if entityType == 0 and entityModel then
+                    entityType = 3
                 else SendNuiMessage('{"event": "leftTarget"}') end
+
+                if entityType > 0 then
+                    newOptions = GetEntityOptions(entityHit, entityType, entityModel)
+                elseif options then
+                    options = table.wipe(options)
+                end
 
                 if Debug then
                     if lastEntity then
@@ -142,10 +140,14 @@ local function enableTargeting()
 
                 if i ~= 20 then Wait(0) end
             end
+        elseif lastEntity then
+            if Debug then SetEntityDrawOutline(lastEntity, false) end
+            SendNuiMessage('{"event": "leftTarget"}')
+            options, lastEntity = nil, nil
         end
     end
 
-    if lastEntity then
+    if lastEntity and Debug then
         SetEntityDrawOutline(lastEntity, false)
     end
 
