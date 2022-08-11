@@ -73,6 +73,8 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
 
                 return n > 0 and inRange, newZone?.id, options
             end
+
+            return nil, nil, options
         end, function()
             for i = 1, #inRange do
                 local zone = inRange[i]
