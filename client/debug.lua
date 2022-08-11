@@ -17,11 +17,11 @@ ox_target:addBoxZone({
     drawSprite = true,
     options = {
         {
-            name = 'test',
+            name = 'box',
             event = 'ox_target:debug',
             icon = 'fa-solid fa-cube',
             label = '(Debug) Box',
-            canInteract = function(entity)
+            canInteract = function(entity, coords, distance)
                 return true
             end
         }
@@ -35,11 +35,11 @@ ox_target:addSphereZone({
     drawSprite = true,
     options = {
         {
-            name = 'test',
+            name = 'sphere',
             event = 'ox_target:debug',
             icon = 'fa-solid fa-circle',
             label = '(Debug) Sphere',
-            canInteract = function(entity)
+            canInteract = function(entity, coords, distance)
                 return true
             end
         }
@@ -52,7 +52,7 @@ ox_target:addModel(`police`, {
         event = 'ox_target:debug',
         icon = 'fa-solid fa-handcuffs',
         label = 'Police car',
-        canInteract = function(entity)
+        canInteract = function(entity, coords, distance)
             return true
         end
     }
@@ -60,11 +60,11 @@ ox_target:addModel(`police`, {
 
 ox_target:addGlobalPed({
     {
-        name = 'vehicle',
+        name = 'ped',
         event = 'ox_target:debug',
         icon = 'fa-solid fa-male',
         label = '(Debug) Ped',
-        canInteract = function(entity)
+        canInteract = function(entity, coords, distance)
             return true
         end
     }
@@ -76,7 +76,7 @@ ox_target:addGlobalVehicle({
         event = 'ox_target:debug',
         icon = 'fa-solid fa-car',
         label = '(Debug) Vehicle',
-        canInteract = function(entity)
+        canInteract = function(entity, coords, distance)
             return true
         end
     }
@@ -84,12 +84,25 @@ ox_target:addGlobalVehicle({
 
 ox_target:addGlobalObject({
     {
-        name = 'vehicle',
+        name = 'object',
         event = 'ox_target:debug',
         icon = 'fa-solid fa-bong',
         label = '(Debug) Object',
-        canInteract = function(entity)
+        canInteract = function(entity, coords, distance)
             return true
+        end
+    }
+})
+
+ox_target:addGlobalVehicle({
+    {
+        name = 'vehiclebonnet',
+        event = 'ox_target:debug',
+        icon = 'fa-solid fa-bone',
+        label = '(Debug) Vehicle Bonnet',
+        canInteract = function(entity, coords, distance)
+            local boneId = GetEntityBoneIndexByName(entity, 'bonnet')
+            return boneId ~= -1 and #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 1
         end
     }
 })
