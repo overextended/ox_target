@@ -19,23 +19,24 @@ local function setNuiFocus(state, cursor)
     SetNuiFocusKeepInput(state)
 end
 
-local DrawSprites = DrawSprites
 local RaycastFromCamera = RaycastFromCamera
 local GetEntityType = GetEntityType
+local HasEntityClearLosToEntity = HasEntityClearLosToEntity
+local SendNuiMessage = SendNuiMessage
+local GetCurrentZone = GetCurrentZone
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
-local SendNUIMessage = SendNUIMessage
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local options
 
 local function enableTargeting()
     if isDisabled or isActive or IsNuiFocused() then return end
-    SendNUIMessage({ event = 'visible', state = true })
+    SendNuiMessage('{"event": "visible", "state": true}')
 
     isActive = true
     local getNearbyZones, drawSprites = DrawSprites()
-    local nearbyZones, lastEntity, entityType, entityModel
+    local currentZone, nearbyZones, lastEntity, entityType, entityModel
     local flag = 30
 
     while isActive do
@@ -77,7 +78,9 @@ local function enableTargeting()
         end
 
         if getNearbyZones then
-            nearbyZones, newOptions = getNearbyZones(endCoords, newOptions)
+            nearbyZones, currentZone, newOptions = getNearbyZones(endCoords, currentZone, newOptions)
+        elseif not newOptions then
+            currentZone, newOptions = GetCurrentZone(endCoords, currentZone)
         end
 
         if newOptions and next(newOptions) then
@@ -119,7 +122,7 @@ local function enableTargeting()
     end
 
     setNuiFocus(false)
-    SendNUIMessage({ event = 'visible', state = false })
+    SendNuiMessage('{"event": "visible", "state": false}')
     options = nil
 end
 

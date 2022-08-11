@@ -41,25 +41,37 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
 
         lib.requestStreamedTextureDict(dict)
 
-        return function(coords, options)
+        return function(coords, currentZone, options)
             if Zones then
                 inRange = {}
                 local n = 0
+                local newZone
 
                 for _, zone in pairs(Zones) do
-                    if zone.drawSprite ~= false and zone.distance < 7 then
+                    if zone.distance < 7 then
                         local contains = zone:contains(coords)
-                        zone.colour = contains and hover or colour
-                        n += 1
-                        inRange[n] = zone
 
-                        if not options and contains then
-                            options = { options = zone.options }
+                        if zone.drawSprite ~= false then
+                            zone.colour = contains and hover or colour
+                            n += 1
+                            inRange[n] = zone
+                        end
+
+                        if not newZone and contains then
+                            newZone = zone
                         end
                     end
                 end
 
-                return n > 0 and inRange, options
+                if newZone then
+                    if newZone.id ~= currentZone then
+                        options = { options = newZone.options }
+                    end
+                elseif currentZone then
+                    SendNuiMessage('{"event": "leftTarget"}')
+                end
+
+                return n > 0 and inRange, newZone?.id, options
             end
         end, function()
             for i = 1, #inRange do
@@ -68,9 +80,26 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
                 if zone.drawSprite ~= false then
                     SetDrawOrigin(zone.coords.x, zone.coords.y, zone.coords.z)
                     DrawSprite(dict, texture, 0, 0, width, height, 0, zone.colour[1], zone.colour[2], zone.colour[3], zone.colour[4])
-                    ClearDrawOrigin()
+                end
+            end
+
+            ClearDrawOrigin()
+        end
+    end
+else
+    function DrawSprites() end
+
+    function GetCurrentZone(coords, currentZone)
+        if Zones then
+            for _, zone in pairs(Zones) do
+                if zone.distance < 7 then
+                    if zone:contains(coords) then
+                        return zone.id, zone.id ~= currentZone and { options = zone.options } or nil
+                    end
                 end
             end
         end
+
+        if currentZone then SendNuiMessage('{"event": "leftTarget"}') end
     end
-else function DrawSprites() end end
+end
