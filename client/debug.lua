@@ -1,4 +1,4 @@
-Debug = GetConvarInt('ox_target:debug', 1) == 1
+Debug = GetConvarInt('ox_target:debug', 0) == 1
 if not Debug then return end
 
 AddEventHandler('ox_target:debug', function(data)
@@ -90,19 +90,6 @@ ox_target:addGlobalObject({
         label = '(Debug) Object',
         canInteract = function(entity, coords, distance)
             return true
-        end
-    }
-})
-
-ox_target:addGlobalVehicle({
-    {
-        name = 'vehiclebonnet',
-        event = 'ox_target:debug',
-        icon = 'fa-solid fa-bone',
-        label = '(Debug) Vehicle Bonnet',
-        canInteract = function(entity, coords, distance)
-            local boneId = GetEntityBoneIndexByName(entity, 'bonnet')
-            return boneId ~= -1 and #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 1
         end
     }
 })
