@@ -26,8 +26,10 @@ local SendNuiMessage = SendNuiMessage
 local GetCurrentZone = GetCurrentZone
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
+local CanInteract = CanInteract
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
+local DisablePlayerFiring = DisablePlayerFiring
 local options
 
 local function enableTargeting()
@@ -82,6 +84,24 @@ local function enableTargeting()
         elseif not newOptions then
             currentZone, newOptions = GetCurrentZone(endCoords, currentZone)
         end
+
+        for k, v in pairs(newOptions or options) do
+            for i = 1, #v do
+                local option = v[i]
+
+                if option.canInteract then
+                    local hide = not option.canInteract(entityHit)
+
+                    if not newOptions and hide ~= option.hide then
+                        newOptions = options
+                    end
+
+                    v[i].hide = hide
+                end
+            end
+        end
+
+        print(options, newOptions)
 
         if newOptions and next(newOptions) then
             options = newOptions

@@ -21,6 +21,9 @@ ox_target:addBoxZone({
             event = 'ox_target:debug',
             icon = 'fa-solid fa-cube',
             label = '(Debug) Box',
+            canInteract = function(entity)
+                return math.random(0, 100) >= 50
+            end
         }
     }
 })
@@ -36,6 +39,9 @@ ox_target:addSphereZone({
             event = 'ox_target:debug',
             icon = 'fa-solid fa-circle',
             label = '(Debug) Sphere',
+            canInteract = function(entity)
+                return math.random(0, 100) >= 50
+            end
         }
     }
 })
@@ -46,6 +52,9 @@ ox_target:addModel(`police`, {
         event = 'ox_target:debug',
         icon = 'fa-solid fa-handcuffs',
         label = 'Police car',
+        canInteract = function(entity)
+            return math.random(0, 100) >= 50
+        end
     }
 })
 
@@ -55,6 +64,9 @@ ox_target:addGlobalPed({
         event = 'ox_target:debug',
         icon = 'fa-solid fa-male',
         label = '(Debug) Ped',
+        canInteract = function(entity)
+            return math.random(0, 100) >= 50
+        end
     }
 })
 
@@ -64,6 +76,9 @@ ox_target:addGlobalVehicle({
         event = 'ox_target:debug',
         icon = 'fa-solid fa-car',
         label = '(Debug) Vehicle',
+        canInteract = function(entity)
+            return math.random(0, 100) >= 50
+        end
     }
 })
 
@@ -73,5 +88,8 @@ ox_target:addGlobalObject({
         event = 'ox_target:debug',
         icon = 'fa-solid fa-bong',
         label = '(Debug) Object',
+        canInteract = function(entity)
+            return math.random(0, 100) >= 50
+        end
     }
 })
