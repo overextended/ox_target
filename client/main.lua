@@ -85,30 +85,30 @@ local function enableTargeting()
             currentZone, newOptions = GetCurrentZone(endCoords, currentZone)
         end
 
-        for k, v in pairs(newOptions or options) do
-            for i = 1, #v do
-                local option = v[i]
+        if newOptions or options then
+            for k, v in pairs(newOptions or options) do
+                for i = 1, #v do
+                    local option = v[i]
 
-                if option.canInteract then
-                    local hide = not option.canInteract(entityHit)
+                    if option.canInteract then
+                        local hide = not option.canInteract(entityHit)
 
-                    if not newOptions and hide ~= option.hide then
-                        newOptions = options
+                        if not newOptions and hide ~= option.hide then
+                            newOptions = options
+                        end
+
+                        v[i].hide = hide
                     end
-
-                    v[i].hide = hide
                 end
             end
-        end
 
-        print(options, newOptions)
-
-        if newOptions and next(newOptions) then
-            options = newOptions
-            SendNuiMessage(json.encode({
-                event = 'setTarget',
-                options = options
-            }, { sort_keys=true }))
+            if newOptions and next(newOptions) then
+                options = newOptions
+                SendNuiMessage(json.encode({
+                    event = 'setTarget',
+                    options = options
+                }, { sort_keys=true }))
+            end
         end
 
         for i = 1, 20 do
