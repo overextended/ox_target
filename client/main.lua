@@ -154,7 +154,7 @@ local function enableTargeting()
             if Debug then SetEntityDrawOutline(lastEntity, false) end
             SendNuiMessage('{"event": "leftTarget"}')
             options, lastEntity = nil, nil
-        end
+        else Wait(50) end
     end
 
     if lastEntity and Debug then

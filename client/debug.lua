@@ -6,10 +6,10 @@ AddEventHandler('ox_target:debug', function(data)
 end)
 
 local ox_target = exports.ox_target
-local drawZones = false
+local drawZones = true
 
 ox_target:addBoxZone({
-    coords = vec3(442.5363, -1017.666, 28.65637),
+    coords = vec3(442.5363, -1017.666, 28.85637),
     size = vec3(2, 2, 2),
     rotation = 45,
     debug = drawZones,
@@ -29,7 +29,7 @@ ox_target:addBoxZone({
 })
 
 ox_target:addSphereZone({
-    coords = vec3(440.5363, -1015.666, 27.65637),
+    coords = vec3(440.5363, -1015.666, 28.85637),
     radius = 1,
     debug = drawZones,
     drawSprite = true,
