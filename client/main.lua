@@ -62,26 +62,29 @@ local function enableTargeting()
                 end
 
                 entityType = entityHit ~= 0 and GetEntityType(entityHit)
-                local success, result = pcall(GetEntityModel, entityHit)
-                entityModel = success and result
 
-                if entityType == 0 and entityModel then
-                    entityType = 3
-                else SendNuiMessage('{"event": "leftTarget"}') end
+                if entityType then
+                    local success, result = pcall(GetEntityModel, entityHit)
+                    entityModel = success and result
 
-                if entityType > 0 then
-                    newOptions = GetEntityOptions(entityHit, entityType, entityModel)
-                elseif options then
-                    options = table.wipe(options)
-                end
+                    if entityType == 0 and entityModel then
+                        entityType = 3
+                    else SendNuiMessage('{"event": "leftTarget"}') end
 
-                if Debug then
-                    if lastEntity then
-                        SetEntityDrawOutline(lastEntity, false)
+                    if entityType > 0 then
+                        newOptions = GetEntityOptions(entityHit, entityType, entityModel)
+                    elseif options then
+                        options = table.wipe(options)
                     end
 
-                    if entityType ~= 1 then
-                        SetEntityDrawOutline(entityHit, true)
+                    if Debug then
+                        if lastEntity then
+                            SetEntityDrawOutline(lastEntity, false)
+                        end
+
+                        if entityType ~= 1 then
+                            SetEntityDrawOutline(entityHit, true)
+                        end
                     end
                 end
 
