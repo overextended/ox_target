@@ -24,6 +24,8 @@ local GetEntityType = GetEntityType
 local HasEntityClearLosToEntity = HasEntityClearLosToEntity
 local SendNuiMessage = SendNuiMessage
 local GetCurrentZone = GetCurrentZone
+local PlayerHasGroups = PlayerHasGroups or function() return true end
+local PlayerHasItems = PlayerHasItems or function() return true end
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
@@ -113,6 +115,14 @@ local function enableTargeting()
                         local hide
 
                         if option.distance and distance > option.distance then
+                            hide = true
+                        end
+
+                        if option.groups and not PlayerHasGroups(option.groups) then
+                            hide = true
+                        end
+
+                        if option.items and not PlayerHasItems(option.items) then
                             hide = true
                         end
 
