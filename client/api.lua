@@ -7,27 +7,31 @@ exports('addSphereZone', function(data)
 end)
 
 ---@param target table
----@param options table
+---@param add table
 ---@param resource string
-local function addTarget(target, options, resource)
-    for i = 1, #options do
-        options[i].resource = resource or 'ox_target'
-        table.insert(target, options[i])
+local function addTarget(target, add, resource)
+    local num = #target
+    for i = 1, #add do
+        num += 1
+        add[i].resource = resource or 'ox_target'
+        target[num] = add[i]
     end
 end
 
 ---@param target table
----@param options table
+---@param remove table
 ---@param resource string
-local function removeTarget(target, options, resource)
-    if type(options) ~= 'table' then options = { options } end
+local function removeTarget(target, remove, resource)
+    if type(remove) ~= 'table' then remove = { remove } end
 
-    for k, v in pairs(target) do
-        for i = 1, #options do
-            local name = options[i]
+    for i = #target, 1, -1 do
+        local option = target[i]
 
-            if v.resource == (resource or 'ox_target') and v.name == name then
-                table.remove(target, k)
+        if option.resource == resource then
+            for j = #remove, 1, -1 do
+                if option.name == remove[j] then
+                    table.remove(target, j)
+                end
             end
         end
     end
@@ -165,13 +169,13 @@ exports('removeLocalEntity', function(arr, options)
     end
 end)
 
-local function removeResourceTargets(resource, options)
-    for i = 1, #options do
-        local target = options[i]
+local function removeResourceTargets(resource, target)
+    for i = 1, #target do
+        local options = target[i]
 
-        for k, v in pairs(target) do
-            if v.resource == resource then
-                table.remove(target, k)
+        for j = #options, 1, -1 do
+            if options[j].resource == resource then
+                table.remove(options, j)
             end
         end
     end
