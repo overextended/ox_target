@@ -32,8 +32,11 @@ local DisablePlayerFiring = DisablePlayerFiring
 local options
 local currentTarget = {}
 
+-- Toggle ox_target, instead of holding the hotkey
+local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
+
 local function enableTargeting()
-    if isDisabled or isActive or IsNuiFocused() then return end
+    if isDisabled or isActive or IsNuiFocused() or IsPauseMenuActive() then return end
     SendNuiMessage('{"event": "visible", "state": true}')
 
     isActive = true
@@ -137,16 +140,19 @@ local function enableTargeting()
                     drawSprites(endCoords)
                 end
 
-                if options and not hasFocus and IsDisabledControlJustPressed(0, 25) then
-                    setNuiFocus(true, true)
-                end
+                DisablePlayerFiring(cache.playerId, true)
+                DisableControlAction(0, 25, true)
 
                 if hasFocus then
                     DisableControlAction(0, 1, true)
                     DisableControlAction(0, 2, true)
-                end
 
-                DisablePlayerFiring(cache.playerId, true)
+                    if options and IsDisabledControlJustPressed(0, 25) then
+                        setNuiFocus(false, false)
+                    end
+                elseif options and IsDisabledControlJustPressed(0, 25) then
+                    setNuiFocus(true, true)
+                end
 
                 if i ~= 20 then Wait(0) end
             end
@@ -155,6 +161,10 @@ local function enableTargeting()
             SendNuiMessage('{"event": "leftTarget"}')
             options, lastEntity = nil, nil
         else Wait(50) end
+
+        if toggleHotkey and IsPauseMenuActive() then
+            isActive = false
+        end
     end
 
     if lastEntity and Debug then
@@ -167,19 +177,22 @@ local function enableTargeting()
     options = nil
 end
 
----@param forceDisable boolean
-local function disableTargeting(forceDisable)
+local function disableTargeting()
     isActive = false
 end
-
--- Toggle ox_target, instead of holding the hotkey
-local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
 
 -- Default keybind to toggle targeting (https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard)
 local hotkey = GetConvar('ox_target:defaultHotkey', 'LMENU')
 
 if toggleHotkey then
-    RegisterCommand('ox_target', function() return isActive and disableTargeting() or enableTargeting() end)
+    RegisterCommand('ox_target', function()
+        if isActive then
+            return disableTargeting()
+        end
+
+        return enableTargeting()
+    end)
+
     RegisterKeyMapping("ox_target", "Toggle targeting", "keyboard", hotkey)
 else
     RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end)
