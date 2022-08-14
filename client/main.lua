@@ -110,16 +110,21 @@ local function enableTargeting()
                 for k, v in pairs(newOptions or options) do
                     for i = 1, #v do
                         local option = v[i]
+                        local hide
 
-                        if option.canInteract then
-                            local hide = not option.canInteract(entityHit, distance, endCoords, option.name)
-
-                            if not newOptions and hide ~= option.hide then
-                                newOptions = options
-                            end
-
-                            v[i].hide = hide
+                        if option.distance and distance > option.distance then
+                            hide = true
                         end
+
+                        if not hide and option.canInteract then
+                            hide = not option.canInteract(entityHit, distance, endCoords, option.name)
+                        end
+
+                        if not newOptions and hide ~= option.hide then
+                            newOptions = options
+                        end
+
+                        v[i].hide = hide
                     end
                 end
 
