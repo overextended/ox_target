@@ -219,7 +219,7 @@ function GetEntityOptions(entity, _type, model)
     end
 
     return {
-        global = next(global) and global,
+        global = global,
         model = Models[model],
         entity = netId and Entities[netId] or nil,
         localEntity = LocalEntities[entity],

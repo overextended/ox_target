@@ -45,6 +45,7 @@ local function enableTargeting()
     local getNearbyZones, drawSprites = DrawSprites()
     local currentZone, nearbyZones, lastEntity, entityType, entityModel
     local flag = 30
+    local hidden
 
     while isActive do
         if not options then
@@ -110,7 +111,10 @@ local function enableTargeting()
                 currentTarget.distance = distance
 
                 for k, v in pairs(newOptions or options) do
-                    for i = 1, #v do
+                    hidden = 0
+                    local total = #v
+
+                    for i = 1, total do
                         local option = v[i]
                         local hide
 
@@ -135,15 +139,24 @@ local function enableTargeting()
                         end
 
                         v[i].hide = hide
+
+                        if hide then hidden += 1 end
                     end
+
+                    hidden = hidden == total
                 end
 
                 if newOptions and next(newOptions) then
                     options = newOptions
-                    SendNuiMessage(json.encode({
-                        event = 'setTarget',
-                        options = options
-                    }, { sort_keys=true }))
+
+                    if hidden then
+                        SendNuiMessage('{"event": "leftTarget"}')
+                    else
+                        SendNuiMessage(json.encode({
+                            event = 'setTarget',
+                            options = options
+                        }, { sort_keys=true }))
+                    end
                 end
             end
 
