@@ -106,7 +106,7 @@ local function enableTargeting()
                         local option = v[i]
 
                         if option.canInteract then
-                            local hide = not option.canInteract(option.name, entityHit, endCoords, distance)
+                            local hide = not option.canInteract(entityHit, distance, endCoords, option.name)
 
                             if not newOptions and hide ~= option.hide then
                                 newOptions = options
@@ -187,18 +187,35 @@ else
     RegisterKeyMapping('+ox_target', 'Toggle targeting', 'keyboard', hotkey)
 end
 
+local function getResponse(option, server)
+    local response = {
+        name = option.name,
+        entity = currentTarget.entity,
+        zone = currentTarget.zone,
+        coords = currentTarget.coords,
+        distance = currentTarget.distance,
+    }
+
+    if server and response.entity then
+        response.entity = NetworkGetNetworkIdFromEntity(response.entity)
+    end
+
+    return response
+end
+
 RegisterNUICallback('select', function(data, cb)
     cb(1)
     local option = options?[data[1]][data[2]]
 
     if option then
         if option.onSelect then
-            option.onSelect(option.name, currentTarget.entity or currentTarget.zone, currentTarget.coords, currentTarget.distance)
-        elseif option.export then
-            local resource, method = string.strsplit('.', option.export)
-            exports[resource](nil, method, option.name, currentTarget.entity or currentTarget.zone, currentTarget.coords, currentTarget.distance)
+            option.onSelect(getResponse(option))
         elseif option.event then
-            TriggerEvent(option.event, option.name, currentTarget.entity or currentTarget.zone, currentTarget.coords, currentTarget.distance)
+            TriggerEvent(option.event, getResponse(option))
+        elseif option.serverEvent then
+            TriggerServerEvent(option.serverEvent, getResponse(option, true))
+        elseif option.command then
+            ExecuteCommand(option.command)
         end
     end
 
