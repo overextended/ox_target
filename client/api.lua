@@ -6,6 +6,10 @@ exports('addSphereZone', function(data)
     return lib.zones.sphere(data).id
 end)
 
+exports('removeZone', function(id)
+    Zones[id]:remove()
+end)
+
 ---@param target table
 ---@param add table
 ---@param resource string
