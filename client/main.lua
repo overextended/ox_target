@@ -103,11 +103,11 @@ local function enableTargeting()
             options = newOptions or options or {}
 
             if currentZone then
-                if not newOptions and currentZone.id ~= currentTarget?.zone?.id then
+                if not newOptions and currentZone.id ~= currentTarget?.zone then
                     newOptions = options
                 end
 
-                currentTarget.zone = Zones[currentZone.id]
+                currentTarget.zone = currentZone.id
                 options.zone = currentZone.options
             else
                 currentTarget.zone = nil
