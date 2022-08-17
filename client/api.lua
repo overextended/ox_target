@@ -182,9 +182,13 @@ local function removeResourceTargets(resource, target)
 end
 
 AddEventHandler('onClientResourceStop', function(resource)
-    local options = { Peds, Vehicles, Objects, Players, Models, Entities, LocalEntities, Zones }
+    local options = { Peds, Vehicles, Objects, Players, Models, Entities, LocalEntities }
 
     removeResourceTargets(resource, options)
+
+    for k, v in pairs(Zones) do
+        v:remove()
+    end
 
     for k, v in pairs(Models) do
         removeResourceTargets(resource, v)
