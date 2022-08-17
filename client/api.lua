@@ -1,16 +1,23 @@
-exports('addBoxZone', function(data)
+target = setmetatable({}, {
+    __newindex = function(self, index, value)
+        rawset(self, index, value)
+        exports(index, value)
+    end
+})
+
+function target.addBoxZone(data)
     data.resource = GetInvokingResource()
     return lib.zones.box(data).id
-end)
+end
 
-exports('addSphereZone', function(data)
+function target.addSphereZone(data)
     data.resource = GetInvokingResource()
     return lib.zones.sphere(data).id
-end)
+end
 
-exports('removeZone', function(id)
+function target.removeZone(id)
     Zones[id]:remove()
-end)
+end
 
 ---@param target table
 ---@param add table
@@ -45,47 +52,47 @@ end
 
 local Peds = {}
 
-exports('addGlobalPed', function(options)
+function target.addGlobalPed(options)
     addTarget(Peds, options, GetInvokingResource())
-end)
+end
 
-exports('removeGlobalPed', function(options)
+function target.removeGlobalPed(options)
     removeTarget(Peds, options, GetInvokingResource())
-end)
+end
 
 local Vehicles = {}
 
-exports('addGlobalVehicle', function(options)
+function target.addGlobalVehicle(options)
     addTarget(Vehicles, options, GetInvokingResource())
-end)
+end
 
-exports('removeGlobalVehicle', function(options)
+function target.removeGlobalVehicle(options)
     removeTarget(Vehicles, options, GetInvokingResource())
-end)
+end
 
 local Objects = {}
 
-exports('addGlobalObject', function(options)
+function target.addGlobalObject(options)
     addTarget(Objects, options, GetInvokingResource())
-end)
+end
 
-exports('removeGlobalObject', function(options)
+function target.removeGlobalObject(options)
     removeTarget(Objects, options, GetInvokingResource())
-end)
+end
 
 local Players = {}
 
-exports('addGlobalPlayer', function(options)
+function target.addGlobalPlayer(options)
     addTarget(Players, options, GetInvokingResource())
-end)
+end
 
-exports('removeGlobalPlayer', function(options)
+function target.removeGlobalPlayer(options)
     removeTarget(Players, options, GetInvokingResource())
-end)
+end
 
 local Models = {}
 
-exports('addModel', function(arr, options)
+function target.addModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
 
     for i = 1, #arr do
@@ -98,9 +105,9 @@ exports('addModel', function(arr, options)
 
         addTarget(Models[model], options, GetInvokingResource())
     end
-end)
+end
 
-exports('removeModel', function(arr, options)
+function target.removeModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
 
     for i = 1, #arr do
@@ -111,11 +118,11 @@ exports('removeModel', function(arr, options)
             removeTarget(Models[model], options, GetInvokingResource())
         end
     end
-end)
+end
 
 local Entities = {}
 
-exports('addEntity', function(arr, options)
+function target.addEntity(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
 
     for i = 1, #arr do
@@ -129,9 +136,9 @@ exports('addEntity', function(arr, options)
             addTarget(Entities[netId], options, GetInvokingResource())
         end
     end
-end)
+end
 
-exports('removeEntity', function(arr, options)
+function target.removeEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
 
     for i = 1, #arr do
@@ -141,11 +148,11 @@ exports('removeEntity', function(arr, options)
             removeTarget(Entities[netId], options, GetInvokingResource())
         end
     end
-end)
+end
 
 local LocalEntities = {}
 
-exports('addLocalEntity', function(arr, options)
+function target.addLocalEntity(arr, options)
     arr = type(arr) ~= 'table' and { arr } or arr
 
     for i = 1, #arr do
@@ -161,9 +168,9 @@ exports('addLocalEntity', function(arr, options)
             print(("No entity with id '%s' exists."):format(entity))
         end
     end
-end)
+end
 
-exports('removeLocalEntity', function(arr, options)
+function target.removeLocalEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
 
     for i = 1, #arr do
@@ -173,7 +180,7 @@ exports('removeLocalEntity', function(arr, options)
             removeTarget(LocalEntities[entity], options, GetInvokingResource())
         end
     end
-end)
+end
 
 local function removeResourceTargets(resource, target)
     for i = 1, #target do
