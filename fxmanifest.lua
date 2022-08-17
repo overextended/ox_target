@@ -21,6 +21,7 @@ client_scripts {
 	'client/debug.lua',
 	'client/defaults.lua',
 	'client/framework/*.lua',
+	'client/compat/*.lua',
 	'client/main.lua',
 }
 
