@@ -72,7 +72,7 @@ local function enableTargeting()
 
                     if entityType == 0 and entityModel then
                         entityType = 3
-                    end
+                    else SendNuiMessage('{"event": "leftTarget"}') end
 
                     if entityType > 0 then
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
