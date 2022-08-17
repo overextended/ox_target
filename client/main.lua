@@ -45,7 +45,6 @@ local function enableTargeting()
     local getNearbyZones, drawSprites = DrawSprites()
     local currentZone, nearbyZones, lastEntity, entityType, entityModel
     local flag = 30
-    local hidden
 
     while isActive do
         if not options then
@@ -90,39 +89,39 @@ local function enableTargeting()
                         end
                     end
                 end
-
-                lastEntity = entityHit
             end
 
             if getNearbyZones then
                 nearbyZones, currentZone = getNearbyZones(endCoords, currentZone)
-            elseif not newOptions then
+            else
                 currentZone = GetCurrentZone(endCoords, currentZone)
             end
 
             options = newOptions or options or {}
 
             if currentZone then
-                if not newOptions and currentZone.id ~= currentTarget?.zone then
+                if (not newOptions and currentZone.id ~= currentTarget?.zone) or (lastEntity ~= entityHit) then
                     newOptions = options
                 end
 
                 currentTarget.zone = currentZone.id
                 options.zone = currentZone.options
-            else
+            elseif currentTarget.zone then
                 currentTarget.zone = nil
                 options.zone = nil
             end
 
+            lastEntity = entityHit
             currentTarget.entity = entityHit
             currentTarget.coords = endCoords
             currentTarget.distance = distance
+            local hidden = 0
+            local totalOptions = 0
 
             for k, v in pairs(options) do
-                hidden = 0
-                local total = #v
+                totalOptions += #v
 
-                for i = 1, total do
+                for i = 1, #v do
                     local option = v[i]
                     local hide
 
@@ -142,28 +141,22 @@ local function enableTargeting()
                         hide = not option.canInteract(entityHit, distance, endCoords, option.name)
                     end
 
-                    if not newOptions and hide ~= option.hide then
-                        newOptions = options
-                    end
-
                     v[i].hide = hide
 
                     if hide then hidden += 1 end
                 end
+            end
 
-                hidden = hidden == total
+            if newOptions and next(newOptions) then
+                options = newOptions
 
-                if newOptions and next(newOptions) then
-                    options = newOptions
-
-                    if hidden then
-                        SendNuiMessage('{"event": "leftTarget"}')
-                    else
-                        SendNuiMessage(json.encode({
-                            event = 'setTarget',
-                            options = options
-                        }, { sort_keys=true }))
-                    end
+                if hidden == totalOptions then
+                    SendNuiMessage('{"event": "leftTarget"}')
+                else
+                    SendNuiMessage(json.encode({
+                        event = 'setTarget',
+                        options = options
+                    }, { sort_keys=true }))
                 end
             end
 

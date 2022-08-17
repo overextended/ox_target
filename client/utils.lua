@@ -87,12 +87,12 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
 else
     function DrawSprites() end
 
-    function GetCurrentZone(coords, currentZone)
+    function GetCurrentZone(coords)
         if Zones then
             for _, zone in pairs(Zones) do
                 if zone.distance < 7 then
                     if zone:contains(coords) then
-                        return zone.id, zone.id ~= currentZone and zone or nil
+                        return zone
                     end
                 end
             end
