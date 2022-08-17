@@ -94,7 +94,7 @@ exports('addModel', function(arr, options)
     end
 end)
 
-exports('addModel', function(arr, options)
+exports('removeModel', function(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
 
     for i = 1, #arr do
