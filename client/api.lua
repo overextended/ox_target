@@ -1,8 +1,10 @@
 exports('addBoxZone', function(data)
+    data.resource = GetInvokingResource()
     return lib.zones.box(data).id
 end)
 
 exports('addSphereZone', function(data)
+    data.resource = GetInvokingResource()
     return lib.zones.sphere(data).id
 end)
 
@@ -192,7 +194,9 @@ AddEventHandler('onClientResourceStop', function(resource)
 
     if Zones then
         for k, v in pairs(Zones) do
-            v:remove()
+            if v.resource == resource then
+                v:remove()
+            end
         end
     end
 
