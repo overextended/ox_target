@@ -168,6 +168,8 @@ local function enableTargeting()
             end
 
             for i = 1, 20 do
+                if not isActive then break end
+
                 if Debug then
                     DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42,
                         24,
