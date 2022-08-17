@@ -76,6 +76,8 @@ local function enableTargeting()
 
                     if entityType > 0 then
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
+                    elseif options then
+                        table.wipe(options)
                     end
 
                     if Debug then
