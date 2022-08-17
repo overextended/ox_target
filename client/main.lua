@@ -44,13 +44,9 @@ local function enableTargeting()
     isActive = true
     local getNearbyZones, drawSprites = DrawSprites()
     local currentZone, nearbyZones, lastEntity, entityType, entityModel
-    local flag = 30
+    local flag
 
     while isActive do
-        if not options then
-            if flag == 30 then flag = -1 else flag = 30 end
-        end
-
         local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera(flag)
         local playerCoords = GetEntityCoords(cache.ped)
         local distance = #(playerCoords - endCoords)
@@ -59,7 +55,7 @@ local function enableTargeting()
             local newOptions
 
             if lastEntity ~= entityHit then
-                if flag == 30 and entityHit then
+                if flag ~= 1 and entityHit then
                     entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
                 end
 
@@ -191,9 +187,14 @@ local function enableTargeting()
             end
         elseif lastEntity then
             if Debug then SetEntityDrawOutline(lastEntity, false) end
+            if options then table.wipe(options) end
             SendNuiMessage('{"event": "leftTarget"}')
-            options, lastEntity = nil, nil
+            lastEntity = nil
         else Wait(50) end
+
+        if not options or not next(options) then
+            flag = flag == 26 and 1 or 26
+        end
 
         if toggleHotkey and IsPauseMenuActive() then
             isActive = false

@@ -2,7 +2,7 @@ local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
 local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
 
----@param flag? number Defaults to -1
+---@param flag number
 ---@return boolean hit
 ---@return number entityHit
 ---@return vector3 endCoords
@@ -12,7 +12,7 @@ function RaycastFromCamera(flag)
     local coords, normal = GetWorldCoordFromScreenCoord(0.5, 0.5)
     local destination = coords + normal * 10
     local handle = StartShapeTestLosProbe(coords.x, coords.y, coords.z, destination.x, destination.y, destination.z,
-        flag or -1, cache.ped, 7)
+        flag, cache.ped, 4)
 
     while true do
         Wait(0)
