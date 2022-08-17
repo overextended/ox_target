@@ -13,7 +13,6 @@ ox_target:addBoxZone({
     size = vec3(2, 2, 2),
     rotation = 45,
     debug = drawZones,
-    interactionDistance = 10,
     drawSprite = true,
     options = {
         {

@@ -72,12 +72,10 @@ local function enableTargeting()
 
                     if entityType == 0 and entityModel then
                         entityType = 3
-                    else SendNuiMessage('{"event": "leftTarget"}') end
+                    end
 
                     if entityType > 0 then
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
-                    elseif options then
-                        options = table.wipe(options)
                     end
 
                     if Debug then
@@ -95,56 +93,63 @@ local function enableTargeting()
             end
 
             if getNearbyZones then
-                nearbyZones, currentZone, newOptions = getNearbyZones(endCoords, currentZone, newOptions)
+                nearbyZones, currentZone = getNearbyZones(endCoords, currentZone)
             elseif not newOptions then
-                currentZone, newOptions = GetCurrentZone(endCoords, currentZone)
+                currentZone = GetCurrentZone(endCoords, currentZone)
             end
 
-            if newOptions or options then
-                if currentZone then
-                    currentTarget.zone = Zones[currentZone]
-                else
-                    currentTarget.entity = entityHit
+            options = newOptions or options or {}
+
+            if currentZone then
+                if not newOptions and currentZone.id ~= currentTarget?.zone?.id then
+                    newOptions = options
                 end
 
-                currentTarget.coords = endCoords
-                currentTarget.distance = distance
+                currentTarget.zone = Zones[currentZone.id]
+                options.zone = currentZone.options
+            else
+                currentTarget.zone = nil
+                options.zone = nil
+            end
 
-                for k, v in pairs(newOptions or options) do
-                    hidden = 0
-                    local total = #v
+            currentTarget.entity = entityHit
+            currentTarget.coords = endCoords
+            currentTarget.distance = distance
 
-                    for i = 1, total do
-                        local option = v[i]
-                        local hide
+            for k, v in pairs(options) do
+                hidden = 0
+                local total = #v
 
-                        if option.distance and distance > option.distance then
-                            hide = true
-                        end
+                for i = 1, total do
+                    local option = v[i]
+                    local hide
 
-                        if option.groups and not PlayerHasGroups(option.groups) then
-                            hide = true
-                        end
-
-                        if option.items and not PlayerHasItems(option.items) then
-                            hide = true
-                        end
-
-                        if not hide and option.canInteract then
-                            hide = not option.canInteract(entityHit, distance, endCoords, option.name)
-                        end
-
-                        if not newOptions and hide ~= option.hide then
-                            newOptions = options
-                        end
-
-                        v[i].hide = hide
-
-                        if hide then hidden += 1 end
+                    if option.distance and distance > option.distance then
+                        hide = true
                     end
 
-                    hidden = hidden == total
+                    if option.groups and not PlayerHasGroups(option.groups) then
+                        hide = true
+                    end
+
+                    if option.items and not PlayerHasItems(option.items) then
+                        hide = true
+                    end
+
+                    if not hide and option.canInteract then
+                        hide = not option.canInteract(entityHit, distance, endCoords, option.name)
+                    end
+
+                    if not newOptions and hide ~= option.hide then
+                        newOptions = options
+                    end
+
+                    v[i].hide = hide
+
+                    if hide then hidden += 1 end
                 end
+
+                hidden = hidden == total
 
                 if newOptions and next(newOptions) then
                     options = newOptions

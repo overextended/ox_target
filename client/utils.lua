@@ -41,7 +41,7 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
 
         lib.requestStreamedTextureDict(dict)
 
-        return function(coords, currentZone, options)
+        return function(coords, currentZone)
             if Zones then
                 inRange = {}
                 local n = 0
@@ -63,15 +63,11 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
                     end
                 end
 
-                if newZone then
-                    if newZone.id ~= currentZone then
-                        options = { options = newZone.options }
-                    end
-                elseif currentZone then
+                if not newZone and currentZone then
                     SendNuiMessage('{"event": "leftTarget"}')
                 end
 
-                return n > 0 and inRange, newZone?.id, options
+                return n > 0 and inRange, newZone
             end
 
             return nil, nil, options
@@ -96,7 +92,7 @@ else
             for _, zone in pairs(Zones) do
                 if zone.distance < 7 then
                     if zone:contains(coords) then
-                        return zone.id, zone.id ~= currentZone and { options = zone.options } or nil
+                        return zone.id, zone.id ~= currentZone and zone or nil
                     end
                 end
             end
