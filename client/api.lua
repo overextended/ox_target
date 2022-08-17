@@ -190,8 +190,10 @@ AddEventHandler('onClientResourceStop', function(resource)
 
     removeResourceTargets(resource, options)
 
-    for k, v in pairs(Zones) do
-        v:remove()
+    if Zones then
+        for k, v in pairs(Zones) do
+            v:remove()
+        end
     end
 
     for k, v in pairs(Models) do
