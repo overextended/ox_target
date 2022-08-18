@@ -17,15 +17,15 @@ RegisterNetEvent('ox:setGroup', function(name, grade)
 end)
 
 function PlayerHasGroups(filter)
-    local type = type(filter)
+    local _type = type(filter)
 
-    if type == 'string' then
+    if _type == 'string' then
         local grade = playerGroups[filter]
 
         if grade then
             return true
         end
-    elseif type == 'table' then
+    elseif _type == 'table' then
         local tabletype = table.type(filter)
 
         if tabletype == 'hash' then
@@ -61,11 +61,11 @@ AddEventHandler('ox_inventory:itemCount', function(name, count)
 end)
 
 function PlayerHasItems(filter)
-    local type = type(filter)
+    local _type = type(filter)
 
-    if type == 'string' then
+    if _type == 'string' then
         if playerItems[filter] < 1 then return end
-    elseif type == 'table' then
+    elseif _type == 'table' then
         local tabletype = table.type(filter)
 
         if tabletype == 'hash' then

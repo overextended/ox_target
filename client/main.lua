@@ -47,7 +47,7 @@ local function enableTargeting()
     local flag
 
     while isActive do
-        local hit, entityHit, endCoords, surfaceNormal, materialHash = RaycastFromCamera(flag)
+        local hit, entityHit, endCoords = RaycastFromCamera(flag)
         local playerCoords = GetEntityCoords(cache.ped)
         local distance = #(playerCoords - endCoords)
 
@@ -114,7 +114,7 @@ local function enableTargeting()
             local hidden = 0
             local totalOptions = 0
 
-            for k, v in pairs(options) do
+            for _, v in pairs(options) do
                 totalOptions += #v
 
                 for i = 1, #v do
@@ -225,12 +225,12 @@ if toggleHotkey then
         end
 
         return enableTargeting()
-    end)
+    end, false)
 
     RegisterKeyMapping("ox_target", "Toggle targeting", "keyboard", hotkey)
 else
-    RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end)
-    RegisterCommand('-ox_target', disableTargeting)
+    RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end, false)
+    RegisterCommand('-ox_target', disableTargeting, false)
     RegisterKeyMapping('+ox_target', 'Toggle targeting', 'keyboard', hotkey)
 end
 

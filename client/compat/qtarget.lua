@@ -112,4 +112,3 @@ end)
 exportHandler('RemovePlayer', function(labels)
     target.removeGlobalPlayer(labels)
 end)
-
