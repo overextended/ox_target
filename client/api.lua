@@ -200,22 +200,22 @@ AddEventHandler('onClientResourceStop', function(resource)
     removeResourceTargets(resource, options)
 
     if Zones then
-        for k, v in pairs(Zones) do
+        for _, v in pairs(Zones) do
             if v.resource == resource then
                 v:remove()
             end
         end
     end
 
-    for k, v in pairs(Models) do
+    for _, v in pairs(Models) do
         removeResourceTargets(resource, v)
     end
 
-    for k, v in pairs(Entities) do
+    for _, v in pairs(Entities) do
         removeResourceTargets(resource, v)
     end
 
-    for k, v in pairs(LocalEntities) do
+    for _, v in pairs(LocalEntities) do
         removeResourceTargets(resource, v)
     end
 end)

@@ -6,7 +6,7 @@ local function toggleDoor(vehicle, door)
         if GetVehicleDoorAngleRatio(vehicle, door) > 0.0 then
             SetVehicleDoorShut(vehicle, door, false)
         else
-            SetVehicleDoorOpen(vehicle, door, false)
+            SetVehicleDoorOpen(vehicle, door, false, false)
         end
     end
 end
