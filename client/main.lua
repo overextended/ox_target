@@ -137,6 +137,10 @@ local function enableTargeting()
                         hide = not option.canInteract(entityHit, distance, endCoords, option.name)
                     end
 
+                    if not newOptions and v[i].hide ~= hide then
+                        newOptions = options
+                    end
+
                     v[i].hide = hide
 
                     if hide then hidden += 1 end
