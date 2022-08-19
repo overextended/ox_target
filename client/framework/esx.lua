@@ -5,9 +5,11 @@ local playerItems = {}
 local playerGroups = {}
 
 local function setPlayerData(playerData)
-    for _, v in pairs(playerData.inventory) do
-        if v.count > 0 then
-            playerItems[v.name] = v.count
+    if playerData.inventory then
+        for _, v in pairs(playerData.inventory) do
+            if v.count > 0 then
+                playerItems[v.name] = v.count
+            end
         end
     end
 
