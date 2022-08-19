@@ -10,9 +10,10 @@ local function convert(options)
 
     for _, v in pairs(options) do
         v.onSelect = v.action
-        v.action = nil
         v.distance = v.distance or distance
         v.name = v.name or v.label
+        v.groups = v.job
+        v.items = v.item or v.required_item
 
         if v.event and v.type ~= 'client' then
             if v.type == 'server' then
@@ -23,6 +24,11 @@ local function convert(options)
 
             v.event = nil
         end
+
+        v.action = nil
+        v.job = nil
+        v.item = nil
+        v.required_item = nil
     end
 
     return options
