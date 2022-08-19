@@ -28,3 +28,5 @@ client_scripts {
 files {
 	'web/**',
 }
+
+provide 'qtarget'

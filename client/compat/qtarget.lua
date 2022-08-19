@@ -13,6 +13,16 @@ local function convert(options)
         v.action = nil
         v.distance = v.distance or distance
         v.name = v.name or v.label
+
+        if v.event and v.type ~= 'client' then
+            if v.type == 'server' then
+                v.serverEvent = v.event
+            elseif v.type == 'command' then
+                v.command = v.event
+            end
+
+            v.event = nil
+        end
     end
 
     return options
