@@ -261,6 +261,8 @@ RegisterNUICallback('select', function(data, cb)
     if option then
         if option.onSelect then
             option.onSelect(getResponse(option))
+        elseif option.export then
+            exports[option.resource][option.export](nil, getResponse(option))
         elseif option.event then
             TriggerEvent(option.event, getResponse(option))
         elseif option.serverEvent then
