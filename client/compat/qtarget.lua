@@ -15,7 +15,7 @@ local function convert(options)
         v.groups = v.job
         v.items = v.item or v.required_item
 
-        if v.event and v.type ~= 'client' then
+        if v.event and v.type and v.type ~= 'client' then
             if v.type == 'server' then
                 v.serverEvent = v.event
             elseif v.type == 'command' then
@@ -23,6 +23,7 @@ local function convert(options)
             end
 
             v.event = nil
+            v.type = nil
         end
 
         v.action = nil
