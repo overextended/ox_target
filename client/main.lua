@@ -239,17 +239,25 @@ else
 end
 
 local function getResponse(option, server)
-    local response = {
-        name = option.name,
-        entity = currentTarget.entity,
-        zone = currentTarget.zone,
-        coords = currentTarget.coords,
-        distance = currentTarget.distance,
-    }
+    local response = table.clone(option)
+    response.entity = currentTarget.entity
+    response.zone = currentTarget.zone
+    response.coords = currentTarget.coords
+    response.distance = currentTarget.distance
 
     if server and response.entity then
         response.entity = NetworkGetNetworkIdFromEntity(response.entity)
     end
+
+    response.icon = nil
+    response.groups = nil
+    response.items = nil
+    response.canInteract = nil
+    response.onSelect = nil
+    response.export = nil
+    response.event = nil
+    response.serverEvent = nil
+    response.command = nil
 
     return response
 end
