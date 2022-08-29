@@ -44,10 +44,16 @@ local function enableTargeting()
     isActive = true
     local getNearbyZones, drawSprites = DrawSprites()
     local currentZone, nearbyZones, lastEntity, entityType, entityModel
-    local flag
+    local flag = 1
 
     while isActive do
         local hit, entityHit, endCoords = RaycastFromCamera(flag)
+
+        if not hit then
+            flag = flag == 26 and 1 or 26
+            hit, entityHit, endCoords = RaycastFromCamera(flag)
+        end
+
         local playerCoords = GetEntityCoords(cache.ped)
         local distance = #(playerCoords - endCoords)
 
