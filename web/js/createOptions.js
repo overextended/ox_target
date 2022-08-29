@@ -1,9 +1,5 @@
 import { fetchNui } from './fetchNui.js';
 
-function selectOption(type, id) {
-  fetchNui('select', [type, id]);
-  document.body.style.visibility = 'hidden';
-}
 const optionsWrapper = document.getElementById('options-wrapper');
 
 export function createOptions(type, data, id) {
@@ -15,6 +11,6 @@ export function createOptions(type, data, id) {
       <i class="${data.icon} option-icon"></i>
       <p class="option-label">${data.label}</p>
     `;
-  option.addEventListener('click', () => selectOption(type, id));
+  option.addEventListener('click', () => fetchNui('select', [type, id]));
   optionsWrapper.appendChild(option);
 }
