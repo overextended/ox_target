@@ -280,5 +280,5 @@ RegisterNUICallback('select', function(data, cb)
         end
     end
 
-    isActive = false
+    setNuiFocus(false)
 end)
