@@ -182,7 +182,7 @@ function target.removeLocalEntity(arr, options)
     end
 end
 
-local function removeResourceTargets(resource, target)
+local function removeResourceGlobals(resource, target)
     for i = 1, #target do
         local options = target[i]
 
@@ -194,10 +194,21 @@ local function removeResourceTargets(resource, target)
     end
 end
 
-AddEventHandler('onClientResourceStop', function(resource)
-    local options = { Peds, Vehicles, Objects, Players, Models, Entities, LocalEntities }
+local function removeResourceTargets(resource, target)
+    for i = 1, #target do
+        for _, options in pairs(target[i]) do
+            for j = #options, 1, -1 do
+                if options[j].resource == resource then
+                    table.remove(options, j)
+                end
+            end
+        end
+    end
+end
 
-    removeResourceTargets(resource, options)
+AddEventHandler('onClientResourceStop', function(resource)
+    removeResourceGlobals(resource, { Peds, Vehicles, Objects, Players })
+    removeResourceTargets(resource, { Models, Entities, LocalEntities })
 
     if Zones then
         for _, v in pairs(Zones) do
@@ -205,18 +216,6 @@ AddEventHandler('onClientResourceStop', function(resource)
                 v:remove()
             end
         end
-    end
-
-    for _, v in pairs(Models) do
-        removeResourceTargets(resource, v)
-    end
-
-    for _, v in pairs(Entities) do
-        removeResourceTargets(resource, v)
-    end
-
-    for _, v in pairs(LocalEntities) do
-        removeResourceTargets(resource, v)
     end
 end)
 
