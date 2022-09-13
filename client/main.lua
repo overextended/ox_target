@@ -94,8 +94,10 @@ local function enableTargeting()
             end
 
             if getNearbyZones then
+                ---@type CZone[]?, CZone?
                 nearbyZones, currentZone = getNearbyZones(endCoords, currentZone)
             else
+                ---@type CZone?
                 currentZone = GetCurrentZone(endCoords, currentZone)
             end
 
