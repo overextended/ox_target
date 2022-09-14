@@ -5,6 +5,11 @@ target = setmetatable({}, {
     end
 })
 
+function target.addPolyZone(data)
+    data.resource = GetInvokingResource()
+    return lib.zones.poly(data).id
+end
+
 function target.addBoxZone(data)
     data.resource = GetInvokingResource()
     return lib.zones.box(data).id
