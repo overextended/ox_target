@@ -5,21 +5,28 @@ target = setmetatable({}, {
     end
 })
 
+---@param data table
+---@return number
 function target.addPolyZone(data)
     data.resource = GetInvokingResource()
     return lib.zones.poly(data).id
 end
 
+---@param data table
+---@return number
 function target.addBoxZone(data)
     data.resource = GetInvokingResource()
     return lib.zones.box(data).id
 end
 
+---@param data table
+---@return number
 function target.addSphereZone(data)
     data.resource = GetInvokingResource()
     return lib.zones.sphere(data).id
 end
 
+---@param id number
 function target.removeZone(id)
     Zones[id]:remove()
 end
@@ -57,48 +64,59 @@ end
 
 local Peds = {}
 
+---@param options table
 function target.addGlobalPed(options)
     addTarget(Peds, options, GetInvokingResource())
 end
 
+---@param options table
 function target.removeGlobalPed(options)
     removeTarget(Peds, options, GetInvokingResource())
 end
 
 local Vehicles = {}
 
+---@param options table
 function target.addGlobalVehicle(options)
     addTarget(Vehicles, options, GetInvokingResource())
 end
 
+---@param options table
 function target.removeGlobalVehicle(options)
     removeTarget(Vehicles, options, GetInvokingResource())
 end
 
 local Objects = {}
 
+---@param options table
 function target.addGlobalObject(options)
     addTarget(Objects, options, GetInvokingResource())
 end
 
+---@param options table
 function target.removeGlobalObject(options)
     removeTarget(Objects, options, GetInvokingResource())
 end
 
 local Players = {}
 
+---@param options table
 function target.addGlobalPlayer(options)
     addTarget(Players, options, GetInvokingResource())
 end
 
+---@param options table
 function target.removeGlobalPlayer(options)
     removeTarget(Players, options, GetInvokingResource())
 end
 
 local Models = {}
 
+---@param arr number | number[]
+---@param options table
 function target.addModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
+    local resource = GetInvokingResource()
 
     for i = 1, #arr do
         local model = arr[i]
@@ -108,27 +126,33 @@ function target.addModel(arr, options)
             Models[model] = {}
         end
 
-        addTarget(Models[model], options, GetInvokingResource())
+        addTarget(Models[model], options, resource)
     end
 end
 
+---@param arr number | number[]
+---@param options table
 function target.removeModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
+    local resource = GetInvokingResource()
 
     for i = 1, #arr do
         local model = arr[i]
         model = type(model) == 'string' and joaat(model) or model
 
         if Models[model] then
-            removeTarget(Models[model], options, GetInvokingResource())
+            removeTarget(Models[model], options, resource)
         end
     end
 end
 
 local Entities = {}
 
+---@param arr number | number[]
+---@param options table
 function target.addEntity(arr, options)
-    arr = type(arr) ~= 'table' and { arr } or arr
+    if type(arr) ~= 'table' then arr = { arr } end
+    local resource = GetInvokingResource()
 
     for i = 1, #arr do
         local netId = arr[i]
@@ -138,27 +162,33 @@ function target.addEntity(arr, options)
         end
 
         if NetworkDoesNetworkIdExist(netId) then
-            addTarget(Entities[netId], options, GetInvokingResource())
+            addTarget(Entities[netId], options, resource)
         end
     end
 end
 
+---@param arr number | number[]
+---@param options table
 function target.removeEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
+    local resource = GetInvokingResource()
 
     for i = 1, #arr do
         local netId = arr[i]
 
         if Entities[netId] then
-            removeTarget(Entities[netId], options, GetInvokingResource())
+            removeTarget(Entities[netId], options, resource)
         end
     end
 end
 
 local LocalEntities = {}
 
+---@param arr number | number[]
+---@param options table
 function target.addLocalEntity(arr, options)
-    arr = type(arr) ~= 'table' and { arr } or arr
+    if type(arr) ~= 'table' then arr = { arr } end
+    local resource = GetInvokingResource()
 
     for i = 1, #arr do
         local entity = arr[i]
@@ -168,25 +198,30 @@ function target.addLocalEntity(arr, options)
         end
 
         if DoesEntityExist(entity) then
-            addTarget(LocalEntities[entity], options, GetInvokingResource())
+            addTarget(LocalEntities[entity], options, resource)
         else
             print(("No entity with id '%s' exists."):format(entity))
         end
     end
 end
 
+---@param arr number | number[]
+---@param options table
 function target.removeLocalEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
+    local resource = GetInvokingResource()
 
     for i = 1, #arr do
         local entity = arr[i]
 
         if LocalEntities[entity] then
-            removeTarget(LocalEntities[entity], options, GetInvokingResource())
+            removeTarget(LocalEntities[entity], options, resource)
         end
     end
 end
 
+---@param resource string
+---@param target table
 local function removeResourceGlobals(resource, target)
     for i = 1, #target do
         local options = target[i]
@@ -199,6 +234,8 @@ local function removeResourceGlobals(resource, target)
     end
 end
 
+---@param resource string
+---@param target table
 local function removeResourceTargets(resource, target)
     for i = 1, #target do
         for _, options in pairs(target[i]) do
@@ -211,6 +248,7 @@ local function removeResourceTargets(resource, target)
     end
 end
 
+---@param resource string
 AddEventHandler('onClientResourceStop', function(resource)
     removeResourceGlobals(resource, { Peds, Vehicles, Objects, Players })
     removeResourceTargets(resource, { Models, Entities, LocalEntities })
@@ -227,6 +265,10 @@ end)
 local NetworkGetEntityIsNetworked = NetworkGetEntityIsNetworked
 local NetworkGetNetworkIdFromEntity = NetworkGetNetworkIdFromEntity
 
+---@param entity number
+---@param _type number
+---@param model number
+---@return table
 function GetEntityOptions(entity, _type, model)
     if _type == 1 then
         if IsPedAPlayer(entity) then
