@@ -4,6 +4,8 @@ local function exportHandler(exportName, func)
     end)
 end
 
+---@param options table
+---@return table
 local function convert(options)
     local distance = options.distance
     options = options.options
@@ -36,34 +38,37 @@ local function convert(options)
 end
 
 exportHandler('AddBoxZone', function(name, center, length, width, options, targetoptions)
-    return target.addBoxZone({
+    return lib.zones.box({
         name = name,
         coords = center,
         size = vec3(width, length, math.abs(options.maxZ - options.minZ)),
         debug = options.debugPoly,
         rotation = options.heading,
         options = convert(targetoptions),
-    })
+        resource = GetInvokingResource(),
+    }).id
 end)
 
 exportHandler('AddPolyZone', function(name, points, options, targetoptions)
-    return target.addBoxZone({
+    return lib.zones.poly({
         name = name,
         points = points,
         thickness = math.abs(options.maxZ - options.minZ),
         debug = options.debugPoly,
         options = convert(targetoptions),
-    })
+        resource = GetInvokingResource(),
+    }).id
 end)
 
 exportHandler('AddCircleZone', function(name, center, radius, options, targetoptions)
-    return target.addSphereZone({
+    return lib.zones.sphere({
         name = name,
         coords = center,
         radius = radius,
         debug = options.debugPoly,
         options = convert(targetoptions),
-    })
+        resource = GetInvokingResource(),
+    }).id
 end)
 
 exportHandler('RemoveZone', function(id)
@@ -71,7 +76,7 @@ exportHandler('RemoveZone', function(id)
         if type(id) == 'string' then
             for _, v in pairs(Zones) do
                 if v.name == id then
-                    return v:remove()
+                    v:remove()
                 end
             end
         end
