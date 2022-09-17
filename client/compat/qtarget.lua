@@ -50,10 +50,18 @@ exportHandler('AddBoxZone', function(name, center, length, width, options, targe
 end)
 
 exportHandler('AddPolyZone', function(name, points, options, targetoptions)
+    local newPoints = table.create(#points, 0)
+    local thickness = math.abs(options.maxZ - options.minZ)
+
+    for i = 1, #points do
+        local point = points[i]
+        newPoints[i] = vec3(point.x, point.y, options.maxZ - (thickness / 2))
+    end
+
     return lib.zones.poly({
         name = name,
-        points = points,
-        thickness = math.abs(options.maxZ - options.minZ),
+        points = newPoints,
+        thickness = thickness,
         debug = options.debugPoly,
         options = convert(targetoptions),
         resource = GetInvokingResource(),
