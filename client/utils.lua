@@ -53,7 +53,7 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
                 for _, zone in pairs(Zones) do
                     local contains = zone:contains(coords)
 
-                    if zone.drawSprite ~= false then
+                    if zone.drawSprite ~= false and (contains or (zone.distance or 7) < 7) then
                         zone.colour = contains and hover or colour
                         n += 1
                         inRange[n] = zone
