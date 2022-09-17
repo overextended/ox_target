@@ -51,7 +51,7 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
                 local newZone
 
                 for _, zone in pairs(Zones) do
-                    if zone.distance < 7 then
+                    if (zone.distance or 10) < 7 then
                         local contains = zone:contains(coords)
 
                         if zone.drawSprite ~= false then
