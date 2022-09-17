@@ -51,18 +51,16 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
                 local newZone
 
                 for _, zone in pairs(Zones) do
-                    if (zone.distance or 10) < 7 then
-                        local contains = zone:contains(coords)
+                    local contains = zone:contains(coords)
 
-                        if zone.drawSprite ~= false then
-                            zone.colour = contains and hover or colour
-                            n += 1
-                            inRange[n] = zone
-                        end
+                    if zone.drawSprite ~= false then
+                        zone.colour = contains and hover or colour
+                        n += 1
+                        inRange[n] = zone
+                    end
 
-                        if not newZone and contains then
-                            newZone = zone
-                        end
+                    if not newZone and contains then
+                        newZone = zone
                     end
                 end
 
@@ -93,10 +91,8 @@ else
     function GetCurrentZone(coords)
         if Zones then
             for _, zone in pairs(Zones) do
-                if zone.distance < 7 then
-                    if zone:contains(coords) then
-                        return zone
-                    end
+                if zone:contains(coords) then
+                    return zone
                 end
             end
         end
