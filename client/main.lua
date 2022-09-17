@@ -75,7 +75,7 @@ local function enableTargeting()
                         entityType = 3
                     else SendNuiMessage('{"event": "leftTarget"}') end
 
-                    if entityType > 0 then
+                    if entityModel then
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
                     elseif options then
                         table.wipe(options)
@@ -123,9 +123,10 @@ local function enableTargeting()
             local totalOptions = 0
 
             for _, v in pairs(options) do
-                totalOptions += #v
+                local optionCount = #v
+                totalOptions += optionCount
 
-                for i = 1, #v do
+                for i = 1, optionCount do
                     local option = v[i]
                     local hide
 
@@ -172,9 +173,8 @@ local function enableTargeting()
                 if not isActive then break end
 
                 if Debug then
-                    DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42,
-                        24,
-                        100, false, false, 0, true, false, false, false)
+                    ---@diagnostic disable-next-line: param-type-mismatch
+                    DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24, 100, false, false, 0, true, false, false, false)
                 end
 
                 if nearbyZones then
