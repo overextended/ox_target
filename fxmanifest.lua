@@ -14,6 +14,10 @@ description ''
 -- Manifest
 ui_page 'web/index.html'
 
+shared_scripts {
+	'@ox_lib/init.lua',
+}
+
 client_scripts {
 	'@ox_lib/init.lua',
 	'client/utils.lua',
@@ -23,6 +27,10 @@ client_scripts {
 	'client/framework/*.lua',
 	'client/compat/*.lua',
 	'client/main.lua',
+}
+
+server_scripts {
+	'server/main.lua'
 }
 
 files {
