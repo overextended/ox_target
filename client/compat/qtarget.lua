@@ -95,6 +95,33 @@ exportHandler('RemoveZone', function(id)
     end
 end)
 
+exportHandler('AddTargetBone', function(bones, options)
+    if type(bones) ~= 'table' then bones = { bones } end
+    options = convert(options)
+
+    for k, v in pairs(options) do
+        ---@type string | function | nil
+        local canInteract = v.canInteract
+
+        if canInteract then
+            canInteract = msgpack.pack(canInteract)
+            canInteract = msgpack.unpack(canInteract)
+        end
+
+        function v.canInteract(entity, distance, data)
+            for i = 1, #bones do
+                local boneId = GetEntityBoneIndexByName(entity, bones[i])
+
+                if boneId ~= -1 then
+                    return not canInteract or canInteract(entity, distance, data)
+                end
+            end
+        end
+    end
+
+    exports.ox_target:addGlobalVehicle(options)
+end)
+
 exportHandler('AddTargetEntity', function(entities, options)
     target.addEntity(entities, convert(options))
 end)
