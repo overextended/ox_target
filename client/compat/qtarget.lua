@@ -100,13 +100,8 @@ exportHandler('AddTargetBone', function(bones, options)
     options = convert(options)
 
     for k, v in pairs(options) do
-        ---@type string | function | nil
-        local canInteract = v.canInteract
-
-        if canInteract then
-            canInteract = msgpack.pack(canInteract)
-            canInteract = msgpack.unpack(canInteract)
-        end
+        ---@type table?
+        local canInteract = v.canInteract and msgpack.unpack(msgpack.pack(v.canInteract))
 
         function v.canInteract(entity, distance, data)
             for i = 1, #bones do
