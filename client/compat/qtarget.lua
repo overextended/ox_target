@@ -32,6 +32,7 @@ local function convert(options)
         v.job = nil
         v.item = nil
         v.required_item = nil
+        v.qtarget = true
     end
 
     return options

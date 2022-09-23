@@ -276,7 +276,7 @@ RegisterNUICallback('select', function(data, cb)
 
     if option then
         if option.onSelect then
-            option.onSelect(getResponse(option))
+            option.onSelect(option.qtarget and currentTarget.entity or getResponse(option))
         elseif option.export then
             exports[option.resource][option.export](nil, getResponse(option))
         elseif option.event then
