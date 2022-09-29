@@ -272,6 +272,8 @@ end
 
 RegisterNUICallback('select', function(data, cb)
     cb(1)
+    setNuiFocus(false)
+
     local option = options?[data[1]][data[2]]
 
     if option then
@@ -288,5 +290,7 @@ RegisterNUICallback('select', function(data, cb)
         end
     end
 
-    setNuiFocus(false)
+    if IsNuiFocused() then
+        isActive = false
+    end
 end)
