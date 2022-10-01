@@ -26,6 +26,8 @@ local SendNuiMessage = SendNuiMessage
 local GetCurrentZone = GetCurrentZone
 local PlayerHasGroups = PlayerHasGroups or function() return true end
 local PlayerHasItems = PlayerHasItems or function() return true end
+local GetEntityBoneIndexByName = GetEntityBoneIndexByName
+local GetWorldPositionOfEntityBone = GetWorldPositionOfEntityBone
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
@@ -142,8 +144,45 @@ local function enableTargeting()
                         hide = true
                     end
 
+                    local bone = option.bones
+
+                    if bone then
+                        local _type = type(bone)
+
+                        if _type == 'string' then
+                            local boneId = GetEntityBoneIndexByName(entityHit, bone)
+
+                            if boneId ~= -1 then
+                                bone = boneId
+                            else
+                                hide = true
+                            end
+                        elseif _type == 'table' then
+                            local closestBone, boneDistance
+
+                            for j = 1, #bone do
+                                local boneId = GetEntityBoneIndexByName(entityHit, bone[j])
+
+                                if boneId ~= -1 then
+                                    local dist = #(endCoords - GetWorldPositionOfEntityBone(entityHit, boneId))
+
+                                    if not closestBone or dist < boneDistance then
+                                        closestBone = boneId
+                                        boneDistance = dist
+                                    end
+                                end
+                            end
+
+                            if closestBone then
+                                bone = closestBone
+                            else
+                                hide = true
+                            end
+                        end
+                    end
+
                     if not hide and option.canInteract then
-                        hide = not option.canInteract(entityHit, distance, endCoords, option.name)
+                        hide = not option.canInteract(entityHit, distance, endCoords, option.name, bone)
                     end
 
                     if not newOptions and v[i].hide ~= hide then
@@ -169,7 +208,7 @@ local function enableTargeting()
                 end
             end
 
-            for i = 1, 20 do
+            for i = 1, 15 do
                 if not isActive then break end
 
                 if Debug then

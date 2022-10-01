@@ -19,6 +19,7 @@ ox_target:addGlobalVehicle({
         name = 'ox_target:driverF',
         icon = 'fa-solid fa-car-side',
         label = 'Toggle front driver door',
+        bones = { 'door_dside_f', 'seat_dside_f' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
 
@@ -39,6 +40,7 @@ ox_target:addGlobalVehicle({
         name = 'ox_target:passengerF',
         icon = 'fa-solid fa-car-side',
         label = 'Toggle front passenger door',
+        bones = { 'door_pside_f', 'seat_pside_f' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
 
@@ -59,6 +61,7 @@ ox_target:addGlobalVehicle({
         name = 'ox_target:driverR',
         icon = 'fa-solid fa-car-side',
         label = 'Toggle rear driver door',
+        bones = { 'door_dside_r', 'seat_dside_r' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
 
@@ -79,6 +82,7 @@ ox_target:addGlobalVehicle({
         name = 'ox_target:passengerR',
         icon = 'fa-solid fa-car-side',
         label = 'Toggle rear passenger door',
+        bones = { 'door_pside_r', 'seat_pside_r' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
 
@@ -100,11 +104,10 @@ ox_target:addGlobalVehicle({
         name = 'ox_target:bonnet',
         icon = 'fa-solid fa-car',
         label = 'Toggle hood',
-        canInteract = function(entity, distance, coords, name)
+        bones = 'bonnet',
+        canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
-
-            local boneId = GetEntityBoneIndexByName(entity, 'bonnet')
-            return boneId ~= -1 and #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.9
+            return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
             toggleDoor(data.entity, 4)
@@ -117,11 +120,10 @@ ox_target:addGlobalVehicle({
         name = 'ox_target:trunk',
         icon = 'fa-solid fa-car-rear',
         label = 'Toggle trunk',
-        canInteract = function(entity, distance, coords, name)
+        bones = 'boot',
+        canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
-
-            local boneId = GetEntityBoneIndexByName(entity, 'boot')
-            return boneId ~= -1 and #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.9
+            return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
             toggleDoor(data.entity, 5)
