@@ -208,7 +208,7 @@ local function enableTargeting()
                 end
             end
 
-            for i = 1, 15 do
+            for i = 1, 10 do
                 if not isActive then break end
 
                 if Debug then
@@ -234,7 +234,7 @@ local function enableTargeting()
                     setNuiFocus(true, true)
                 end
 
-                if i ~= 20 then Wait(0) end
+                if i ~= 10 then Wait(0) end
             end
         elseif lastEntity then
             if Debug then SetEntityDrawOutline(lastEntity, false) end
