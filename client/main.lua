@@ -152,7 +152,7 @@ local function enableTargeting()
                         if _type == 'string' then
                             local boneId = GetEntityBoneIndexByName(entityHit, bone)
 
-                            if boneId ~= -1 then
+                            if boneId ~= -1 and #(endCoords - GetWorldPositionOfEntityBone(entityHit, boneId)) <= 1 then
                                 bone = boneId
                             else
                                 hide = true
@@ -166,7 +166,7 @@ local function enableTargeting()
                                 if boneId ~= -1 then
                                     local dist = #(endCoords - GetWorldPositionOfEntityBone(entityHit, boneId))
 
-                                    if not closestBone or dist < boneDistance then
+                                    if dist <= (boneDistance or 1) then
                                         closestBone = boneId
                                         boneDistance = dist
                                     end
