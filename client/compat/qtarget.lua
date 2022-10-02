@@ -100,19 +100,8 @@ exportHandler('AddTargetBone', function(bones, options)
     if type(bones) ~= 'table' then bones = { bones } end
     options = convert(options)
 
-    for k, v in pairs(options) do
-        ---@type table?
-        local canInteract = v.canInteract and msgpack.unpack(msgpack.pack(v.canInteract))
-
-        function v.canInteract(entity, distance, data)
-            for i = 1, #bones do
-                local boneId = GetEntityBoneIndexByName(entity, bones[i])
-
-                if boneId ~= -1 then
-                    return not canInteract or canInteract(entity, distance, data)
-                end
-            end
-        end
+    for _, v in pairs(options) do
+        v.bones = bones
     end
 
     exports.ox_target:addGlobalVehicle(options)
