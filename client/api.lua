@@ -32,14 +32,21 @@ function target.removeZone(id)
 end
 
 ---@param target table
----@param add table
+---@param options table
 ---@param resource string
-local function addTarget(target, add, resource)
+local function addTarget(target, options, resource)
+    local optionsType = type(options)
+
+    if optionsType ~= 'table' then
+        TypeError('options', 'table', optionsType)
+    end
+
     local num = #target
-    for i = 1, #add do
+
+    for i = 1, #options do
         num += 1
-        add[i].resource = resource or 'ox_target'
-        target[num] = add[i]
+        options[i].resource = resource or 'ox_target'
+        target[num] = options[i]
     end
 end
 
