@@ -89,7 +89,7 @@ local function convert(options)
             end
         end
 
-        if type(groups) == 'table' and table.type(v.groups) == 'empty' then
+        if type(v.groups) == 'table' and table.type(v.groups) == 'empty' then
             v.groups = nil
         end
 
