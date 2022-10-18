@@ -6,6 +6,7 @@ body {
   white-space: nowrap;
   margin: 0;
   user-select: none;
+  overflow: hidden;
 }
 
 p {
