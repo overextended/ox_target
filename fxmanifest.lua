@@ -38,3 +38,4 @@ files {
 }
 
 provide 'qtarget'
+provide 'qb-target'
