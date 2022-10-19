@@ -185,11 +185,39 @@ exportHandler('AddTargetBone', function(bones, options)
 end)
 
 exportHandler('AddTargetEntity', function(entities, options)
-    target.addEntity(entities, convert(options))
+    if type(entities) == 'table' then
+        for k, v in pairs(entities) do
+            if NetworkGetEntityIsNetworked(v) then
+                target.addEntity(v, convert(options))
+            else
+                target.addLocalEntity(v, convert(options))
+            end
+        end
+    else
+        if NetworkGetEntityIsNetworked(entities) then
+            target.addEntity(entities, convert(options))
+        else
+            target.addLocalEntity(entities, convert(options))
+        end
+    end
 end)
 
 exportHandler('RemoveTargetEntity', function(entities, labels)
-    target.removeEntity(entities, labels)
+    if type(entities) == 'table' then
+        for k, v in pairs(entities) do
+            if NetworkGetEntityIsNetworked(v) then
+                target.removeEntity(v, labels)
+            else
+                target.removeLocalEntity(v, labels)
+            end
+        end
+    else
+        if NetworkGetEntityIsNetworked(entities) then
+            target.removeEntity(entities, labels)
+        else
+            target.removeLocalEntity(entities, labels)
+        end
+    end
 end)
 
 exportHandler('AddTargetModel', function(models, options)
