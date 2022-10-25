@@ -47,6 +47,7 @@ local function enableTargeting()
     local getNearbyZones, drawSprites = DrawSprites()
     local currentZone, nearbyZones, lastEntity, entityType, entityModel
     local flag = 1
+    local hasTick
 
     while isActive do
         local hit, entityHit, endCoords = RaycastFromCamera(flag)
@@ -207,35 +208,6 @@ local function enableTargeting()
                     }, { sort_keys=true }))
                 end
             end
-
-            for i = 1, 10 do
-                if not isActive then break end
-
-                if Debug then
-                    ---@diagnostic disable-next-line: param-type-mismatch
-                    DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24, 100, false, false, 0, true, false, false, false)
-                end
-
-                if nearbyZones then
-                    drawSprites(endCoords)
-                end
-
-                DisablePlayerFiring(cache.playerId, true)
-                DisableControlAction(0, 25, true)
-
-                if hasFocus then
-                    DisableControlAction(0, 1, true)
-                    DisableControlAction(0, 2, true)
-
-                    if options and IsDisabledControlJustPressed(0, 25) then
-                        setNuiFocus(false, false)
-                    end
-                elseif options and IsDisabledControlJustPressed(0, 25) then
-                    setNuiFocus(true, true)
-                end
-
-                if i ~= 10 then Wait(0) end
-            end
         elseif lastEntity then
             if Debug then SetEntityDrawOutline(lastEntity, false) end
             if options then table.wipe(options) end
@@ -250,6 +222,41 @@ local function enableTargeting()
         if toggleHotkey and IsPauseMenuActive() then
             isActive = false
         end
+
+        if not hasTick then
+            hasTick = true
+
+            CreateThread(function()
+                while isActive do
+                    if Debug then
+                        ---@diagnostic disable-next-line: param-type-mismatch
+                        DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24, 100, false, false, 0, true, false, false, false)
+                    end
+
+                    if nearbyZones then
+                        drawSprites(endCoords)
+                    end
+
+                    DisablePlayerFiring(cache.playerId, true)
+                    DisableControlAction(0, 25, true)
+
+                    if hasFocus then
+                        DisableControlAction(0, 1, true)
+                        DisableControlAction(0, 2, true)
+
+                        if options and IsDisabledControlJustPressed(0, 25) then
+                            setNuiFocus(false, false)
+                        end
+                    elseif options and IsDisabledControlJustPressed(0, 25) then
+                        setNuiFocus(true, true)
+                    end
+
+                    Wait(0)
+                end
+            end)
+        end
+
+        Wait(60)
     end
 
     if lastEntity and Debug then
