@@ -2,6 +2,11 @@ Debug = GetConvarInt('ox_target:debug', 0) == 1
 if not Debug then return end
 
 AddEventHandler('ox_target:debug', function(data)
+    if data.entity then
+        data.archetype = GetEntityArchetypeName(data.entity)
+        data.model = GetEntityModel(data.entity)
+    end
+
 	print(json.encode(data, {indent=true}))
 end)
 
