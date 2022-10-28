@@ -11,31 +11,34 @@ local usingOxInventory = GetResourceState('ox_inventory') ~= "missing"
 
 local playerItems = setmetatable({}, {
     __index = function(self, index)
-        self[index] = usingOxInventory and exports.ox_inventory:Search('count', index) or exports['qb-inventory']:HasItem(index) or 0
+        self[index] = usingOxInventory and exports.ox_inventory:Search('count', index) or playerData.items[index] or 0
         return self[index]
     end
 })
+
+local function setPlayerItems()
+    for _, item in pairs(playerData.items) do
+        playerItems[item.name] = item.amount
+    end
+end
 
 if usingOxInventory then
     AddEventHandler('ox_inventory:itemCount', function(name, count)
         playerItems[name] = count
     end)
+elseif playerData then
+    setPlayerItems()
 end
 
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     playerData = QBCore.Functions.GetPlayerData()
+    if not usingOxInventory then setPlayerItems() end
 end)
 
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
     if source == '' then return end
-
     playerData = val
-
-    if usingOxInventory then return end
-
-    for _, v in pairs(val.items) do
-        if v then playerItems[v.name] = v.amount end
-    end
+    if not usingOxInventory then setPlayerItems() end
 end)
 
 function PlayerHasGroups(filter)
