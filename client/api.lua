@@ -62,7 +62,7 @@ local function removeTarget(target, remove, resource)
         if option.resource == resource then
             for j = #remove, 1, -1 do
                 if option.name == remove[j] then
-                    table.remove(target, j)
+                    table.remove(target, i)
                 end
             end
         end
