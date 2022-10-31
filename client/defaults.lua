@@ -1,4 +1,5 @@
 if GetConvarInt('ox_target:defaults', 1) ~= 1 then return end
+lib.locale()
 local ox_target = exports.ox_target
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
 local GetWorldPositionOfEntityBone = GetWorldPositionOfEntityBone
@@ -18,7 +19,7 @@ ox_target:addGlobalVehicle({
     {
         name = 'ox_target:driverF',
         icon = 'fa-solid fa-car-side',
-        label = 'Toggle front driver door',
+        label = locale('toggle_front_driver_door'),
         bones = { 'door_dside_f', 'seat_dside_f' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
@@ -39,7 +40,7 @@ ox_target:addGlobalVehicle({
     {
         name = 'ox_target:passengerF',
         icon = 'fa-solid fa-car-side',
-        label = 'Toggle front passenger door',
+        label = locale('toggle_front_passenger_door'),
         bones = { 'door_pside_f', 'seat_pside_f' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
@@ -60,7 +61,7 @@ ox_target:addGlobalVehicle({
     {
         name = 'ox_target:driverR',
         icon = 'fa-solid fa-car-side',
-        label = 'Toggle rear driver door',
+        label = locale('toggle_rear_driver_door'),
         bones = { 'door_dside_r', 'seat_dside_r' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
@@ -81,7 +82,7 @@ ox_target:addGlobalVehicle({
     {
         name = 'ox_target:passengerR',
         icon = 'fa-solid fa-car-side',
-        label = 'Toggle rear passenger door',
+        label = locale('toggle_rear_passenger_door'),
         bones = { 'door_pside_r', 'seat_pside_r' },
         canInteract = function(entity, distance, coords, name)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
@@ -103,7 +104,7 @@ ox_target:addGlobalVehicle({
     {
         name = 'ox_target:bonnet',
         icon = 'fa-solid fa-car',
-        label = 'Toggle hood',
+        label = locale('toggle_hood'),
         bones = 'bonnet',
         canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
@@ -119,7 +120,7 @@ ox_target:addGlobalVehicle({
     {
         name = 'ox_target:trunk',
         icon = 'fa-solid fa-car-rear',
-        label = 'Toggle trunk',
+        label = locale('toggle_trunk'),
         bones = 'boot',
         canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
