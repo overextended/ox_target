@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Porte conducteur avant",
+  "toggle_front_passenger_door": "Porte passager avant",
+  "toggle_rear_driver_door": "Porte conducteur arrière",
+  "toggle_rear_passenger_door": "Porte passager arrière",
+  "toggle_hood": "Capot",
+  "toggle_trunk": "Coffre",
+  "debug_box": "(Debug) Box",
+  "debug_sphere": "(Debug) Sphère",
+  "debug_police_car": "Véhicule de police",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Véhicule",
+  "debug_object": "(Debug) Objet",
+  "toggle_targeting": "Afficher le système d'interaction"
+}
