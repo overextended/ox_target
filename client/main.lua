@@ -20,15 +20,17 @@ local function setNuiFocus(state, cursor)
     SetNuiFocusKeepInput(state)
 end
 
+local SendNuiMessage = SendNuiMessage
+local GetEntityCoords = GetEntityCoords
 local RaycastFromCamera = RaycastFromCamera
 local GetEntityType = GetEntityType
 local HasEntityClearLosToEntity = HasEntityClearLosToEntity
-local SendNuiMessage = SendNuiMessage
 local GetCurrentZone = GetCurrentZone
 local PlayerHasGroups = PlayerHasGroups or function() return true end
 local PlayerHasItems = PlayerHasItems or function() return true end
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
 local GetWorldPositionOfEntityBone = GetWorldPositionOfEntityBone
+local next = next
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
@@ -45,21 +47,23 @@ local function enableTargeting()
     SendNuiMessage('{"event": "visible", "state": true}')
 
     isActive = true
+    local flag, hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick
     local getNearbyZones, drawSprites = DrawSprites()
-    local currentZone, nearbyZones, lastEntity, entityType, entityModel
-    local flag = 1
-    local hasTick
 
     while isActive do
-        local hit, entityHit, endCoords = RaycastFromCamera(flag)
-
-        if not hit then
-            flag = flag == 26 and 1 or 26
-            hit, entityHit, endCoords = RaycastFromCamera(flag)
-        end
-
         local playerCoords = GetEntityCoords(cache.ped)
-        local distance = #(playerCoords - endCoords)
+
+        do
+            local hit1, entity1, coords1 = RaycastFromCamera(1)
+            local hit2, entity2, coords2 = RaycastFromCamera(26)
+            local dist1, dist2 = #(playerCoords - coords1), #(playerCoords - coords2)
+
+            if dist1 < dist2 then
+                flag, hit, entityHit, endCoords, distance = 1, hit1, entity1, coords1, dist1
+            else
+                flag, hit, entityHit, endCoords, distance = 1, hit2, entity2, coords2, dist2
+            end
+        end
 
         if hit and distance < 7 then
             local newOptions
@@ -215,10 +219,6 @@ local function enableTargeting()
             SendNuiMessage('{"event": "leftTarget"}')
             lastEntity = nil
         else Wait(50) end
-
-        if not options or not next(options) then
-            flag = flag == 26 and 1 or 26
-        end
 
         if toggleHotkey and IsPauseMenuActive() then
             isActive = false
