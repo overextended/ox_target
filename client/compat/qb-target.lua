@@ -119,7 +119,7 @@ exportHandler('AddBoxZone', function(name, center, length, width, options, targe
     return lib.zones.box({
         name = name,
         coords = center,
-        size = vec3(width, length, math.abs(options.maxZ - options.minZ)),
+        size = vec3(width, length, (options.useZ or not options.maxZ) and center.z or math.abs(options.maxZ - options.minZ)),
         debug = options.debugPoly,
         rotation = options.heading,
         options = convert(targetoptions),
