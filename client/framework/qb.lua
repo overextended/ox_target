@@ -26,7 +26,7 @@ if usingOxInventory then
     AddEventHandler('ox_inventory:itemCount', function(name, count)
         playerItems[name] = count
     end)
-elseif playerData then
+elseif next(playerData) then
     setPlayerItems()
 end
 
