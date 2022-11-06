@@ -1,3 +1,4 @@
+lib.locale()
 local isActive = false
 local isDisabled = false
 
@@ -285,11 +286,11 @@ if toggleHotkey then
         return enableTargeting()
     end, false)
 
-    RegisterKeyMapping("ox_target", "Toggle targeting", "keyboard", hotkey)
+    RegisterKeyMapping('ox_target', locale('toggle_targeting'), 'keyboard', hotkey)
 else
     RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end, false)
     RegisterCommand('-ox_target', disableTargeting, false)
-    RegisterKeyMapping('+ox_target', 'Toggle targeting', 'keyboard', hotkey)
+    RegisterKeyMapping('+ox_target', locale('toggle_targeting'), 'keyboard', hotkey)
 end
 
 local function getResponse(option, server)

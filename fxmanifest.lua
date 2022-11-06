@@ -35,6 +35,7 @@ server_scripts {
 
 files {
 	'web/**',
+	'locales/*.json'
 }
 
 provide 'qtarget'
