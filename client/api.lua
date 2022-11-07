@@ -162,7 +162,7 @@ function target.addEntity(arr, options)
     local resource = GetInvokingResource()
 
     for i = 1, #arr do
-        local netId = arr[i]
+        local netId = NetworkGetNetworkIdFromEntity(arr[i])
 
         if not Entities[netId] then
             Entities[netId] = {}
