@@ -52,30 +52,27 @@ local function enableTargeting()
 
     while isActive do
         local playerCoords = GetEntityCoords(cache.ped)
+        hit, entityHit, endCoords = RaycastFromCamera(26)
+        entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
 
-        do
-            local hit1, entity1, coords1 = RaycastFromCamera(1)
-            local hit2, entity2, coords2 = RaycastFromCamera(26)
-            local dist1, dist2 = #(playerCoords - coords1), #(playerCoords - coords2)
-
-            if dist1 < dist2 then
-                flag, hit, entityHit, endCoords, distance = 1, hit1, entity1, coords1, dist1
-            else
-                flag, hit, entityHit, endCoords, distance = 1, hit2, entity2, coords2, dist2
-            end
+        if entityType == 0 then
+            hit, entityHit, endCoords = RaycastFromCamera(1)
+            flag, entityType = 1, entityHit ~= 0 and GetEntityType(entityHit) or 0
+        else
+            flag = 26
         end
+
+        distance = #(playerCoords - endCoords)
 
         if hit and distance < 7 then
             local newOptions
 
             if lastEntity ~= entityHit then
-                if flag ~= 1 and entityHit then
+                if flag ~= 1 then
                     entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
                 end
 
-                entityType = entityHit ~= 0 and GetEntityType(entityHit)
-
-                if entityType then
+                if entityHit ~= 0 then
                     local success, result = pcall(GetEntityModel, entityHit)
                     entityModel = success and result
 
