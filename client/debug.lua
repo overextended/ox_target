@@ -1,6 +1,3 @@
-Debug = GetConvarInt('ox_target:debug', 0) == 1
-if not Debug then return end
-
 AddEventHandler('ox_target:debug', function(data)
     if data.entity then
         data.archetype = GetEntityArchetypeName(data.entity)
@@ -9,6 +6,9 @@ AddEventHandler('ox_target:debug', function(data)
 
 	print(json.encode(data, {indent=true}))
 end)
+
+Debug = GetConvarInt('ox_target:debug', 0) == 1
+if not Debug then return end
 
 local ox_target = exports.ox_target
 local drawZones = true
