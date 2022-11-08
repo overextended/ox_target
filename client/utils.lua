@@ -1,3 +1,5 @@
+lib.locale()
+
 ---Throws a formatted type error
 ---@param variable string
 ---@param expected string

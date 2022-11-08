@@ -1,5 +1,5 @@
 if GetConvarInt('ox_target:defaults', 1) ~= 1 then return end
-lib.locale()
+
 local ox_target = exports.ox_target
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
 local GetWorldPositionOfEntityBone = GetWorldPositionOfEntityBone

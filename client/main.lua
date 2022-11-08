@@ -1,4 +1,3 @@
-lib.locale()
 local isActive = false
 local isDisabled = false
 

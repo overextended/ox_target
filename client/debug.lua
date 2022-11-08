@@ -1,6 +1,5 @@
 Debug = GetConvarInt('ox_target:debug', 0) == 1
 if not Debug then return end
-lib.locale()
 
 AddEventHandler('ox_target:debug', function(data)
     if data.entity then
