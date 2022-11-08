@@ -40,6 +40,7 @@ local currentTarget = {}
 
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
+local mouseButton = GetConvarInt('ox_target:leftClick', 1) == 1 and 24 or 25
 
 local function enableTargeting()
     if isDisabled or isActive or IsNuiFocused() or IsPauseMenuActive() then return end
@@ -244,7 +245,7 @@ local function enableTargeting()
                         if options and IsDisabledControlJustPressed(0, 25) then
                             setNuiFocus(false, false)
                         end
-                    elseif options and IsDisabledControlJustPressed(0, 25) then
+                    elseif options and IsDisabledControlJustPressed(0, mouseButton) then
                         setNuiFocus(true, true)
                     end
 
