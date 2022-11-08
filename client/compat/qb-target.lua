@@ -118,7 +118,7 @@ end
 exportHandler('AddBoxZone', function(name, center, length, width, options, targetoptions)
     return lib.zones.box({
         name = name,
-        coords = center,
+        coords = center.xyz,
         size = vec3(width, length, (options.useZ or not options.maxZ) and center.z or math.abs(options.maxZ - options.minZ)),
         debug = options.debugPoly,
         rotation = options.heading,
@@ -149,7 +149,7 @@ end)
 exportHandler('AddCircleZone', function(name, center, radius, options, targetoptions)
     return lib.zones.sphere({
         name = name,
-        coords = center,
+        coords = center.xyz,
         radius = radius,
         debug = options.debugPoly,
         options = convert(targetoptions),
