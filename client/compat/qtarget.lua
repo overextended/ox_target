@@ -107,38 +107,38 @@ exportHandler('AddTargetBone', function(bones, options)
     exports.ox_target:addGlobalVehicle(options)
 end)
 
-exportHandler('AddTargetEntity', function(entities, options)
-    if type(entities) == 'table' then
-        for k, v in pairs(entities) do
-            if NetworkGetEntityIsNetworked(v) then
+exportHandler('AddTargetEntity', function(netIds, options)
+    if type(netIds) == 'table' then
+        for k, v in pairs(netIds) do
+            if NetworkDoesNetworkIdExist(v) then
                 target.addEntity(v, convert(options))
             else
                 target.addLocalEntity(v, convert(options))
             end
         end
     else
-        if NetworkGetEntityIsNetworked(entities) then
-            target.addEntity(entities, convert(options))
+        if NetworkDoesNetworkIdExist(netIds) then
+            target.addEntity(netIds, convert(options))
         else
-            target.addLocalEntity(entities, convert(options))
+            target.addLocalEntity(netIds, convert(options))
         end
     end
 end)
 
-exportHandler('RemoveTargetEntity', function(entities, labels)
-    if type(entities) == 'table' then
-        for k, v in pairs(entities) do
-            if NetworkGetEntityIsNetworked(v) then
+exportHandler('RemoveTargetEntity', function(netIds, labels)
+    if type(netIds) == 'table' then
+        for k, v in pairs(netIds) do
+            if NetworkDoesNetworkIdExist(v) then
                 target.removeEntity(v, labels)
             else
                 target.removeLocalEntity(v, labels)
             end
         end
     else
-        if NetworkGetEntityIsNetworked(entities) then
-            target.removeEntity(entities, labels)
+        if NetworkDoesNetworkIdExist(netIds) then
+            target.removeEntity(netIds, labels)
         else
-            target.removeLocalEntity(entities, labels)
+            target.removeLocalEntity(netIds, labels)
         end
     end
 end)
