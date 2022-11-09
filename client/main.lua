@@ -35,7 +35,7 @@ local GetEntityOptions = GetEntityOptions
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
-local options
+local options = {}
 local currentTarget = {}
 
 -- Toggle ox_target, instead of holding the hotkey
@@ -47,27 +47,45 @@ local function enableTargeting()
     SendNuiMessage('{"event": "visible", "state": true}')
 
     isActive = true
-    local flag, hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick
+    local flag, hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick = 1
     local getNearbyZones, drawSprites = DrawSprites()
 
     while isActive do
         local playerCoords = GetEntityCoords(cache.ped)
-        hit, entityHit, endCoords = RaycastFromCamera(26)
+        hit, entityHit, endCoords = RaycastFromCamera(flag)
         entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
+        distance = #(playerCoords - endCoords)
 
         if entityType == 0 then
-            hit, entityHit, endCoords = RaycastFromCamera(1)
-            flag, entityType = 1, entityHit ~= 0 and GetEntityType(entityHit) or 0
-        else
-            flag = 26
+            local _flag = flag == 1 and 26 or 1
+            local _hit, _entityHit, _endCoords = RaycastFromCamera(_flag)
+            local _distance = #(playerCoords - _endCoords)
+
+            if _distance < distance then
+                flag, hit, entityHit, endCoords, distance = _flag, _hit, _entityHit, _endCoords, _distance
+                entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
+            end
         end
 
-        distance = #(playerCoords - endCoords)
 
         if hit and distance < 7 then
             local newOptions
+            local lastZone = currentZone
 
-            if lastEntity ~= entityHit then
+            if getNearbyZones then
+                ---@type CZone[]?, CZone?
+                nearbyZones, currentZone = getNearbyZones(endCoords)
+            else
+                ---@type CZone?
+                currentZone = GetCurrentZone(endCoords)
+            end
+
+            if lastZone ~= currentZone or entityHit ~= lastEntity then
+                if next(options) then
+                    table.wipe(options)
+                    SendNuiMessage('{"event": "leftTarget"}')
+                end
+
                 if flag ~= 1 then
                     entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
                 end
@@ -76,14 +94,8 @@ local function enableTargeting()
                     local success, result = pcall(GetEntityModel, entityHit)
                     entityModel = success and result
 
-                    if entityType == 0 and entityModel then
-                        entityType = 3
-                    else SendNuiMessage('{"event": "leftTarget"}') end
-
                     if entityModel then
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
-                    elseif options then
-                        table.wipe(options)
                     end
 
                     if Debug then
@@ -96,14 +108,6 @@ local function enableTargeting()
                         end
                     end
                 end
-            end
-
-            if getNearbyZones then
-                ---@type CZone[]?, CZone?
-                nearbyZones, currentZone = getNearbyZones(endCoords, currentZone)
-            else
-                ---@type CZone?
-                currentZone = GetCurrentZone(endCoords, currentZone)
             end
 
             options = newOptions or options or {}
@@ -254,6 +258,10 @@ local function enableTargeting()
             end)
         end
 
+        if not next(options) then
+            flag = flag == 1 and 26 or 1
+        end
+
         Wait(60)
     end
 
@@ -264,7 +272,7 @@ local function enableTargeting()
     setNuiFocus(false)
     SendNuiMessage('{"event": "visible", "state": false}')
     table.wipe(currentTarget)
-    options = nil
+    table.wipe(options)
 end
 
 local function disableTargeting()

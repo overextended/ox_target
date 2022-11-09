@@ -292,7 +292,7 @@ function GetEntityOptions(entity, _type, model)
         global = Peds
     elseif _type == 2 then
         global = Vehicles
-    elseif _type == 3 then
+    else
         global = Objects
     end
 
