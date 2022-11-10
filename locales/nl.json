@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Toggle bestuurdersdeur",
+  "toggle_front_passenger_door": "Toggle bijrijdersdeur",
+  "toggle_rear_driver_door": "Toggle achterdeur links",
+  "toggle_rear_passenger_door": "Toggle achterdeur rechts",
+  "toggle_hood": "Toggle motorkap",
+  "toggle_trunk": "Toggle kofferbak",
+  "debug_box": "(Debug) Doos",
+  "debug_sphere": "(Debug) Bol",
+  "debug_police_car": "Politie voertuig",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Voertuig",
+  "debug_object": "(Debug) Object",
+  "toggle_targeting": "Toggle richten"
+}

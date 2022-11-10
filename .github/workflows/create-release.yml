@@ -43,7 +43,7 @@ jobs:
         run: |
           mkdir -p ./temp/ox_target
           cp ./{LICENSE,README.md,fxmanifest.lua} ./temp/ox_target
-          cp -r ./{client,server,web} ./temp/ox_target
+          cp -r ./{client,server,web,locales} ./temp/ox_target
           cd ./temp && zip -r ../ox_target.zip ./ox_target
 
       - name: Create Release

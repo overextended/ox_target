@@ -164,11 +164,11 @@ function target.addEntity(arr, options)
     for i = 1, #arr do
         local netId = arr[i]
 
-        if not Entities[netId] then
-            Entities[netId] = {}
-        end
-
         if NetworkDoesNetworkIdExist(netId) then
+            if not Entities[netId] then
+                Entities[netId] = {}
+            end
+
             addTarget(Entities[netId], options, resource)
         end
     end
@@ -200,11 +200,11 @@ function target.addLocalEntity(arr, options)
     for i = 1, #arr do
         local entity = arr[i]
 
-        if not LocalEntities[entity] then
-            LocalEntities[entity] = {}
-        end
-
         if DoesEntityExist(entity) then
+            if not LocalEntities[entity] then
+                LocalEntities[entity] = {}
+            end
+
             addTarget(LocalEntities[entity], options, resource)
         else
             print(("No entity with id '%s' exists."):format(entity))
@@ -292,7 +292,7 @@ function GetEntityOptions(entity, _type, model)
         global = Peds
     elseif _type == 2 then
         global = Vehicles
-    elseif _type == 3 then
+    else
         global = Objects
     end
 

@@ -19,69 +19,83 @@ local function setNuiFocus(state, cursor)
     SetNuiFocusKeepInput(state)
 end
 
+local SendNuiMessage = SendNuiMessage
+local GetEntityCoords = GetEntityCoords
 local RaycastFromCamera = RaycastFromCamera
 local GetEntityType = GetEntityType
 local HasEntityClearLosToEntity = HasEntityClearLosToEntity
-local SendNuiMessage = SendNuiMessage
 local GetCurrentZone = GetCurrentZone
 local PlayerHasGroups = PlayerHasGroups or function() return true end
 local PlayerHasItems = PlayerHasItems or function() return true end
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
 local GetWorldPositionOfEntityBone = GetWorldPositionOfEntityBone
+local next = next
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
-local options
+local options = {}
 local currentTarget = {}
 
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
+local mouseButton = GetConvarInt('ox_target:leftClick', 1) == 1 and 24 or 25
 
 local function enableTargeting()
     if isDisabled or isActive or IsNuiFocused() or IsPauseMenuActive() then return end
     SendNuiMessage('{"event": "visible", "state": true}')
 
     isActive = true
+    local flag, hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick = 1
     local getNearbyZones, drawSprites = DrawSprites()
-    local currentZone, nearbyZones, lastEntity, entityType, entityModel
-    local flag = 1
-    local hasTick
 
     while isActive do
-        local hit, entityHit, endCoords = RaycastFromCamera(flag)
+        local playerCoords = GetEntityCoords(cache.ped)
+        hit, entityHit, endCoords = RaycastFromCamera(flag)
+        entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
+        distance = #(playerCoords - endCoords)
 
-        if not hit then
-            flag = flag == 26 and 1 or 26
-            hit, entityHit, endCoords = RaycastFromCamera(flag)
+        if entityType == 0 then
+            local _flag = flag == 1 and 26 or 1
+            local _hit, _entityHit, _endCoords = RaycastFromCamera(_flag)
+            local _distance = #(playerCoords - _endCoords)
+
+            if _distance < distance then
+                flag, hit, entityHit, endCoords, distance = _flag, _hit, _entityHit, _endCoords, _distance
+                entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
+            end
         end
 
-        local playerCoords = GetEntityCoords(cache.ped)
-        local distance = #(playerCoords - endCoords)
 
         if hit and distance < 7 then
             local newOptions
+            local lastZone = currentZone
 
-            if lastEntity ~= entityHit then
-                if flag ~= 1 and entityHit then
+            if getNearbyZones then
+                ---@type CZone[]?, CZone?
+                nearbyZones, currentZone = getNearbyZones(endCoords)
+            else
+                ---@type CZone?
+                currentZone = GetCurrentZone(endCoords)
+            end
+
+            if lastZone ~= currentZone or entityHit ~= lastEntity then
+                if next(options) then
+                    table.wipe(options)
+                    SendNuiMessage('{"event": "leftTarget"}')
+                end
+
+                if flag ~= 1 then
                     entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
                 end
 
-                entityType = entityHit ~= 0 and GetEntityType(entityHit)
-
-                if entityType then
+                if entityHit ~= 0 then
                     local success, result = pcall(GetEntityModel, entityHit)
                     entityModel = success and result
 
-                    if entityType == 0 and entityModel then
-                        entityType = 3
-                    else SendNuiMessage('{"event": "leftTarget"}') end
-
                     if entityModel then
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
-                    elseif options then
-                        table.wipe(options)
                     end
 
                     if Debug then
@@ -94,14 +108,6 @@ local function enableTargeting()
                         end
                     end
                 end
-            end
-
-            if getNearbyZones then
-                ---@type CZone[]?, CZone?
-                nearbyZones, currentZone = getNearbyZones(endCoords, currentZone)
-            else
-                ---@type CZone?
-                currentZone = GetCurrentZone(endCoords, currentZone)
             end
 
             options = newOptions or options or {}
@@ -215,10 +221,6 @@ local function enableTargeting()
             lastEntity = nil
         else Wait(50) end
 
-        if not options or not next(options) then
-            flag = flag == 26 and 1 or 26
-        end
-
         if toggleHotkey and IsPauseMenuActive() then
             isActive = false
         end
@@ -247,13 +249,17 @@ local function enableTargeting()
                         if options and IsDisabledControlJustPressed(0, 25) then
                             setNuiFocus(false, false)
                         end
-                    elseif options and IsDisabledControlJustPressed(0, 25) then
+                    elseif options and IsDisabledControlJustPressed(0, mouseButton) then
                         setNuiFocus(true, true)
                     end
 
                     Wait(0)
                 end
             end)
+        end
+
+        if not next(options) then
+            flag = flag == 1 and 26 or 1
         end
 
         Wait(60)
@@ -266,7 +272,7 @@ local function enableTargeting()
     setNuiFocus(false)
     SendNuiMessage('{"event": "visible", "state": false}')
     table.wipe(currentTarget)
-    options = nil
+    table.wipe(options)
 end
 
 local function disableTargeting()
@@ -285,11 +291,11 @@ if toggleHotkey then
         return enableTargeting()
     end, false)
 
-    RegisterKeyMapping("ox_target", "Toggle targeting", "keyboard", hotkey)
+    RegisterKeyMapping('ox_target', locale('toggle_targeting'), 'keyboard', hotkey)
 else
     RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end, false)
     RegisterCommand('-ox_target', disableTargeting, false)
-    RegisterKeyMapping('+ox_target', 'Toggle targeting', 'keyboard', hotkey)
+    RegisterKeyMapping('+ox_target', locale('toggle_targeting'), 'keyboard', hotkey)
 end
 
 local function getResponse(option, server)
