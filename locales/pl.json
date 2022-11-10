@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Przednie drzwi kierowcy",
+  "toggle_front_passenger_door": "Przednie drzwi pasażera",
+  "toggle_rear_driver_door": "Tylne drzwi kierowcy",
+  "toggle_rear_passenger_door": "Tylne drzwi pasażera",
+  "toggle_hood": "Maska",
+  "toggle_trunk": "Bagażnik",
+  "debug_box": "(Debug) Blok",
+  "debug_sphere": "(Debug) Kula",
+  "debug_police_car": "Radiowóz",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Pojazd",
+  "debug_object": "(Debug) Objekt",
+  "toggle_targeting": "Przełącz targetowanie"
+}
