@@ -38,7 +38,7 @@ end)
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
     if source == '' then return end
     playerData = val
-    if not usingOxInventory then setPlayerItems() end
+    if not usingOxInventory and playerData.items then setPlayerItems() end
 end)
 
 function PlayerHasGroups(filter)
