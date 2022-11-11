@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
   visibility: hidden;
@@ -27,8 +27,8 @@ p {
 
 #options-wrapper {
   position: absolute;
-  top: calc(48.4%);
-  left: calc(50% + 18pt);
+  top: calc(51%);
+  left: calc(48%);
 }
 
 .option-container {
@@ -37,19 +37,12 @@ p {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-family: 'Nunito';
-  background: linear-gradient(
-    90deg,
-    rgba(20, 20, 20, 0.7) 0%,
-    rgba(20, 20, 20, 0.6) 66%,
-    rgba(47, 48, 53, 0) 100%
-  );
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
   font-size: 11pt;
   line-height: 22pt;
   vertical-align: middle;
   margin: 2pt;
-  transition: 300ms;
-  transform-origin: left top;
   scale: 1;
   height: 22pt;
   width: 150pt;
@@ -57,15 +50,7 @@ p {
 }
 
 .option-container:hover {
-  background: linear-gradient(
-    90deg,
-    rgba(30, 30, 30, 0.7) 0%,
-    rgba(30, 30, 30, 0.6) 66%,
-    rgba(57, 58, 63, 0) 100%
-  );
-  transform-origin: left top;
-  color: white;
-  margin-left: 4pt;
+  color: #00f8b9;
 }
 
 .option-icon {
@@ -76,5 +61,5 @@ p {
 }
 
 .option-label {
-  font-weight: 500;
+  font-weight: 700;
 }
