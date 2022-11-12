@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Prednja lijeva vrata",
+  "toggle_front_passenger_door": "Prednja desna vrata",
+  "toggle_rear_driver_door": "Zadnja lijeva vrata",
+  "toggle_rear_passenger_door": "Zadnja desna vrata",
+  "toggle_hood": "Hauba",
+  "toggle_trunk": "Gepek",
+  "debug_box": "(Debug) Kocka (Box)",
+  "debug_sphere": "(Debug) Sfera (Sphere)",
+  "debug_police_car": "Policijski auto",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Auto",
+  "debug_object": "(Debug) Objekt",
+  "toggle_targeting": "Upali/Ugasi Target sistem"
+}
