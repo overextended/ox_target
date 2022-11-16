@@ -16,6 +16,10 @@ local function convert(options)
         v.name = v.name or v.label
         v.items = v.item
         v.groups = v.job
+        
+        if v.groups == "all" then
+            v.groups = nil
+        end
 
         local groupType = type(v.groups)
         if groupType == 'nil' then

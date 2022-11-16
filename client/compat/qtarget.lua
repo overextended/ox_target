@@ -15,6 +15,9 @@ local function convert(options)
         v.distance = v.distance or distance
         v.name = v.name or v.label
         v.groups = v.job
+        if v.groups == "all" then
+            v.groups = nil
+        end
         v.items = v.item or v.required_item
 
         if v.event and v.type and v.type ~= 'client' then
