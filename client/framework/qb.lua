@@ -84,7 +84,9 @@ function PlayerHasItems(filter)
     local _type = type(filter)
 
     if _type == 'string' then
-        if playerItems[filter] < 1 then return end
+          if type(playerItems[filter]) == 'number' then
+            if playerItems[filter] < 1 then return end
+        end
     elseif _type == 'table' then
         local tabletype = table.type(filter)
 
