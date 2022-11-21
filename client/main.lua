@@ -67,7 +67,6 @@ local function enableTargeting()
             end
         end
 
-
         if hit and distance < 7 then
             local newOptions
             local lastZone = currentZone
@@ -305,8 +304,8 @@ local function getResponse(option, server)
     response.coords = currentTarget.coords
     response.distance = currentTarget.distance
 
-    if server and response.entity then
-        response.entity = NetworkGetNetworkIdFromEntity(response.entity)
+    if server then
+        response.entity = response.entity ~= 0 and NetworkGetEntityIsNetworked(response.entity) and NetworkGetNetworkIdFromEntity(response.entity) or 0
     end
 
     response.icon = nil
