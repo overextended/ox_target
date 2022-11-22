@@ -39,6 +39,13 @@ local function convert(options)
 end
 
 exportHandler('AddBoxZone', function(name, center, length, width, options, targetoptions)
+    local z = center.z
+
+    if not options.useZ then
+        z = z + math.abs(options.maxZ - options.minZ) / 2
+        center = vec3(center.x, center.y, z)
+    end
+
     return lib.zones.box({
         name = name,
         coords = center,
