@@ -1,0 +1,15 @@
+{
+"toggle_front_driver_door": "Sofőroldali ajtó nyitása/zárása",
+"toggle_front_passenger_door": "Anyósülés oldali ajtó nyitása/zárása",
+"toggle_rear_driver_door": "Sofőroldali hátsó ajtó nyitása/zárása",
+"toggle_rear_passenger_door": "Anyósülés oldali hátsó ajtó nyitása/zárása",
+"toggle_hood": "Motorháztető nyitása/zárása",
+"toggle_trunk": "Csomagtartó nyitása/zárása",
+"debug_box": "(Hibakeresés) Doboz",
+"debug_sphere": "(Hibakeresés) Gömb",
+"debug_police_car": "(Hibakeresés) Rendőrautó",
+"debug_ped": "(Hibakeresés) Entitás",
+"debug_vehicle": "(Hibakeresés) Jármű",
+"debug_object": "(Hibakeresés) Objekt",
+"toggle_targeting": "Célzó be- és kikapcsolása"
+}
