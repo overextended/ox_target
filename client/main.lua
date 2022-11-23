@@ -41,13 +41,14 @@ local currentTarget = {}
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
 local mouseButton = GetConvarInt('ox_target:leftClick', 1) == 1 and 24 or 25
+local debug = GetConvarInt('ox_target:debug', 0) == 1
 
 local function enableTargeting()
     if isDisabled or isActive or IsNuiFocused() or IsPauseMenuActive() then return end
     SendNuiMessage('{"event": "visible", "state": true}')
 
     isActive = true
-    local flag, hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick = 1
+    local flag, hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick = 511
     local getNearbyZones, drawSprites = DrawSprites()
 
     while isActive do
@@ -57,7 +58,7 @@ local function enableTargeting()
         distance = #(playerCoords - endCoords)
 
         if entityType == 0 then
-            local _flag = flag == 1 and 26 or 1
+            local _flag = flag == 511 and 26 or 511
             local _hit, _entityHit, _endCoords = RaycastFromCamera(_flag)
             local _distance = #(playerCoords - _endCoords)
 
@@ -85,8 +86,18 @@ local function enableTargeting()
                     SendNuiMessage('{"event": "leftTarget"}')
                 end
 
-                if flag ~= 1 then
+                if flag ~= 511 then
                     entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
+                end
+
+                if lastEntity ~= entityHit and debug then
+                    if lastEntity then
+                        SetEntityDrawOutline(lastEntity, false)
+                    end
+
+                    if entityType ~= 1 then
+                        SetEntityDrawOutline(entityHit, true)
+                    end
                 end
 
                 if entityHit ~= 0 then
@@ -97,15 +108,6 @@ local function enableTargeting()
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
                     end
 
-                    if Debug then
-                        if lastEntity then
-                            SetEntityDrawOutline(lastEntity, false)
-                        end
-
-                        if entityType ~= 1 then
-                            SetEntityDrawOutline(entityHit, true)
-                        end
-                    end
                 end
             end
 
@@ -214,7 +216,7 @@ local function enableTargeting()
                 end
             end
         elseif lastEntity then
-            if Debug then SetEntityDrawOutline(lastEntity, false) end
+            if debug then SetEntityDrawOutline(lastEntity, false) end
             if options then table.wipe(options) end
             SendNuiMessage('{"event": "leftTarget"}')
             lastEntity = nil
@@ -229,7 +231,7 @@ local function enableTargeting()
 
             CreateThread(function()
                 while isActive do
-                    if Debug then
+                    if debug then
                         ---@diagnostic disable-next-line: param-type-mismatch
                         DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24, 100, false, false, 0, true, false, false, false)
                     end
@@ -258,13 +260,13 @@ local function enableTargeting()
         end
 
         if not next(options) then
-            flag = flag == 1 and 26 or 1
+            flag = flag == 511 and 26 or 511
         end
 
         Wait(60)
     end
 
-    if lastEntity and Debug then
+    if lastEntity and debug then
         SetEntityDrawOutline(lastEntity, false)
     end
 
