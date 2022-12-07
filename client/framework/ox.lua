@@ -6,7 +6,7 @@ end)
 
 local playerGroups = success and result or {}
 
-AddEventHandler('ox:playerLoaded', function(data)
+RegisterNetEvent('ox:playerLoaded', function(data)
     playerGroups = data.groups
 end)
 
