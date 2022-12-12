@@ -138,7 +138,7 @@ function target.addModel(arr, options)
 end
 
 ---@param arr number | number[]
----@param options table
+---@param options? table
 function target.removeModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -148,7 +148,13 @@ function target.removeModel(arr, options)
         model = type(model) == 'string' and joaat(model) or model
 
         if Models[model] then
-            removeTarget(Models[model], options, resource)
+            if options then
+                removeTarget(Models[model], options, resource)
+            end
+
+            if not options or #Models[model] == 0 then
+                Models[model] = nil
+            end
         end
     end
 end
@@ -175,7 +181,7 @@ function target.addEntity(arr, options)
 end
 
 ---@param arr number | number[]
----@param options table
+---@param options? table
 function target.removeEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -184,7 +190,13 @@ function target.removeEntity(arr, options)
         local netId = arr[i]
 
         if Entities[netId] then
-            removeTarget(Entities[netId], options, resource)
+            if options then
+                removeTarget(Entities[netId], options, resource)
+            end
+
+            if not options or #Entities[netId] == 0 then
+                Entities[netId] = nil
+            end
         end
     end
 end
@@ -213,7 +225,7 @@ function target.addLocalEntity(arr, options)
 end
 
 ---@param arr number | number[]
----@param options table
+---@param options? table
 function target.removeLocalEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -222,7 +234,13 @@ function target.removeLocalEntity(arr, options)
         local entity = arr[i]
 
         if LocalEntities[entity] then
-            removeTarget(LocalEntities[entity], options, resource)
+            if options then
+                removeTarget(LocalEntities[entity], options, resource)
+            end
+
+            if not options or #LocalEntities[entity] == 0 then
+                LocalEntities[entity] = nil
+            end
         end
     end
 end
@@ -245,11 +263,17 @@ end
 ---@param target table
 local function removeResourceTargets(resource, target)
     for i = 1, #target do
-        for _, options in pairs(target[i]) do
+        local tbl = target[i]
+
+        for key, options in pairs(tbl) do
             for j = #options, 1, -1 do
                 if options[j].resource == resource then
                     table.remove(options, j)
                 end
+            end
+
+            if #options == 0 then
+                tbl[key] = nil
             end
         end
     end
