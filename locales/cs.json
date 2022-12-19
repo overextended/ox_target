@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Přední dveře řidiče",
+  "toggle_front_passenger_door": "Přední dveře spolujezdce",
+  "toggle_rear_driver_door": "Zadní dveře řidiče",
+  "toggle_rear_passenger_door": "Zadní dveře spolujezdce",
+  "toggle_hood": "Kapota",
+  "toggle_trunk": "Kufr",
+  "debug_box": "(Debug) Box",
+  "debug_sphere": "(Debug) Koule",
+  "debug_police_car": "Policejní auto",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Vozidlo",
+  "debug_object": "(Debug) Objekt",
+  "toggle_targeting": "Výběr zaměření"
+}
