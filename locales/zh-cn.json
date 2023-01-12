@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "开关司机侧前门",
+  "toggle_front_passenger_door": "开关乘客侧前门",
+  "toggle_rear_driver_door": "开关驾驶侧后门",
+  "toggle_rear_passenger_door": "开关乘客侧后门",
+  "toggle_hood": "开关引擎盖",
+  "toggle_trunk": "开关后备箱",
+  "debug_box": "(Debug) Box",
+  "debug_sphere": "(Debug) Sphere",
+  "debug_police_car": "Police car",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Vehicle",
+  "debug_object": "(Debug) Object",
+  "toggle_targeting": "开关目标选择"
+}
