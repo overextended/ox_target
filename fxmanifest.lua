@@ -40,3 +40,5 @@ files {
 
 provide 'qtarget'
 provide 'qb-target'
+
+dependency 'ox_lib'
