@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Tombol pintu pengemudi depan",
+  "toggle_front_passenger_door": "Tombol pintu penumpang depan",
+  "toggle_rear_driver_door": "Tombol pintu pengemudi belakang",
+  "toggle_rear_passenger_door": "Tombol pintu penumpang belakang",
+  "toggle_hood": "Tombol kap",
+  "toggle_trunk": "Tombol bagasi",
+  "debug_box": "(Debug) Kotak",
+  "debug_sphere": "(Debug) Bola",
+  "debug_police_car": "Mobil polisi",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Kendaraan",
+  "debug_object": "(Debug) Objek",
+  "toggle_targeting": "Tombol penargetan"
+}

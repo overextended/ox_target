@@ -7,7 +7,7 @@ game 'gta5'
 -- Resource Information
 name 'ox_target'
 author 'Overextended'
-version '1.6.2'
+version '1.6.3'
 repository 'https://github.com/overextended/ox_target'
 description ''
 
@@ -40,3 +40,5 @@ files {
 
 provide 'qtarget'
 provide 'qb-target'
+
+dependency 'ox_lib'
