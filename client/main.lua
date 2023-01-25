@@ -190,7 +190,8 @@ local function enableTargeting()
                     end
 
                     if not hide and option.canInteract then
-                        hide = not option.canInteract(entityHit, distance, endCoords, option.name, bone)
+                        local success, resp = pcall(option.canInteract, entityHit, distance, endCoords, option.name, bone)
+                        hide = not success or not resp
                     end
 
                     if not newOptions and v[i].hide ~= hide then
