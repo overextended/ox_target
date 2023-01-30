@@ -148,8 +148,37 @@ local function enableTargeting()
                         hide = true
                     end
 
-                    if option.items and not PlayerHasItems(option.items) then
-                        hide = true
+                    if option.items then
+                        local _type = type(option.items)
+
+                        if option.itemsAny and _type ~= "string" then
+                            if _type == "table" then
+                                local _h = true
+                                local _tableType = table.type(option.items)
+
+                                if _tableType == "hash" then
+                                    for name, amount in pairs(option.items) do
+                                        if PlayerHasItems({[name] = amount}) then
+                                            _h = false
+                                            break
+                                        end
+                                    end
+                                elseif _tableType == "array" then
+                                    for i = 1, #option.items do
+                                        if PlayerHasItems(option.items[i]) then
+                                            _h = false
+                                            break
+                                        end
+                                    end
+                                end
+
+                                hide = _h
+                            end
+                        else
+                            if not PlayerHasItems(option.items) then
+                                hide = true
+                            end
+                        end
                     end
 
                     local bone = option.bones
