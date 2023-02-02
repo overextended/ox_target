@@ -324,13 +324,10 @@ local function getResponse(option, server)
     return response
 end
 
-RegisterNUICallback('select', function(data, cb)
-    cb(1)
-    setNuiFocus(false)
-
+function SelectOption(data)
     local option = options?[data[1]][data[2]]
 
-    if option then
+    if option and not option.hide then
         if option.onSelect then
             option.onSelect(option.qtarget and currentTarget.entity or getResponse(option))
         elseif option.export then
@@ -347,4 +344,11 @@ RegisterNUICallback('select', function(data, cb)
     if IsNuiFocused() then
         isActive = false
     end
+end
+
+RegisterNUICallback('select', function(data, cb)
+    cb(1)
+    setNuiFocus(false)
+
+    SelectOption(data)
 end)

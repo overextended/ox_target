@@ -34,7 +34,7 @@ end
 ---@param target table
 ---@param options table
 ---@param resource string
-local function addTarget(target, options, resource)
+local function addTarget(target, options, resource, targetType)
     local optionsType = type(options)
 
     if optionsType ~= 'table' then
@@ -46,6 +46,12 @@ local function addTarget(target, options, resource)
     for i = 1, #options do
         num += 1
         options[i].resource = resource or 'ox_target'
+        if options[i].key then
+            local command = ('ox_target_%s_%s'):format(targetType, num)
+
+            RegisterCommand(command, function() SelectOption({targetType, num}) end)
+            RegisterKeyMapping(command, ('ox_target %s'):format(options[i].label), 'keyboard', options[i].key)
+        end
         target[num] = options[i]
     end
 end
@@ -73,7 +79,7 @@ local Peds = {}
 
 ---@param options table
 function target.addGlobalPed(options)
-    addTarget(Peds, options, GetInvokingResource())
+    addTarget(Peds, options, GetInvokingResource(), 'global')
 end
 
 ---@param options table
@@ -85,7 +91,7 @@ local Vehicles = {}
 
 ---@param options table
 function target.addGlobalVehicle(options)
-    addTarget(Vehicles, options, GetInvokingResource())
+    addTarget(Vehicles, options, GetInvokingResource(), 'global')
 end
 
 ---@param options table
@@ -97,7 +103,7 @@ local Objects = {}
 
 ---@param options table
 function target.addGlobalObject(options)
-    addTarget(Objects, options, GetInvokingResource())
+    addTarget(Objects, options, GetInvokingResource(), 'global')
 end
 
 ---@param options table
@@ -109,7 +115,7 @@ local Players = {}
 
 ---@param options table
 function target.addGlobalPlayer(options)
-    addTarget(Players, options, GetInvokingResource())
+    addTarget(Players, options, GetInvokingResource(), 'global')
 end
 
 ---@param options table
