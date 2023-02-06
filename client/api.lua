@@ -127,7 +127,7 @@ function target.addModel(arr, options)
 
     for i = 1, #arr do
         local model = arr[i]
-        model = type(model) == 'string' and joaat(model) or model
+        model = tonumber(model) or joaat(model)
 
         if not Models[model] then
             Models[model] = {}
@@ -145,7 +145,7 @@ function target.removeModel(arr, options)
 
     for i = 1, #arr do
         local model = arr[i]
-        model = type(model) == 'string' and joaat(model) or model
+        model = tonumber(model) or joaat(model)
 
         if Models[model] then
             if options then
