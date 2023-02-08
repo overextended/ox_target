@@ -17,7 +17,10 @@ local playerItems = setmetatable({}, {
 })
 
 local function setPlayerItems()
-    playerItems = {}
+    for k, _ in pairs(playerItems) do
+        playerItems[k] = nil
+    end
+    
     for _, item in pairs(playerData.items) do
         playerItems[item.name] = item.amount
     end
