@@ -17,7 +17,8 @@ local playerItems = setmetatable({}, {
 })
 
 local function setPlayerItems()
-    playerItems = {}
+    table.wipe(playerItems)
+    
     for _, item in pairs(playerData.items) do
         playerItems[item.name] = item.amount
     end
