@@ -41,6 +41,12 @@ local function addTarget(target, options, resource)
         TypeError('options', 'table', optionsType)
     end
 
+    local tableType = table.type(options)
+
+    if tableType ~= 'array' then
+        TypeError('options', 'array', ('%s table'):format(tableType))
+    end
+
     local num = #target
 
     for i = 1, #options do
