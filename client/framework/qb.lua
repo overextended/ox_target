@@ -17,10 +17,12 @@ local playerItems = setmetatable({}, {
 })
 
 local function setPlayerItems()
+    if not playerData?.items then return end
+
     table.wipe(playerItems)
-    
+
     for _, item in pairs(playerData.items) do
-        playerItems[item.name] = item.amount
+        playerItems[item.name] = (playerItems[item.name] or 0) + item.amount
     end
 end
 
@@ -28,7 +30,7 @@ if usingOxInventory then
     AddEventHandler('ox_inventory:itemCount', function(name, count)
         playerItems[name] = count
     end)
-elseif next(playerData) then
+else
     setPlayerItems()
 end
 
@@ -39,8 +41,10 @@ end)
 
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
     if source == '' then return end
+
     playerData = val
-    if not usingOxInventory and playerData.items then setPlayerItems() end
+
+    if not usingOxInventory then setPlayerItems() end
 end)
 
 function PlayerHasGroups(filter)
