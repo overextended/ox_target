@@ -103,3 +103,36 @@ else
         end
     end
 end
+
+local playerItems = PlayerItems
+
+if playerItems and GetResourceState('ox_inventory') ~= 'missing' then
+    setmetatable(playerItems, {
+        __index = function(self, index)
+            self[index] = exports.ox_inventory:Search('count', index) or 0
+            return self[index]
+        end
+    })
+end
+
+function PlayerHasItems(filter)
+    local _type = type(filter)
+
+    if _type == 'string' then
+        if playerItems[filter] < 1 then return end
+    elseif _type == 'table' then
+        local tabletype = table.type(filter)
+
+        if tabletype == 'hash' then
+            for name, amount in pairs(filter) do
+                if playerItems[name] < amount then return end
+            end
+        elseif tabletype == 'array' then
+            for i = 1, #filter do
+                if playerItems[filter[i]] < 1 then return end
+            end
+        end
+    end
+
+    return true
+end

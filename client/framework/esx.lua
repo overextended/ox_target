@@ -1,14 +1,14 @@
 if GetResourceState('es_extended') == 'missing' then return end
 
 local groups = { 'job', 'job2' }
-local playerItems = {}
+PlayerItems = {}
 local playerGroups = {}
 
 local function setPlayerData(playerData)
     if playerData.inventory then
         for _, v in pairs(playerData.inventory) do
             if v.count > 0 then
-                playerItems[v.name] = v.count
+                PlayerItems[v.name] = v.count
             end
         end
     end
@@ -31,7 +31,7 @@ SetTimeout(0, function()
     end
 
     if GetResourceState('ox_inventory') ~= 'missing' then
-        setmetatable(playerItems, {
+        setmetatable(PlayerItems, {
             __index = function(self, index)
                 self[index] = exports.ox_inventory:Search('count', index) or 0
                 return self[index]
@@ -92,31 +92,9 @@ function PlayerHasGroups(filter)
 end
 
 RegisterNetEvent('esx:addInventoryItem', function(name, count)
-    playerItems[name] = count
+    PlayerItems[name] = count
 end)
 
 RegisterNetEvent('esx:removeInventoryItem', function(name, count)
-    playerItems[name] = count
+    PlayerItems[name] = count
 end)
-
-function PlayerHasItems(filter)
-    local _type = type(filter)
-
-    if _type == 'string' then
-        if (playerItems[filter] or 0) < 1 then return end
-    elseif _type == 'table' then
-        local tabletype = table.type(filter)
-
-        if tabletype == 'hash' then
-            for name, amount in pairs(filter) do
-                if (playerItems[name] or 0) < amount then return end
-            end
-        elseif tabletype == 'array' then
-            for i = 1, #filter do
-                if (playerItems[filter[i]] or 0) < 1 then return end
-            end
-        end
-    end
-
-    return true
-end
