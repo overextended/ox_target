@@ -115,24 +115,38 @@ if playerItems and GetResourceState('ox_inventory') ~= 'missing' then
     })
 end
 
-function PlayerHasItems(filter)
+function PlayerHasItems(filter, hasAny)
+    if not playerItems then return true end
+
     local _type = type(filter)
 
     if _type == 'string' then
-        if playerItems[filter] < 1 then return end
+        return playerItems[filter] and true
     elseif _type == 'table' then
         local tabletype = table.type(filter)
 
         if tabletype == 'hash' then
             for name, amount in pairs(filter) do
-                if playerItems[name] < amount then return end
+                local hasItem = (playerItems[name] or 0) < amount
+
+                if hasAny then
+                    if hasItem then return true end
+                elseif not hasItem then
+                    return false
+                end
             end
         elseif tabletype == 'array' then
             for i = 1, #filter do
-                if playerItems[filter[i]] < 1 then return end
+                local hasItem = playerItems[filter[i]]
+
+                if hasAny then
+                    if hasItem then return true end
+                elseif not hasItem then
+                    return false
+                end
             end
         end
     end
 
-    return true
+    return not hasAny
 end

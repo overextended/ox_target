@@ -148,7 +148,7 @@ local function enableTargeting()
                         hide = true
                     end
 
-                    if option.items and not PlayerHasItems(option.items) then
+                    if option.items and not PlayerHasItems(option.items, option.anyItem) then
                         hide = true
                     end
 
