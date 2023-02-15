@@ -11,7 +11,7 @@ local usingOxInventory = GetResourceState('ox_inventory') ~= "missing"
 
 local playerItems = setmetatable({}, {
     __index = function(self, index)
-        self[index] = usingOxInventory and exports.ox_inventory:Search('count', index) or playerData.items[index] or 0
+        self[index] = usingOxInventory and exports.ox_inventory:Search('count', index) or 0
         return self[index]
     end
 })
