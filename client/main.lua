@@ -28,7 +28,7 @@ local GetCurrentZone = GetCurrentZone
 local PlayerHasGroups = PlayerHasGroups or function() return true end
 local PlayerHasItems = PlayerHasItems
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
-local GetWorldPositionOfEntityBone = GetWorldPositionOfEntityBone
+local GetEntityBonePosition_2 = GetEntityBonePosition_2
 local next = next
 local GetEntityModel = GetEntityModel
 local GetEntityOptions = GetEntityOptions
@@ -172,7 +172,7 @@ local function enableTargeting()
                                 local boneId = GetEntityBoneIndexByName(entityHit, bone[j])
 
                                 if boneId ~= -1 then
-                                    local dist = #(endCoords - GetWorldPositionOfEntityBone(entityHit, boneId))
+                                    local dist = #(endCoords - GetEntityBonePosition_2(entityHit, boneId))
 
                                     if dist <= (boneDistance or 1) then
                                         closestBone = boneId

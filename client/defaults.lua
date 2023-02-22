@@ -2,7 +2,7 @@ if GetConvarInt('ox_target:defaults', 1) ~= 1 then return end
 
 local ox_target = exports.ox_target
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
-local GetWorldPositionOfEntityBone = GetWorldPositionOfEntityBone
+local GetEntityBonePosition_2 = GetEntityBonePosition_2
 local GetVehicleDoorLockStatus = GetVehicleDoorLockStatus
 
 local function toggleDoor(vehicle, door)
@@ -27,7 +27,7 @@ ox_target:addGlobalVehicle({
             local boneId = GetEntityBoneIndexByName(entity, 'door_dside_f')
 
             if boneId ~= -1 then
-                return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.5 or #(coords - GetWorldPositionOfEntityBone(entity, GetEntityBoneIndexByName(entity, 'seat_dside_f'))) < 0.72
+                return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_dside_f'))) < 0.72
             end
         end,
         onSelect = function(data)
@@ -48,7 +48,7 @@ ox_target:addGlobalVehicle({
             local boneId = GetEntityBoneIndexByName(entity, 'door_pside_f')
 
             if boneId ~= -1 then
-                return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.5 or #(coords - GetWorldPositionOfEntityBone(entity, GetEntityBoneIndexByName(entity, 'seat_pside_f'))) < 0.72
+                return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_pside_f'))) < 0.72
             end
         end,
         onSelect = function(data)
@@ -69,7 +69,7 @@ ox_target:addGlobalVehicle({
             local boneId = GetEntityBoneIndexByName(entity, 'door_dside_r')
 
             if boneId ~= -1 then
-                return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.5 or #(coords - GetWorldPositionOfEntityBone(entity, GetEntityBoneIndexByName(entity, 'seat_dside_r'))) < 0.72
+                return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_dside_r'))) < 0.72
             end
         end,
         onSelect = function(data)
@@ -90,7 +90,7 @@ ox_target:addGlobalVehicle({
             local boneId = GetEntityBoneIndexByName(entity, 'door_pside_r')
 
             if boneId ~= -1 then
-                return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.5 or #(coords - GetWorldPositionOfEntityBone(entity, GetEntityBoneIndexByName(entity, 'seat_pside_r'))) < 0.72
+                return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_pside_r'))) < 0.72
             end
         end,
         onSelect = function(data)
@@ -108,7 +108,7 @@ ox_target:addGlobalVehicle({
         bones = 'bonnet',
         canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
-            return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.9
+            return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
             toggleDoor(data.entity, 4)
@@ -124,7 +124,7 @@ ox_target:addGlobalVehicle({
         bones = 'boot',
         canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
-            return #(coords - GetWorldPositionOfEntityBone(entity, boneId)) < 0.9
+            return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
             toggleDoor(data.entity, 5)
