@@ -7,6 +7,8 @@ PlayerItems = {}
 
 local function setPlayerData(playerData)
     if playerData.inventory then
+        table.wipe(PlayerItems)
+
         for _, v in pairs(playerData.inventory) do
             if v.count > 0 then
                 PlayerItems[v.name] = v.count
@@ -27,22 +29,13 @@ end
 SetTimeout(0, function()
     local ESX = exports.es_extended:getSharedObject()
 
-    if ESX.PlayerLoaded then
+    if ESX.PlayerLoaded and not usingOxInventory then
         setPlayerData(ESX.PlayerData)
-    end
-
-    if usingOxInventory then
-        setmetatable(PlayerItems, {
-            __index = function(self, index)
-                self[index] = exports.ox_inventory:Search('count', index) or 0
-                return self[index]
-            end
-        })
     end
 end)
 
 RegisterNetEvent('esx:playerLoaded', function(data)
-    if source == '' then return end
+    if source == '' or usingOxInventory then return end
     setPlayerData(data)
 end)
 
