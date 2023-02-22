@@ -121,7 +121,7 @@ function PlayerHasItems(filter, hasAny)
     local _type = type(filter)
 
     if _type == 'string' then
-        return playerItems[filter] and true
+        return (playerItems[filter] or 0) > 0
     elseif _type == 'table' then
         local tabletype = table.type(filter)
 
@@ -137,7 +137,7 @@ function PlayerHasItems(filter, hasAny)
             end
         elseif tabletype == 'array' then
             for i = 1, #filter do
-                local hasItem = playerItems[filter[i]]
+                local hasItem = (playerItems[filter[i]] or 0) > 0
 
                 if hasAny then
                     if hasItem then return true end
