@@ -160,7 +160,7 @@ local function enableTargeting()
                         if _type == 'string' then
                             local boneId = GetEntityBoneIndexByName(entityHit, bone)
 
-                            if boneId ~= -1 and #(endCoords - GetWorldPositionOfEntityBone(entityHit, boneId)) <= 1 then
+                            if boneId ~= -1 and #(endCoords - GetEntityBonePosition_2(entityHit, boneId)) <= 2 then
                                 bone = boneId
                             else
                                 hide = true
