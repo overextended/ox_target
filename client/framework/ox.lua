@@ -5,6 +5,7 @@ local success, result = pcall(function()
 end)
 
 local playerGroups = success and result or {}
+PlayerItems = {}
 
 AddEventHandler('ox:playerLoaded', function(data)
     playerGroups = data.groups
@@ -47,9 +48,3 @@ function PlayerHasGroups(filter)
         end
     end
 end
-
-PlayerItems = {}
-
-AddEventHandler('ox_inventory:itemCount', function(name, count)
-    PlayerItems[name] = count
-end)

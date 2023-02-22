@@ -113,6 +113,10 @@ if playerItems and GetResourceState('ox_inventory') ~= 'missing' then
             return self[index]
         end
     })
+
+    AddEventHandler('ox_inventory:itemCount', function(name, count)
+        playerItems[name] = count
+    end)
 end
 
 function PlayerHasItems(filter, hasAny)

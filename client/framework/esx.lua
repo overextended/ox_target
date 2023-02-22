@@ -1,8 +1,9 @@
 if GetResourceState('es_extended') == 'missing' then return end
 
 local groups = { 'job', 'job2' }
-PlayerItems = {}
 local playerGroups = {}
+local usingOxInventory = GetResourceState('ox_inventory') ~= 'missing'
+PlayerItems = {}
 
 local function setPlayerData(playerData)
     if playerData.inventory then
@@ -30,7 +31,7 @@ SetTimeout(0, function()
         setPlayerData(ESX.PlayerData)
     end
 
-    if GetResourceState('ox_inventory') ~= 'missing' then
+    if usingOxInventory then
         setmetatable(PlayerItems, {
             __index = function(self, index)
                 self[index] = exports.ox_inventory:Search('count', index) or 0
@@ -53,6 +54,14 @@ end)
 RegisterNetEvent('esx:setJob2', function(job)
     if source == '' then return end
     playerGroups.job2 = job
+end)
+
+RegisterNetEvent('esx:addInventoryItem', function(name, count)
+    PlayerItems[name] = count
+end)
+
+RegisterNetEvent('esx:removeInventoryItem', function(name, count)
+    PlayerItems[name] = count
 end)
 
 function PlayerHasGroups(filter)
@@ -90,11 +99,3 @@ function PlayerHasGroups(filter)
         end
     end
 end
-
-RegisterNetEvent('esx:addInventoryItem', function(name, count)
-    PlayerItems[name] = count
-end)
-
-RegisterNetEvent('esx:removeInventoryItem', function(name, count)
-    PlayerItems[name] = count
-end)

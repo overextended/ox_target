@@ -7,10 +7,7 @@ end)
 
 local playerData = success and result or {}
 local usingOxInventory = GetResourceState('ox_inventory') ~= 'missing'
-
 PlayerItems = {}
-
-
 
 local function setPlayerItems()
     if not playerData?.items then return end
@@ -22,11 +19,7 @@ local function setPlayerItems()
     end
 end
 
-if usingOxInventory then
-    AddEventHandler('ox_inventory:itemCount', function(name, count)
-        PlayerItems[name] = count
-    end)
-else
+if not usingOxInventory then
     setPlayerItems()
 end
 
