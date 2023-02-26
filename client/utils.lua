@@ -131,7 +131,7 @@ function PlayerHasItems(filter, hasAny)
 
         if tabletype == 'hash' then
             for name, amount in pairs(filter) do
-                local hasItem = (playerItems[name] or 0) < amount
+                local hasItem = (playerItems[name] or 0) >= amount
 
                 if hasAny then
                     if hasItem then return true end
