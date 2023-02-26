@@ -6,15 +6,8 @@ local usingOxInventory = GetResourceState('ox_inventory') ~= 'missing'
 PlayerItems = {}
 
 local function setPlayerData(playerData)
-    if playerData.inventory then
-        table.wipe(PlayerItems)
-
-        for _, v in pairs(playerData.inventory) do
-            if v.count > 0 then
-                PlayerItems[v.name] = v.count
-            end
-        end
-    end
+    table.wipe(playerGroups)
+    table.wipe(PlayerItems)
 
     for i = 1, #groups do
         local group = groups[i]
@@ -24,18 +17,26 @@ local function setPlayerData(playerData)
             playerGroups[group] = data
         end
     end
+
+    if usingOxInventory or not playerData.inventory then return end
+
+    for _, v in pairs(playerData.inventory) do
+        if v.count > 0 then
+            PlayerItems[v.name] = v.count
+        end
+    end
 end
 
 SetTimeout(0, function()
     local ESX = exports.es_extended:getSharedObject()
 
-    if ESX.PlayerLoaded and not usingOxInventory then
+    if ESX.PlayerLoaded then
         setPlayerData(ESX.PlayerData)
     end
 end)
 
 RegisterNetEvent('esx:playerLoaded', function(data)
-    if source == '' or usingOxInventory then return end
+    if source == '' then return end
     setPlayerData(data)
 end)
 
