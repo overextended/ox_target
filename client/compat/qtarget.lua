@@ -10,7 +10,19 @@ local function convert(options)
     local distance = options.distance
     options = options.options
 
-    for _, v in pairs(options) do
+    -- People may pass options as a hashmap (or mixed, even)
+    for k, v in pairs(options) do
+        if type(k) ~= 'number' then
+            table.insert(options, v)
+        end
+    end
+
+    for id, v in pairs(options) do
+        if type(id) ~= 'number' then
+            options[id] = nil
+            goto continue
+        end
+
         v.onSelect = v.action
         v.distance = v.distance or distance
         v.name = v.name or v.label
@@ -33,6 +45,8 @@ local function convert(options)
         v.item = nil
         v.required_item = nil
         v.qtarget = true
+
+        ::continue::
     end
 
     return options
