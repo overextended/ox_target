@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Ava/sulge eesuks",
+  "toggle_front_passenger_door": "Ava/sulge eesuks",
+  "toggle_rear_driver_door": "Ava/sulge tagauks",
+  "toggle_rear_passenger_door": "Ava/sulge tagauks",
+  "toggle_hood": "Ava/sulge kapott",
+  "toggle_trunk": "Ava/sulge pagasiruum",
+  "debug_box": "(Debug) Kast",
+  "debug_sphere": "(Debug) Kera",
+  "debug_police_car": "Politseiauto",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Sõiduk",
+  "debug_object": "(Debug) Objekt",
+  "toggle_targeting": "Näita kolmandat silma"
+}
