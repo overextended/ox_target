@@ -28,7 +28,9 @@ end
 
 ---@param id number
 function target.removeZone(id)
-    Zones[id]:remove()
+    if Zones[id] ~= nil then
+        Zones[id]:remove()
+    end
 end
 
 ---@param target table
