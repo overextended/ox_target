@@ -28,7 +28,13 @@ end
 
 ---@param id number
 function target.removeZone(id)
-    Zones[id]:remove()
+    local zone = Zones?[id]
+
+    if not zone then
+        return warn(('attempted to remove a zone that does not exists (id: %s)'):format(id))
+    end
+
+    zone:remove()
 end
 
 ---@param target table
