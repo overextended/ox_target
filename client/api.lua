@@ -47,10 +47,22 @@ local function addTarget(target, options, resource)
         TypeError('options', 'table', optionsType)
     end
 
+    local mainIcon = options.mainIcon
+
+    if mainIcon then
+        options.mainIcon = nil
+        local _options = options
+        options = {}
+
+        for i in pairs(_options) do
+            options[i] = _options[i]
+        end
+    end
+
     local tableType = table.type(options)
 
-    if tableType ~= 'array' and not options.mainIcon then
-        TypeError('options', 'array', ('%s table'):format(tableType))
+    if tableType ~= 'array' then
+        TypeError('options', 'array', ('%s table - only permitted non-number/string key index is "mainIcon"'):format(tableType))
     end
 
     local num = #target
@@ -58,7 +70,7 @@ local function addTarget(target, options, resource)
     for i in ipairs(options) do
         num += 1
         options[i].resource = resource or 'ox_target'
-        options[i].mainIcon = options.mainIcon
+        options[i].mainIcon = mainIcon
         target[num] = options[i]
     end
 end
