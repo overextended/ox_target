@@ -6,17 +6,30 @@ const eye = document.getElementById('eyeSvg');
 const defaultIcon = "fa-solid fa-eye";
 let currentIcon;
 
+const addEyeIcon = function (newIcon = defaultIcon) {
+  if (!currentIcon || newIcon !== currentIcon) {
+    if (currentIcon) {
+      const previousIconData = currentIcon.split(" ");
+
+      for (let i = 0; i < previousIconData.length; i++) {
+        eye.classList.remove(previousIconData[i]);
+      }
+    }
+    
+    const newIconData = newIcon.split(" ");
+
+    for (let i = 0; i < newIconData.length; i++) {
+      eye.classList.add(newIconData[i]);
+    }
+
+    currentIcon = newIcon;
+  }
+};
+
 window.addEventListener('message', (event) => {
   optionsWrapper.innerHTML = '';
 
-  if (!currentIcon || currentIcon !== defaultIcon) {
-    if (currentIcon) {
-      eye.classList.remove(currentIcon);
-    }
-
-    eye.classList.add(defaultIcon);
-    currentIcon = defaultIcon;
-  }
+  addEyeIcon(defaultIcon);
   
   switch (event.data.event) {
     case 'visible': {
@@ -30,8 +43,7 @@ window.addEventListener('message', (event) => {
 
     case 'setTarget': {
       if (event.data.icon) {
-        eye.classList.add(event.data.icon);
-        currentIcon = event.data.icon;
+        addEyeIcon(event.data.icon);
       }
 
       eye.style.color = '#cfd2da';
