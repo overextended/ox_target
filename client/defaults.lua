@@ -37,6 +37,7 @@ ox_target:addGlobalVehicle({
 })
 
 ox_target:addGlobalVehicle({
+    mainIcon = 'fa-solid fa-info',
     {
         name = 'ox_target:passengerF',
         icon = 'fa-solid fa-car-side',
@@ -79,6 +80,7 @@ ox_target:addGlobalVehicle({
 })
 
 ox_target:addGlobalVehicle({
+    mainIcon = 'fa-solid fa-car',
     {
         name = 'ox_target:passengerR',
         icon = 'fa-solid fa-car-side',
@@ -117,6 +119,7 @@ ox_target:addGlobalVehicle({
 })
 
 ox_target:addGlobalVehicle({
+    mainIcon = 'fa-solid fa-car',
     {
         name = 'ox_target:trunk',
         icon = 'fa-solid fa-car-rear',

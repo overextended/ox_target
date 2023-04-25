@@ -49,15 +49,16 @@ local function addTarget(target, options, resource)
 
     local tableType = table.type(options)
 
-    if tableType ~= 'array' then
+    if tableType ~= 'array' and not options.mainIcon then
         TypeError('options', 'array', ('%s table'):format(tableType))
     end
 
     local num = #target
 
-    for i = 1, #options do
+    for i in ipairs(options) do
         num += 1
         options[i].resource = resource or 'ox_target'
+        options[i].mainIcon = options.mainIcon
         target[num] = options[i]
     end
 end
