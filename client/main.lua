@@ -52,7 +52,7 @@ local function enableTargeting()
     local getNearbyZones, drawSprites = DrawSprites()
 
     while isActive do
-        local mainIcon
+        local mainIcon, mainIconColor
         local playerCoords = GetEntityCoords(cache.ped)
         hit, entityHit, endCoords = RaycastFromCamera(flag)
         entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
@@ -201,7 +201,12 @@ local function enableTargeting()
 
                     v[i].hide = hide
 
-                    if hide then hidden += 1 elseif not mainIcon then mainIcon = option.mainIcon end
+                    if hide then
+                        hidden += 1
+                    else
+                        mainIcon = mainIcon or option.mainIcon
+                        mainIconColor = mainIconColor or option.mainIconColor
+                    end
                 end
             end
 
@@ -213,7 +218,8 @@ local function enableTargeting()
                 else
                     SendNuiMessage(json.encode({
                         event = 'setTarget',
-                        icon = mainIcon,
+                        mainIcon = mainIcon,
+                        mainIconColor = mainIconColor,
                         options = options
                     }, { sort_keys=true }))
                 end

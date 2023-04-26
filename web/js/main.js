@@ -46,7 +46,7 @@ window.addEventListener('message', (event) => {
     }
 
     case 'setTarget': {
-      setMainIcon(event.data.icon);
+      setMainIcon(event.data.mainIcon);
       setMainIconColor(event.data.mainIconColor || '#cfd2da');
 
       if (event.data.options) {

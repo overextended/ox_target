@@ -38,6 +38,7 @@ ox_target:addGlobalVehicle({
 
 ox_target:addGlobalVehicle({
     mainIcon = 'fa-solid fa-info',
+    mainIconColor = '#f21505',
     {
         name = 'ox_target:passengerF',
         icon = 'fa-solid fa-car-side',
