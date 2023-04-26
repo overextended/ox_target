@@ -6,7 +6,7 @@ const eye = document.getElementById('eyeSvg');
 const defaultIcon = 'fa-solid fa-eye';
 let currentIcon;
 
-const addEyeIcon = function (newIcon = defaultIcon) {
+const setMainIcon = function (newIcon = defaultIcon) {
   if (!currentIcon || newIcon !== currentIcon) {
     if (currentIcon) {
       const previousIconData = currentIcon.split(' ');
@@ -26,27 +26,28 @@ const addEyeIcon = function (newIcon = defaultIcon) {
   }
 };
 
+const setMainIconColor = function (newIconColor) {
+  eye.style.color = newIconColor
+};
+
 window.addEventListener('message', (event) => {
   optionsWrapper.innerHTML = '';
 
-  addEyeIcon(defaultIcon);
+  setMainIcon(defaultIcon);
   
   switch (event.data.event) {
     case 'visible': {
       body.style.visibility = event.data.state ? 'visible' : 'hidden';
-      return (eye.style.color = 'black');
+      return setMainIconColor('black');
     }
 
     case 'leftTarget': {
-      return (eye.style.color = 'black');
+      return setMainIconColor('black');
     }
 
     case 'setTarget': {
-      if (event.data.icon) {
-        addEyeIcon(event.data.icon);
-      }
-
-      eye.style.color = '#cfd2da';
+      setMainIcon(event.data.icon);
+      setMainIconColor(event.data.mainIconColor || '#cfd2da');
 
       if (event.data.options) {
         for (const type in event.data.options) {
