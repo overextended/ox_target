@@ -67,7 +67,7 @@ local function addTarget(target, options, resource)
 
     local num = #target
 
-    for i in ipairs(options) do
+    for i = 1, #options do
         num += 1
         options[i].resource = resource or 'ox_target'
         options[i].mainIcon = mainIcon
