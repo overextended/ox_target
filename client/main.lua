@@ -210,6 +210,9 @@ local function enableTargeting()
                 end
             end
 
+            mainIcon = mainIcon or currentZone?.mainIcon
+            mainIconColor = mainIconColor or currentZone?.mainIconColor
+
             if newOptions and next(newOptions) then
                 options = newOptions
 
