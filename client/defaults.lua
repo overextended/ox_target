@@ -16,6 +16,7 @@ local function toggleDoor(vehicle, door)
 end
 
 ox_target:addGlobalVehicle({
+    mainIcon = 'fa-solid fa-car',
     {
         name = 'ox_target:driverF',
         icon = 'fa-solid fa-car-side',
@@ -37,8 +38,7 @@ ox_target:addGlobalVehicle({
 })
 
 ox_target:addGlobalVehicle({
-    mainIcon = 'fa-solid fa-info',
-    mainIconColor = '#f21505',
+    mainIcon = 'fa-solid fa-car',
     {
         name = 'ox_target:passengerF',
         icon = 'fa-solid fa-car-side',
@@ -60,6 +60,7 @@ ox_target:addGlobalVehicle({
 })
 
 ox_target:addGlobalVehicle({
+    mainIcon = 'fa-solid fa-car',
     {
         name = 'ox_target:driverR',
         icon = 'fa-solid fa-car-side',
@@ -104,6 +105,7 @@ ox_target:addGlobalVehicle({
 
 
 ox_target:addGlobalVehicle({
+    mainIcon = 'fa-solid fa-car',
     {
         name = 'ox_target:bonnet',
         icon = 'fa-solid fa-car',
