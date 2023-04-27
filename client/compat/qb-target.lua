@@ -27,6 +27,7 @@ local function convert(options)
         v.distance = v.distance or distance
         v.name = v.name or v.label
         v.items = v.item
+        v.icon = v.icon
         v.groups = v.job
 
         local groupType = type(v.groups)
