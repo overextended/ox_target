@@ -3,38 +3,44 @@ import { createOptions } from './createOptions.js';
 const optionsWrapper = document.getElementById('options-wrapper');
 const body = document.body;
 const eye = document.getElementById('eyeSvg');
-const defaultIcon = 'fa-solid fa-eye';
+const defaultIconFontAwesome = 'fa-solid fa-eye';
+const defaultIconGoogleMaterial = 'visibility';
+const googleMaterialClass = 'material-symbols-outlined';
+const defaultIconAsGoogleMaterial = true; //whether the default icon should use google material or font awesome
 let currentIcon;
 
-const setMainIcon = function (newIcon = defaultIcon) {
+const setMainIcon = function (newIcon = defaultIconAsGoogleMaterial ? defaultIconGoogleMaterial : defaultIconFontAwesome) {
   if (!currentIcon || newIcon !== currentIcon) {
     if (currentIcon) {
-      const previousIconData = currentIcon.split(' ');
+      const previousIconData = (currentIcon === defaultIconGoogleMaterial ? googleMaterialClass : currentIcon).split(' ');
 
       for (let i = 0; i < previousIconData.length; i++) {
         eye.classList.remove(previousIconData[i]);
       }
     }
-    
-    const newIconData = newIcon.split(' ');
+
+    const isNewIconGoogleMaterial = newIcon === defaultIconGoogleMaterial;
+    const newIconData = (isNewIconGoogleMaterial ? googleMaterialClass : newIcon).split(' ');
 
     for (let i = 0; i < newIconData.length; i++) {
       eye.classList.add(newIconData[i]);
     }
+
+    eye.textContent = isNewIconGoogleMaterial ? defaultIconGoogleMaterial : '';
 
     currentIcon = newIcon;
   }
 };
 
 const setMainIconColor = function (newIconColor) {
-  eye.style.color = newIconColor
+  eye.style.color = eye.style.fill = newIconColor;
 };
 
 window.addEventListener('message', (event) => {
   optionsWrapper.innerHTML = '';
 
-  setMainIcon(defaultIcon);
-  
+  setMainIcon();
+
   switch (event.data.event) {
     case 'visible': {
       body.style.visibility = event.data.state ? 'visible' : 'hidden';
