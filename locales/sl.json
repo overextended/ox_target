@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Odpri/Zapri leva sprednja vrata",
+  "toggle_front_passenger_door": "Odpri/Zapri desna sprednja vrata",
+  "toggle_rear_driver_door": "Odpri/Zapri leva zadnja vrata",
+  "toggle_rear_passenger_door": "Odpri/Zapri desna zadnja vrata",
+  "toggle_hood": "Odpri/Zapri pokrov motorja",
+  "toggle_trunk": "Odpri/Zapri prtljažnik",
+  "debug_box": "(Debug) Kvadrat",
+  "debug_sphere": "(Debug) Krog",
+  "debug_police_car": "Policijsko vozilo",
+  "debug_ped": "(Debug) Pešec",
+  "debug_vehicle": "(Debug) Vozilo",
+  "debug_object": "(Debug) Predmet",
+  "toggle_targeting": "Vklopi/Izklopi tretje oko"
+  }
