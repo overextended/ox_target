@@ -54,8 +54,12 @@ local function enableTargeting()
     while isActive do
         local playerCoords = GetEntityCoords(cache.ped)
         hit, entityHit, endCoords = RaycastFromCamera(flag)
-        entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
         distance = #(playerCoords - endCoords)
+
+        if entityHit ~= 0 and entityHit ~= lastEntity then
+            local success, result = pcall(GetEntityType, entityHit)
+            entityType = success and result or 0
+        end
 
         if entityType == 0 then
             local _flag = flag == 511 and 26 or 511
@@ -64,7 +68,11 @@ local function enableTargeting()
 
             if _distance < distance then
                 flag, hit, entityHit, endCoords, distance = _flag, _hit, _entityHit, _endCoords, _distance
-                entityType = entityHit ~= 0 and GetEntityType(entityHit) or 0
+
+                if entityHit ~= 0 then
+                    local success, result = pcall(GetEntityType, entityHit)
+                    entityType = success and result or 0
+                end
             end
         end
 
@@ -107,7 +115,6 @@ local function enableTargeting()
                     if entityModel then
                         newOptions = GetEntityOptions(entityHit, entityType, entityModel)
                     end
-
                 end
             end
 
