@@ -1,12 +1,4 @@
-lib.locale()
-
----Throws a formatted type error
----@param variable string
----@param expected string
----@param received string
-function TypeError(variable, expected, received)
-    error(("expected %s to have type '%s' (received %s)"):format(variable, expected, received))
-end
+local utils = {}
 
 local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
 local StartShapeTestLosProbe = StartShapeTestLosProbe
@@ -18,7 +10,7 @@ local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
 ---@return vector3 endCoords
 ---@return vector3 surfaceNormal
 ---@return number materialHash
-function RaycastFromCamera(flag)
+function utils.raycastFromCamera(flag)
     local coords, normal = GetWorldCoordFromScreenCoord(0.5, 0.5)
     local destination = coords + normal * 10
     local handle = StartShapeTestLosProbe(coords.x, coords.y, coords.z, destination.x, destination.y, destination.z,
@@ -41,73 +33,87 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
     local ClearDrawOrigin = ClearDrawOrigin
     local dict = 'shared'
     local texture = 'emptydot_32'
-    local colour = { 155, 155, 155, 175 }
-    local hover = { 98, 135, 236, 255 }
+    local colour = vector(155, 155, 155, 175)
+    local hover = vector(98, 135, 236, 255)
+    local inRange
+    local width = 0.02
+    local height = width * GetAspectRatio(false)
 
-    function DrawSprites()
-        local inRange
-        local width = 0.02
-        local height = width * GetAspectRatio()
-
-        lib.requestStreamedTextureDict(dict)
-
-        ---@param coords vector3
-        ---@return CZone[] | false | nil, CZone?
-        return function(coords)
-            if Zones then
-                inRange = {}
-                local n = 0
-                local newZone
-
-                for _, zone in pairs(Zones) do
-                    local contains = zone:contains(coords)
-
-                    if zone.drawSprite ~= false and (contains or (zone.distance or 7) < 7) then
-                        zone.colour = contains and hover or colour
-                        n += 1
-                        inRange[n] = zone
-                    end
-
-                    if not newZone and contains then
-                        newZone = zone
-                    end
-                end
-
-                return n > 0 and inRange, newZone
-            end
-        end, function()
-            for i = 1, #inRange do
-                local zone = inRange[i]
-
-                if zone.drawSprite ~= false then
-                    SetDrawOrigin(zone.coords.x, zone.coords.y, zone.coords.z)
-                    DrawSprite(dict, texture, 0, 0, width, height, 0, zone.colour[1], zone.colour[2], zone.colour[3], zone.colour[4])
-                end
-            end
-
-            ClearDrawOrigin()
-        end
-    end
-else
-    function DrawSprites() end
+    lib.requestStreamedTextureDict(dict)
 
     ---@param coords vector3
+    ---@return CZone[] | false | nil, CZone?
+    function utils.getNearbyZones(coords)
+        if not Zones then return end
+
+        inRange = {}
+        local n = 0
+        local newZone
+
+        for _, zone in pairs(Zones) do
+            local contains = zone:contains(coords)
+
+            if zone.drawSprite ~= false and (contains or (zone.distance or 7) < 7) then
+                zone.colour = contains and hover or nil
+                n += 1
+                inRange[n] = zone
+            end
+
+            if not newZone and contains then
+                newZone = zone
+            end
+        end
+
+        return n > 0 and inRange, newZone
+    end
+
+    function utils.drawZoneSprites()
+        for i = 1, #inRange do
+            local zone = inRange[i]
+            local spriteColour = zone.colour or colour
+
+            if zone.drawSprite ~= false then
+                SetDrawOrigin(zone.coords.x, zone.coords.y, zone.coords.z)
+                DrawSprite(dict, texture, 0, 0, width, height, 0, spriteColour.r, spriteColour.g, spriteColour.b, spriteColour.a)
+            end
+        end
+
+        ClearDrawOrigin()
+    end
+else
+    ---@param coords vector3
     ---@return CZone?
-    function GetCurrentZone(coords)
-        if Zones then
-            for _, zone in pairs(Zones) do
-                if zone:contains(coords) then
-                    return zone
-                end
+    function utils.getCurrentZone(coords)
+        if not Zones then return end
+
+        for _, zone in pairs(Zones) do
+            if zone:contains(coords) then
+                return zone
             end
         end
     end
 end
 
-local playerItems = PlayerItems
+function utils.hasExport(export)
+    local resource, exportName = string.strsplit('.', export)
 
-if playerItems and GetResourceState('ox_inventory') ~= 'missing' then
-    setmetatable(playerItems, {
+    return pcall(function()
+        return exports[resource][exportName]
+    end)
+end
+
+local playerItems
+
+function utils.getItems()
+    if not playerItems then
+        playerItems = {}
+    end
+
+    return playerItems
+end
+
+if utils.hasExport('ox_inventory.Items') then
+    playerItems = setmetatable({}, {
         __index = function(self, index)
             self[index] = exports.ox_inventory:Search('count', index) or 0
             return self[index]
@@ -119,7 +125,10 @@ if playerItems and GetResourceState('ox_inventory') ~= 'missing' then
     end)
 end
 
-function PlayerHasItems(filter, hasAny)
+---@param filter string | string[] | table<string, number>
+---@param hasAny boolean?
+---@return boolean
+function utils.hasPlayerGotItems(filter, hasAny)
     if not playerItems then return true end
 
     local _type = type(filter)
@@ -154,3 +163,12 @@ function PlayerHasItems(filter, hasAny)
 
     return not hasAny
 end
+
+---stub
+---@param filter string | string[] | table<string, number>
+---@return boolean
+function utils.hasPlayerGotGroup(filter)
+    return true
+end
+
+return utils

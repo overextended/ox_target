@@ -1,59 +1,56 @@
-local isActive = false
-local isDisabled = false
+if not lib.checkDependency('ox_lib', '3.0.0', true) then return end
 
-exports('disableTargeting', function(state)
-    if state then
-        isActive = false
-    end
+lib.locale()
 
-    isDisabled = state
-end)
+local utils = require 'client.utils'
+local state = require 'client.state'
+local getEntityOptions = require 'client.api'.getEntityOptions
 
-local hasFocus = false
+require 'client.debug'
+require 'client.defaults'
+require 'client.compat.qtarget'
+require 'client.compat.qb-target'
 
-local function setNuiFocus(state, cursor)
-    if state then SetCursorLocation(0.5, 0.5) end
-
-    hasFocus = state
-    SetNuiFocus(state, cursor or false)
-    SetNuiFocusKeepInput(state)
+if utils.hasExport('ox_core.GetPlayerData') then
+    framework = require 'client.framework.ox'
+elseif utils.hasExport('es_extended.getSharedObject') then
+    framework = require 'client.framework.esx'
+elseif utils.hasExport('qb-core.GetCoreObject') then
+    framework = require 'client.framework.qb'
 end
 
+local raycastFromCamera, getNearbyZones, drawZoneSprites, getCurrentZone, hasPlayerGotItems, hasPlayerGotGroup in utils
 local SendNuiMessage = SendNuiMessage
 local GetEntityCoords = GetEntityCoords
-local RaycastFromCamera = RaycastFromCamera
 local GetEntityType = GetEntityType
 local HasEntityClearLosToEntity = HasEntityClearLosToEntity
-local GetCurrentZone = GetCurrentZone
-local PlayerHasGroups = PlayerHasGroups or function() return true end
-local PlayerHasItems = PlayerHasItems
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
 local GetEntityBonePosition_2 = GetEntityBonePosition_2
 local next = next
 local GetEntityModel = GetEntityModel
-local GetEntityOptions = GetEntityOptions
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local options = {}
 local currentTarget = {}
 
+
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
 local mouseButton = GetConvarInt('ox_target:leftClick', 1) == 1 and 24 or 25
 local debug = GetConvarInt('ox_target:debug', 0) == 1
 
-local function enableTargeting()
-    if isDisabled or isActive or IsNuiFocused() or IsPauseMenuActive() then return end
-    SendNuiMessage('{"event": "visible", "state": true}')
+local function startTargeting()
+    if state.isDisabled() or state.isActive() or IsNuiFocused() or IsPauseMenuActive() then return end
 
-    isActive = true
-    local flag, hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick = 511
-    local getNearbyZones, drawSprites = DrawSprites()
+    state.setActive(true)
 
-    while isActive do
+    local flag = 511
+    local hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick
+
+    while state.isActive() do
         local playerCoords = GetEntityCoords(cache.ped)
-        hit, entityHit, endCoords = RaycastFromCamera(flag)
+        hit, entityHit, endCoords = raycastFromCamera(flag)
         distance = #(playerCoords - endCoords)
 
         if entityHit ~= 0 and entityHit ~= lastEntity then
@@ -63,7 +60,7 @@ local function enableTargeting()
 
         if entityType == 0 then
             local _flag = flag == 511 and 26 or 511
-            local _hit, _entityHit, _endCoords = RaycastFromCamera(_flag)
+            local _hit, _entityHit, _endCoords = raycastFromCamera(_flag)
             local _distance = #(playerCoords - _endCoords)
 
             if _distance < distance then
@@ -81,11 +78,9 @@ local function enableTargeting()
             local lastZone = currentZone
 
             if getNearbyZones then
-                ---@type CZone[]?, CZone?
                 nearbyZones, currentZone = getNearbyZones(endCoords)
             else
-                ---@type CZone?
-                currentZone = GetCurrentZone(endCoords)
+                currentZone = getCurrentZone(endCoords)
             end
 
             if lastZone ~= currentZone or entityHit ~= lastEntity then
@@ -113,7 +108,7 @@ local function enableTargeting()
                     entityModel = success and result
 
                     if entityModel then
-                        newOptions = GetEntityOptions(entityHit, entityType, entityModel)
+                        newOptions = getEntityOptions(entityHit, entityType, entityModel)
                     end
                 end
             end
@@ -151,11 +146,11 @@ local function enableTargeting()
                         hide = true
                     end
 
-                    if option.groups and not PlayerHasGroups(option.groups) then
+                    if option.groups and not hasPlayerGotGroup(option.groups) then
                         hide = true
                     end
 
-                    if option.items and not PlayerHasItems(option.items, option.anyItem) then
+                    if option.items and not hasPlayerGotItems(option.items, option.anyItem) then
                         hide = true
                     end
 
@@ -231,35 +226,35 @@ local function enableTargeting()
         else Wait(50) end
 
         if toggleHotkey and IsPauseMenuActive() then
-            isActive = false
+            state.setActive(false)
         end
 
         if not hasTick then
             hasTick = true
 
             CreateThread(function()
-                while isActive do
+                while state.isActive() do
                     if debug then
                         ---@diagnostic disable-next-line: param-type-mismatch
                         DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24, 100, false, false, 0, true, false, false, false)
                     end
 
                     if nearbyZones then
-                        drawSprites(endCoords)
+                        drawZoneSprites()
                     end
 
                     DisablePlayerFiring(cache.playerId, true)
                     DisableControlAction(0, 25, true)
 
-                    if hasFocus then
+                    if state.isNuiFocused() then
                         DisableControlAction(0, 1, true)
                         DisableControlAction(0, 2, true)
 
                         if options and IsDisabledControlJustPressed(0, 25) then
-                            setNuiFocus(false, false)
+                            state.setNuiFocus(false, false)
                         end
                     elseif options and IsDisabledControlJustPressed(0, mouseButton) then
-                        setNuiFocus(true, true)
+                        state.setNuiFocus(true, true)
                     end
 
                     Wait(0)
@@ -278,33 +273,38 @@ local function enableTargeting()
         SetEntityDrawOutline(lastEntity, false)
     end
 
-    setNuiFocus(false)
+    state.setNuiFocus(false)
     SendNuiMessage('{"event": "visible", "state": false}')
     table.wipe(currentTarget)
     table.wipe(options)
 end
 
-local function disableTargeting()
-    isActive = false
-end
+do
+    ---@type CKeybind
+    local keybind = {
+        name = 'ox_target',
+        defaultKey = GetConvar('ox_target:defaultHotkey', 'LMENU'),
+        defaultMapper = 'keyboard',
+        description = locale('toggle_targeting'),
+    }
 
--- Default keybind to toggle targeting (https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard)
-local hotkey = GetConvar('ox_target:defaultHotkey', 'LMENU')
+    if toggleHotkey then
+        function keybind:onPressed()
+            if state.isActive() then
+                return state.setActive(false)
+            end
 
-if toggleHotkey then
-    RegisterCommand('ox_target', function()
-        if isActive then
-            return disableTargeting()
+            return startTargeting()
         end
+    else
+        keybind.onPressed = startTargeting
 
-        return enableTargeting()
-    end, false)
+        function keybind:onReleased()
+            state.setActive(false)
+        end
+    end
 
-    RegisterKeyMapping('ox_target', locale('toggle_targeting'), 'keyboard', hotkey)
-else
-    RegisterCommand('+ox_target', function() CreateThread(enableTargeting) end, false)
-    RegisterCommand('-ox_target', disableTargeting, false)
-    RegisterKeyMapping('+ox_target', locale('toggle_targeting'), 'keyboard', hotkey)
+    lib.addKeybind(keybind)
 end
 
 local function getResponse(option, server)
@@ -333,7 +333,7 @@ end
 
 RegisterNUICallback('select', function(data, cb)
     cb(1)
-    setNuiFocus(false)
+    state.setNuiFocus(false)
 
     local option = options?[data[1]][data[2]]
 
@@ -352,6 +352,6 @@ RegisterNUICallback('select', function(data, cb)
     end
 
     if IsNuiFocused() then
-        isActive = false
+        state.setActive(false)
     end
 end)

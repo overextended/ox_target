@@ -1,13 +1,12 @@
-if GetResourceState('es_extended') == 'missing' then return end
-
+local utils = require 'client.utils'
 local groups = { 'job', 'job2' }
 local playerGroups = {}
-local usingOxInventory = GetResourceState('ox_inventory') ~= 'missing'
-PlayerItems = {}
+local usingOxInventory = utils.hasExport('ox_inventory.Items')
+local playerItems = utils.getItems()
 
 local function setPlayerData(playerData)
     table.wipe(playerGroups)
-    table.wipe(PlayerItems)
+    table.wipe(playerItems)
 
     for i = 1, #groups do
         local group = groups[i]
@@ -22,7 +21,7 @@ local function setPlayerData(playerData)
 
     for _, v in pairs(playerData.inventory) do
         if v.count > 0 then
-            PlayerItems[v.name] = v.count
+            playerItems[v.name] = v.count
         end
     end
 end
@@ -51,14 +50,15 @@ RegisterNetEvent('esx:setJob2', function(job)
 end)
 
 RegisterNetEvent('esx:addInventoryItem', function(name, count)
-    PlayerItems[name] = count
+    playerItems[name] = count
 end)
 
 RegisterNetEvent('esx:removeInventoryItem', function(name, count)
-    PlayerItems[name] = count
+    playerItems[name] = count
 end)
 
-function PlayerHasGroups(filter)
+---@diagnostic disable-next-line: duplicate-set-field
+function utils.hasPlayerGotGroup(filter)
     local _type = type(filter)
     for i = 1, #groups do
         local group = groups[i]
