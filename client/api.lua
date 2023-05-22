@@ -89,55 +89,55 @@ local function removeTarget(target, remove, resource)
     end
 end
 
-local Peds = {}
+local peds = {}
 
 ---@param options table
 function api.addGlobalPed(options)
-    addTarget(Peds, options, GetInvokingResource())
+    addTarget(peds, options, GetInvokingResource())
 end
 
 ---@param options table
 function api.removeGlobalPed(options)
-    removeTarget(Peds, options, GetInvokingResource())
+    removeTarget(peds, options, GetInvokingResource())
 end
 
-local Vehicles = {}
+local vehicles = {}
 
 ---@param options table
 function api.addGlobalVehicle(options)
-    addTarget(Vehicles, options, GetInvokingResource())
+    addTarget(vehicles, options, GetInvokingResource())
 end
 
 ---@param options table
 function api.removeGlobalVehicle(options)
-    removeTarget(Vehicles, options, GetInvokingResource())
+    removeTarget(vehicles, options, GetInvokingResource())
 end
 
-local Objects = {}
+local objects = {}
 
 ---@param options table
 function api.addGlobalObject(options)
-    addTarget(Objects, options, GetInvokingResource())
+    addTarget(objects, options, GetInvokingResource())
 end
 
 ---@param options table
 function api.removeGlobalObject(options)
-    removeTarget(Objects, options, GetInvokingResource())
+    removeTarget(objects, options, GetInvokingResource())
 end
 
-local Players = {}
+local players = {}
 
 ---@param options table
 function api.addGlobalPlayer(options)
-    addTarget(Players, options, GetInvokingResource())
+    addTarget(players, options, GetInvokingResource())
 end
 
 ---@param options table
 function api.removeGlobalPlayer(options)
-    removeTarget(Players, options, GetInvokingResource())
+    removeTarget(players, options, GetInvokingResource())
 end
 
-local Models = {}
+local models = {}
 
 ---@param arr number | number[]
 ---@param options table
@@ -149,11 +149,11 @@ function api.addModel(arr, options)
         local model = arr[i]
         model = tonumber(model) or joaat(model)
 
-        if not Models[model] then
-            Models[model] = {}
+        if not models[model] then
+            models[model] = {}
         end
 
-        addTarget(Models[model], options, resource)
+        addTarget(models[model], options, resource)
     end
 end
 
@@ -167,19 +167,19 @@ function api.removeModel(arr, options)
         local model = arr[i]
         model = tonumber(model) or joaat(model)
 
-        if Models[model] then
+        if models[model] then
             if options then
-                removeTarget(Models[model], options, resource)
+                removeTarget(models[model], options, resource)
             end
 
-            if not options or #Models[model] == 0 then
-                Models[model] = nil
+            if not options or #models[model] == 0 then
+                models[model] = nil
             end
         end
     end
 end
 
-local Entities = {}
+local entities = {}
 
 ---@param arr number | number[]
 ---@param options table
@@ -191,11 +191,11 @@ function api.addEntity(arr, options)
         local netId = arr[i]
 
         if NetworkDoesNetworkIdExist(netId) then
-            if not Entities[netId] then
-                Entities[netId] = {}
+            if not entities[netId] then
+                entities[netId] = {}
             end
 
-            addTarget(Entities[netId], options, resource)
+            addTarget(entities[netId], options, resource)
         end
     end
 end
@@ -209,19 +209,21 @@ function api.removeEntity(arr, options)
     for i = 1, #arr do
         local netId = arr[i]
 
-        if Entities[netId] then
+        if entities[netId] then
             if options then
-                removeTarget(Entities[netId], options, resource)
+                removeTarget(entities[netId], options, resource)
             end
 
-            if not options or #Entities[netId] == 0 then
-                Entities[netId] = nil
+            if not options or #entities[netId] == 0 then
+                entities[netId] = nil
             end
         end
     end
 end
 
-local LocalEntities = {}
+RegisterNetEvent('ox_target:removeEntity', api.removeEntity)
+
+local localEntities = {}
 
 ---@param arr number | number[]
 ---@param options table
@@ -230,16 +232,16 @@ function api.addLocalEntity(arr, options)
     local resource = GetInvokingResource()
 
     for i = 1, #arr do
-        local entity = arr[i]
+        local entityId = arr[i]
 
-        if DoesEntityExist(entity) then
-            if not LocalEntities[entity] then
-                LocalEntities[entity] = {}
+        if DoesEntityExist(entityId) then
+            if not localEntities[entityId] then
+                localEntities[entityId] = {}
             end
 
-            addTarget(LocalEntities[entity], options, resource)
+            addTarget(localEntities[entityId], options, resource)
         else
-            print(("No entity with id '%s' exists."):format(entity))
+            print(("No entity with id '%s' exists."):format(entityId))
         end
     end
 end
@@ -253,13 +255,13 @@ function api.removeLocalEntity(arr, options)
     for i = 1, #arr do
         local entity = arr[i]
 
-        if LocalEntities[entity] then
+        if localEntities[entity] then
             if options then
-                removeTarget(LocalEntities[entity], options, resource)
+                removeTarget(localEntities[entity], options, resource)
             end
 
-            if not options or #LocalEntities[entity] == 0 then
-                LocalEntities[entity] = nil
+            if not options or #localEntities[entity] == 0 then
+                localEntities[entity] = nil
             end
         end
     end
@@ -301,8 +303,8 @@ end
 
 ---@param resource string
 AddEventHandler('onClientResourceStop', function(resource)
-    removeResourceGlobals(resource, { Peds, Vehicles, Objects, Players })
-    removeResourceTargets(resource, { Models, Entities, LocalEntities })
+    removeResourceGlobals(resource, { peds, vehicles, objects, players })
+    removeResourceTargets(resource, { models, entities, localEntities })
 
     if Zones then
         for _, v in pairs(Zones) do
@@ -324,7 +326,7 @@ function api.getEntityOptions(entity, _type, model)
     if _type == 1 then
         if IsPedAPlayer(entity) then
             return {
-                global = Players
+                global = players
             }
         end
     end
@@ -333,18 +335,18 @@ function api.getEntityOptions(entity, _type, model)
     local global
 
     if _type == 1 then
-        global = Peds
+        global = peds
     elseif _type == 2 then
-        global = Vehicles
+        global = vehicles
     else
-        global = Objects
+        global = objects
     end
 
     return {
         global = global,
-        model = Models[model],
-        entity = netId and Entities[netId] or nil,
-        localEntity = LocalEntities[entity],
+        model = models[model],
+        entity = netId and entities[netId] or nil,
+        localEntity = localEntities[entity],
     }
 end
 
