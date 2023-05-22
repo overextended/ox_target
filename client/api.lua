@@ -193,6 +193,10 @@ function api.addEntity(arr, options)
         if NetworkDoesNetworkIdExist(netId) then
             if not entities[netId] then
                 entities[netId] = {}
+
+                if not Entity(NetworkGetEntityFromNetworkId(netId)).state.hasTargetOptions then
+                    TriggerServerEvent('ox_target:setEntityHasOptions', netId)
+                end
             end
 
             addTarget(entities[netId], options, resource)
@@ -266,6 +270,18 @@ function api.removeLocalEntity(arr, options)
         end
     end
 end
+
+CreateThread(function()
+    while true do
+        Wait(60000)
+
+        for entityId in pairs(localEntities) do
+            if not DoesEntityExist(entityId) then
+                localEntities[entityId] = nil
+            end
+        end
+    end
+end)
 
 ---@param resource string
 ---@param target table
