@@ -27,19 +27,19 @@ function utils.raycastFromCamera(flag)
     end
 end
 
+function utils.getTexture()
+    return lib.requestStreamedTextureDict('shared'), 'emptydot_32'
+end
+
 if GetConvarInt('ox_target:drawSprite', 1) == 1 then
     local SetDrawOrigin = SetDrawOrigin
     local DrawSprite = DrawSprite
     local ClearDrawOrigin = ClearDrawOrigin
-    local dict = 'shared'
-    local texture = 'emptydot_32'
     local colour = vector(155, 155, 155, 175)
     local hover = vector(98, 135, 236, 255)
     local inRange
     local width = 0.02
     local height = width * GetAspectRatio(false)
-
-    lib.requestStreamedTextureDict(dict)
 
     ---@param coords vector3
     ---@return CZone[] | false | nil, CZone?
@@ -67,7 +67,7 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
         return n > 0 and inRange, newZone
     end
 
-    function utils.drawZoneSprites()
+    function utils.drawZoneSprites(dict, texture)
         for i = 1, #inRange do
             local zone = inRange[i]
             local spriteColour = zone.colour or colour

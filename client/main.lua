@@ -231,6 +231,7 @@ local function startTargeting()
 
         if not hasTick then
             hasTick = true
+            local dict, texture = utils.getTexture()
 
             CreateThread(function()
                 while state.isActive() do
@@ -240,7 +241,7 @@ local function startTargeting()
                     end
 
                     if nearbyZones then
-                        drawZoneSprites()
+                        drawZoneSprites(dict, texture)
                     end
 
                     DisablePlayerFiring(cache.playerId, true)
@@ -259,6 +260,8 @@ local function startTargeting()
 
                     Wait(0)
                 end
+
+                SetStreamedTextureDictAsNoLongerNeeded(dict)
             end)
         end
 
