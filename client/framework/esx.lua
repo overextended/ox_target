@@ -1,8 +1,8 @@
 local utils = require 'client.utils'
 local groups = { 'job', 'job2' }
 local playerGroups = {}
-local usingOxInventory = utils.hasExport('ox_inventory.Items')
 local playerItems = utils.getItems()
+local usingOxInventory
 
 local function setPlayerData(playerData)
     table.wipe(playerGroups)
@@ -28,6 +28,7 @@ end
 
 SetTimeout(0, function()
     local ESX = exports.es_extended:getSharedObject()
+    usingOxInventory = utils.hasExport('ox_inventory.Items')
 
     if ESX.PlayerLoaded then
         setPlayerData(ESX.PlayerData)

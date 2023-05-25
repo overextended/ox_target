@@ -12,11 +12,11 @@ require 'client.compat.qtarget'
 require 'client.compat.qb-target'
 
 if utils.hasExport('ox_core.GetPlayerData') then
-    framework = require 'client.framework.ox'
+    require 'client.framework.ox'
 elseif utils.hasExport('es_extended.getSharedObject') then
-    framework = require 'client.framework.esx'
+    require 'client.framework.esx'
 elseif utils.hasExport('qb-core.GetCoreObject') then
-    framework = require 'client.framework.qb'
+    require 'client.framework.qb'
 end
 
 local raycastFromCamera, getNearbyZones, drawZoneSprites, getCurrentZone, hasPlayerGotItems, hasPlayerGotGroup in utils
