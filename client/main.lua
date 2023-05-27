@@ -33,7 +33,19 @@ local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local options = {}
 local currentTarget = {}
+local activated = false
 
+function getTargetData()
+    return currentTarget
+end
+
+function getOptionsData()
+    return options
+end
+
+function getActivated()
+    return activated
+end
 
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
@@ -43,6 +55,7 @@ local debug = GetConvarInt('ox_target:debug', 0) == 1
 local function startTargeting()
     if state.isDisabled() or state.isActive() or IsNuiFocused() or IsPauseMenuActive() then return end
 
+    activated = false
     state.setActive(true)
 
     local flag = 511
@@ -52,6 +65,7 @@ local function startTargeting()
         local playerCoords = GetEntityCoords(cache.ped)
         hit, entityHit, endCoords = raycastFromCamera(flag)
         distance = #(playerCoords - endCoords)
+
 
         if entityHit ~= 0 and entityHit ~= lastEntity then
             local success, result = pcall(GetEntityType, entityHit)
@@ -86,12 +100,14 @@ local function startTargeting()
             if lastZone ~= currentZone or entityHit ~= lastEntity then
                 if next(options) then
                     table.wipe(options)
+                    activated = false
                     SendNuiMessage('{"event": "leftTarget"}')
                 end
 
                 if flag ~= 511 then
                     entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
                 end
+
 
                 if lastEntity ~= entityHit and debug then
                     if lastEntity then
@@ -131,6 +147,7 @@ local function startTargeting()
             currentTarget.entity = entityHit
             currentTarget.coords = endCoords
             currentTarget.distance = distance
+            currentTarget.bone = nil
             local hidden = 0
             local totalOptions = 0
 
@@ -191,6 +208,7 @@ local function startTargeting()
                         end
                     end
 
+
                     if not hide and option.canInteract then
                         local success, resp = pcall(option.canInteract, entityHit, distance, endCoords, option.name, bone)
                         hide = not success or not resp
@@ -210,8 +228,10 @@ local function startTargeting()
                 options = newOptions
 
                 if hidden == totalOptions then
+                    activated = false
                     SendNuiMessage('{"event": "leftTarget"}')
                 else
+                    activated = true
                     SendNuiMessage(json.encode({
                         event = 'setTarget',
                         options = options
@@ -221,11 +241,13 @@ local function startTargeting()
         elseif lastEntity then
             if debug then SetEntityDrawOutline(lastEntity, false) end
             if options then table.wipe(options) end
+            activated = false
             SendNuiMessage('{"event": "leftTarget"}')
             lastEntity = nil
         else Wait(50) end
 
         if toggleHotkey and IsPauseMenuActive() then
+            activated = false
             state.setActive(false)
         end
 
@@ -240,9 +262,7 @@ local function startTargeting()
                         DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24, 100, false, false, 0, true, false, false, false)
                     end
 
-                    if nearbyZones then
-                        drawZoneSprites(dict, texture)
-                    end
+                    drawZoneSprites(dict, texture)
 
                     DisablePlayerFiring(cache.playerId, true)
                     DisableControlAction(0, 25, true)
@@ -251,10 +271,10 @@ local function startTargeting()
                         DisableControlAction(0, 1, true)
                         DisableControlAction(0, 2, true)
 
-                        if options and IsDisabledControlJustPressed(0, 25) then
+                        if options and IsDisabledControlJustPressed(0, 25)  then
                             state.setNuiFocus(false, false)
                         end
-                    elseif options and IsDisabledControlJustPressed(0, mouseButton) then
+                    elseif options and IsDisabledControlJustPressed(0, mouseButton) and getActivated() then
                         state.setNuiFocus(true, true)
                     end
 
@@ -277,6 +297,7 @@ local function startTargeting()
     end
 
     state.setNuiFocus(false)
+    activated = false
     SendNuiMessage('{"event": "visible", "state": false}')
     table.wipe(currentTarget)
     table.wipe(options)
@@ -294,6 +315,7 @@ do
     if toggleHotkey then
         function keybind:onPressed()
             if state.isActive() then
+                activated = false
                 return state.setActive(false)
             end
 
@@ -303,6 +325,7 @@ do
         keybind.onPressed = startTargeting
 
         function keybind:onReleased()
+            activated = false
             state.setActive(false)
         end
     end
@@ -336,7 +359,6 @@ end
 
 RegisterNUICallback('select', function(data, cb)
     cb(1)
-    state.setNuiFocus(false)
 
     local option = options?[data[1]][data[2]]
 
@@ -355,6 +377,8 @@ RegisterNUICallback('select', function(data, cb)
     end
 
     if IsNuiFocused() then
+        activated = false
         state.setActive(false)
+        state.setNuiFocus(false)
     end
 end)

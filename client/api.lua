@@ -113,6 +113,10 @@ function api.removeGlobalVehicle(options)
     removeTarget(vehicles, options, GetInvokingResource())
 end
 
+function api.getVehicle()
+    return vehicles
+end
+
 local objects = {}
 
 ---@param options table
@@ -155,6 +159,10 @@ function api.addModel(arr, options)
 
         addTarget(models[model], options, resource)
     end
+end
+
+function api.getModels()
+    return models
 end
 
 ---@param arr number | number[]
@@ -225,6 +233,10 @@ function api.removeEntity(arr, options)
     end
 end
 
+function api.getEntities()
+    return entities
+end
+
 RegisterNetEvent('ox_target:removeEntity', api.removeEntity)
 
 local localEntities = {}
@@ -269,6 +281,10 @@ function api.removeLocalEntity(arr, options)
             end
         end
     end
+end
+
+function api.getLocalEntities()
+    return localEntities
 end
 
 CreateThread(function()

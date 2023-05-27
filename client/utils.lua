@@ -1,5 +1,7 @@
 local utils = {}
 
+local api = require 'client.api'
+local state = require 'client.state'
 local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
 local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
@@ -35,7 +37,7 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
     local SetDrawOrigin = SetDrawOrigin
     local DrawSprite = DrawSprite
     local ClearDrawOrigin = ClearDrawOrigin
-    local colour = vector(155, 155, 155, 175)
+    local colour = vector(255, 255, 255, 255)
     local hover = vector(98, 135, 236, 255)
     local inRange
     local width = 0.02
@@ -64,10 +66,85 @@ if GetConvarInt('ox_target:drawSprite', 1) == 1 then
             end
         end
 
+
+
         return n > 0 and inRange, newZone
     end
 
+
+    function utils.getNearbyTarget(coords)
+        coords = coords or GetEntityCoords(PlayerPedId())
+        inRange = {}
+
+        local n = 0
+        local targetData  = getTargetData();
+        local activated   = getActivated();
+        local isActive    = state.isActive();
+
+        local getDistance = function(obj) 
+            return #(GetEntityCoords(PlayerPedId())-GetEntityCoords(obj))
+        end
+
+        local models = api.getModels();
+        for _, obj in pairs(GetGamePool("CObject")) do
+            local distance = getDistance(obj)
+            local model = GetEntityModel(obj);
+
+            if (DoesEntityExist(obj) and models[model] and (distance < 7)) then
+                local data = models[model];
+
+                local isHover = obj == targetData?.entity and activated
+
+                n += 1;
+                inRange[n] = {
+                    drawSprite = data?.drawSprite or  true,
+                    colour = isHover and (data?.hover or hover) or (data?.colour or colour),
+                    coords = GetEntityCoords(obj)
+                }
+            end
+        end
+        
+        local entities = api.getLocalEntities();
+        for obj, data in pairs(entities) do
+            local distance = getDistance(obj)
+            if (DoesEntityExist(obj) and (distance < 7)) then
+                local isHover = obj == targetData?.entity and activated
+
+                n += 1;
+                inRange[n] = {
+                    drawSprite = data?.drawSprite or  true,
+                    colour = isHover and (data?.hover or hover) or (data?.colour or colour),
+                    coords = GetEntityCoords(obj)
+                }
+            end
+        end
+
+        local vehicles = api.getVehicle();
+        for _, vehicle in pairs(GetGamePool("CVehicle")) do
+            local distance = getDistance(vehicle)
+            
+            if (DoesEntityExist(vehicle) and (distance < 7)) then
+                local isHover =  targetData?.entity == vehicle and activated 
+
+                if (isHover) then  
+                end
+
+                n += 1;
+                inRange[n] = {
+                    drawSprite = data?.drawSprite or  true,
+                    colour = isHover and (data?.hover or hover) or (data?.colour or colour),
+                    coords = GetEntityCoords(vehicle)
+                }
+            end
+        end
+        
+    end
+
     function utils.drawZoneSprites(dict, texture)
+        utils.getNearbyTarget()
+        
+        if (not inRange) then return end;
+
         for i = 1, #inRange do
             local zone = inRange[i]
             local spriteColour = zone.colour or colour

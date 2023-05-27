@@ -7,17 +7,18 @@ AddEventHandler('ox_target:debug', function(data)
 	print(json.encode(data, {indent=true}))
 end)
 
-if GetConvarInt('ox_target:debug', 0) ~= 1 then return end
+if GetConvarInt('ox_target:debug', 0) ~= 1 then return end 
 
 local ox_target = exports.ox_target
 local drawZones = false
 
 ox_target:addBoxZone({
     coords = vec3(442.5363, -1017.666, 28.85637),
-    size = vec3(2, 2, 2),
+    size = vec3(2, 2, 3),
     rotation = 45,
     debug = drawZones,
     drawSprite = true,
+    debug= true,
     options = {
         {
             name = 'box',

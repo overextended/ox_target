@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "(เปิด/ปิด) ประตูที่นั่งคนขับ",
+  "toggle_front_passenger_door": "(เปิด/ปิด) ประตูประตูผู้โดยสาร",
+  "toggle_rear_driver_door": "(เปิด/ปิด) ประตูหลังที่นั่งคนขับ",
+  "toggle_rear_passenger_door": "(เปิด/ปิด) ประตูหลังที่นั่งคนขับ",
+  "toggle_hood": "(เปิด/ปิด) ฝากระโปรงหน้า",
+  "toggle_trunk": "(เปิด/ปิด) กระโปรงหลังรถ",
+  "debug_box": "(ทดสอบ) Box",
+  "debug_sphere": "(ทดสอบ) Sphere",
+  "debug_police_car": "Police car",
+  "debug_ped": "(ทดสอบ) Ped",
+  "debug_vehicle": "(ทดสอบ) Vehicle",
+  "debug_object": "(ทดสอบ) Object",
+  "toggle_targeting": "เปิด/ปิด การเพ่งเล็ง"
+}

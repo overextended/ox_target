@@ -1,32 +1,43 @@
 import { createOptions } from './createOptions.js';
 
-const optionsWrapper = document.getElementById('options-wrapper');
-const body = document.body;
-const eye = document.getElementById('eyeSvg');
+const optionsWrapper = $('#options-wrapper');
 
-window.addEventListener('message', (event) => {
-  optionsWrapper.innerHTML = '';
+const setFindingState = (state) => {
+    $('body').stop().fadeTo(250, state ? 1 : 0);
+}
 
-  switch (event.data.event) {
-    case 'visible': {
-      body.style.visibility = event.data.state ? 'visible' : 'hidden';
-      return (eye.style.fill = 'black');
-    }
+const setPointState = (state) => {
+    $('#point').stop().fadeTo(250, state ? 1 : 0);
+    $("#finding").stop().fadeTo(250, state ? 0 : 1);
+}
 
-    case 'leftTarget': {
-      return (eye.style.fill = 'black');
-    }
+$(window).on('message', (event) => {
+    optionsWrapper.empty();
 
-    case 'setTarget': {
-      eye.style.fill = '#cfd2da';
-
-      if (event.data.options) {
-        for (const type in event.data.options) {
-          event.data.options[type].forEach((data, id) => {
-            createOptions(type, data, id + 1);
-          });
+    switch (event.originalEvent.data.event) {
+        case 'visible': {
+            setFindingState(event.originalEvent.data.state)
+            setPointState(false);
+            break;
         }
-      }
+
+        case 'leftTarget': {
+            setPointState(false);
+
+            break;
+        }
+
+        case 'setTarget': {
+            setPointState(true);
+
+            if (event.originalEvent.data.options) {
+                for (const type in event.originalEvent.data.options) {
+                    event.originalEvent.data.options[type].forEach((data, id) => {
+                        createOptions(type, data, id + 1);
+                    });
+                }
+            }
+            break;
+        }
     }
-  }
 });
