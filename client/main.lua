@@ -46,7 +46,7 @@ local function startTargeting()
     state.setActive(true)
 
     local flag = 511
-    local hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick
+    local hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick, hasTarget
 
     while state.isActive() do
         local playerCoords = GetEntityCoords(cache.ped)
@@ -210,20 +210,31 @@ local function startTargeting()
                 options = newOptions
 
                 if hidden == totalOptions then
+                    hasTarget = false
                     SendNuiMessage('{"event": "leftTarget"}')
                 else
+                    hasTarget = true
                     SendNuiMessage(json.encode({
                         event = 'setTarget',
                         options = options
                     }, { sort_keys=true }))
                 end
             end
-        elseif lastEntity then
-            if debug then SetEntityDrawOutline(lastEntity, false) end
-            if options then table.wipe(options) end
-            SendNuiMessage('{"event": "leftTarget"}')
-            lastEntity = nil
-        else Wait(50) end
+        else
+            if hasTarget then
+                hasTarget = false
+                SendNuiMessage('{"event": "leftTarget"}')
+            end
+
+            if lastEntity then
+                if debug then SetEntityDrawOutline(lastEntity, false) end
+                if options then table.wipe(options) end
+
+                lastEntity = nil
+            else
+                Wait(50)
+            end
+        end
 
         if toggleHotkey and IsPauseMenuActive() then
             state.setActive(false)
@@ -251,10 +262,10 @@ local function startTargeting()
                         DisableControlAction(0, 1, true)
                         DisableControlAction(0, 2, true)
 
-                        if options and IsDisabledControlJustPressed(0, 25) then
+                        if not hasTarget or options and IsDisabledControlJustPressed(0, 25) then
                             state.setNuiFocus(false, false)
                         end
-                    elseif options and IsDisabledControlJustPressed(0, mouseButton) then
+                    elseif hasTarget and IsDisabledControlJustPressed(0, mouseButton) then
                         state.setNuiFocus(true, true)
                     end
 
@@ -265,7 +276,7 @@ local function startTargeting()
             end)
         end
 
-        if not next(options) then
+        if not hasTarget then
             flag = flag == 511 and 26 or 511
         end
 
