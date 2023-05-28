@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Abrir/Cerrar puerta delantera del conductor",
+  "toggle_front_passenger_door": "Abrir/Cerrar puerta delantera del pasajero",
+  "toggle_rear_driver_door": "Abrir/Cerrar puerta trasera del conductor",
+  "toggle_rear_passenger_door": "Abrir/Cerrar puerta trasera del pasajero",
+  "toggle_hood": "Abrir/Cerrar capó",
+  "toggle_trunk": "Abrir/Cerrar maletero",
+  "debug_box": "(Debug) Caja",
+  "debug_sphere": "(Debug) Esfera",
+  "debug_police_car": "Coche de policía",
+  "debug_ped": "(Debug) Peatón",
+  "debug_vehicle": "(Debug) Vehículo",
+  "debug_object": "(Debug) Objeto",
+  "toggle_targeting": "Activar/Desactivar apuntado"
+}
