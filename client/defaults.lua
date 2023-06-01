@@ -26,6 +26,8 @@ ox_target:addGlobalVehicle({
 
             local boneId = GetEntityBoneIndexByName(entity, 'door_dside_f')
 
+            if IsVehicleDoorDamaged(entity, 0) then return end
+
             if boneId ~= -1 then
                 return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_dside_f'))) < 0.72
             end
@@ -46,6 +48,7 @@ ox_target:addGlobalVehicle({
             if GetVehicleDoorLockStatus(entity) > 1 then return end
 
             local boneId = GetEntityBoneIndexByName(entity, 'door_pside_f')
+            if IsVehicleDoorDamaged(entity, 1) then return end
 
             if boneId ~= -1 then
                 return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_pside_f'))) < 0.72
@@ -67,6 +70,7 @@ ox_target:addGlobalVehicle({
             if GetVehicleDoorLockStatus(entity) > 1 then return end
 
             local boneId = GetEntityBoneIndexByName(entity, 'door_dside_r')
+            if IsVehicleDoorDamaged(entity, 2) then return end
 
             if boneId ~= -1 then
                 return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_dside_r'))) < 0.72
@@ -88,6 +92,7 @@ ox_target:addGlobalVehicle({
             if GetVehicleDoorLockStatus(entity) > 1 then return end
 
             local boneId = GetEntityBoneIndexByName(entity, 'door_pside_r')
+            if IsVehicleDoorDamaged(entity, 3) then return end
 
             if boneId ~= -1 then
                 return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or #(coords - GetEntityBonePosition_2(entity, GetEntityBoneIndexByName(entity, 'seat_pside_r'))) < 0.72
@@ -108,6 +113,7 @@ ox_target:addGlobalVehicle({
         bones = 'bonnet',
         canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
+            if IsVehicleDoorDamaged(entity, 4) then return end
             return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
@@ -124,6 +130,7 @@ ox_target:addGlobalVehicle({
         bones = 'boot',
         canInteract = function(entity, distance, coords, name, boneId)
             if GetVehicleDoorLockStatus(entity) > 1 then return end
+            if IsVehicleDoorDamaged(entity, 5) then return end
             return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
