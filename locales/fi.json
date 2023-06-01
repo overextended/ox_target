@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Avaa/Sulje kuljettajan etuovi",
+  "toggle_front_passenger_door": "Avaa/Sulje repsikan etuovi",
+  "toggle_rear_driver_door": "Avaa/Sulje kuljettajan takaovi",
+  "toggle_rear_passenger_door": "Avaa/Sulje repsikan takaovi",
+  "toggle_hood": "Avaa/Sulje konepelti",
+  "toggle_trunk": "Avaa/Sulje takakontti",
+  "debug_box": "(Debug) Laatikko",
+  "debug_sphere": "(Debug) Ympyrä",
+  "debug_police_car": "Poliisiauto",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Ajoneuvo",
+  "debug_object": "(Debug) Objekti",
+  "toggle_targeting": "Päällä/Pois tähtäys"
+}
