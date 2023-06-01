@@ -257,6 +257,9 @@ local function startTargeting()
 
                     DisablePlayerFiring(cache.playerId, true)
                     DisableControlAction(0, 25, true)
+                    DisableControlAction(0, 140, true) 
+                    DisableControlAction(0, 141, true) 
+                    DisableControlAction(0, 142, true) 
 
                     if state.isNuiFocused() then
                         DisableControlAction(0, 1, true)
