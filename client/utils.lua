@@ -102,19 +102,15 @@ function utils.hasExport(export)
     end)
 end
 
-local playerItems
+local playerItems = {}
 
 function utils.getItems()
-    if not playerItems then
-        playerItems = {}
-    end
-
     return playerItems
 end
 
 SetTimeout(0, function()
     if utils.hasExport('ox_inventory.Items') then
-        playerItems = setmetatable({}, {
+        setmetatable(playerItems, {
             __index = function(self, index)
                 self[index] = exports.ox_inventory:Search('count', index) or 0
                 return self[index]
