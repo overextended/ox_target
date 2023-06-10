@@ -24,8 +24,9 @@ function state.isNuiFocused()
 end
 
 ---@param value boolean
-function state.setNuiFocus(value, cursor)
-    if value then SetCursorLocation(0.5, 0.5) end
+function state.setNuiFocus(value, cursor, reset)
+    reset = reset ~= false
+    if value and reset then SetCursorLocation(0.5, 0.5) end
 
     nuiFocus = value
     SetNuiFocus(value, cursor or false)

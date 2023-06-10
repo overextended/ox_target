@@ -33,7 +33,7 @@ local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local options = {}
 local currentTarget = {}
-
+local currentMenu = 'home'
 
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
@@ -84,6 +84,7 @@ local function startTargeting()
             end
 
             if lastZone ~= currentZone or entityHit ~= lastEntity then
+                currentMenu = 'home'
                 if next(options) then
                     table.wipe(options)
                     SendNuiMessage('{"event": "leftTarget"}')
@@ -189,6 +190,14 @@ local function startTargeting()
                                 hide = true
                             end
                         end
+                    end
+
+                    if option.menuName == nil then
+                        option.menuName = 'home'
+                    end
+                    
+                    if option.menuName ~= currentMenu then
+                        hide = true
                     end
 
                     if not hide and option.canInteract then
@@ -344,6 +353,8 @@ local function getResponse(option, server)
     response.event = nil
     response.serverEvent = nil
     response.command = nil
+    response.menuName = 'home'
+    response.openMenu = 'home'
 
     return response
 end
@@ -353,6 +364,7 @@ RegisterNUICallback('select', function(data, cb)
     state.setNuiFocus(false)
 
     local option = options?[data[1]][data[2]]
+    local forceNuiActive = false
 
     if option then
         if option.onSelect then
@@ -366,9 +378,15 @@ RegisterNUICallback('select', function(data, cb)
         elseif option.command then
             ExecuteCommand(option.command)
         end
+        
+        if option.openMenu then
+            currentMenu = option.openMenu
+            state.setNuiFocus(true, true, false)
+            forceNuiActive = true
+        end
     end
 
-    if IsNuiFocused() then
+    if IsNuiFocused() and not forceNuiActive then
         state.setActive(false)
     end
 end)
