@@ -379,7 +379,7 @@ RegisterNUICallback('select', function(data, cb)
             ExecuteCommand(option.command)
         end
         
-        if option.openMenu then
+        if option.openMenu ~= currentMenu then
             currentMenu = option.openMenu
             state.setNuiFocus(true, true, false)
             forceNuiActive = true
