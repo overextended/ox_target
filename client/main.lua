@@ -324,6 +324,10 @@ do
     lib.addKeybind(keybind)
 end
 
+---@generic T
+---@param option T
+---@param server? boolean
+---@return T
 local function getResponse(option, server)
     local response = table.clone(option)
     response.entity = currentTarget.entity
@@ -352,6 +356,7 @@ RegisterNUICallback('select', function(data, cb)
     cb(1)
     state.setNuiFocus(false)
 
+    ---@type TargetOptions?
     local option = options?[data[1]][data[2]]
 
     if option then

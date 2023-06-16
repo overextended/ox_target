@@ -1,3 +1,22 @@
+---@class TargetOptions
+---@field label string
+---@field name? string
+---@field icon? string
+---@field iconColor? string
+---@field distance? number
+---@field bones? string | string[]
+---@field groups? string | string[] | table<string, number>
+---@field items? string | string[] | table<string, number>
+---@field anyItem? boolean
+---@field canInteract fun(entity?: number, distance: number, coords: vector3, name?: string, bone?: number)
+---@field onSelect? fun(data: TargetOptions | number)
+---@field export? string
+---@field event? string
+---@field serverEvent? string
+---@field command? string
+---@field resource string
+---@field [string] any
+
 local api = setmetatable({}, {
     __newindex = function(self, index, value)
         rawset(self, index, value)
@@ -46,7 +65,7 @@ local function typeError(variable, expected, received)
 end
 
 ---@param target table
----@param options table
+---@param options TargetOptions | TargetOptions[]
 ---@param resource string
 local function addTarget(target, options, resource)
     local optionsType = type(options)
@@ -91,48 +110,48 @@ end
 
 local peds = {}
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.addGlobalPed(options)
     addTarget(peds, options, GetInvokingResource())
 end
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.removeGlobalPed(options)
     removeTarget(peds, options, GetInvokingResource())
 end
 
 local vehicles = {}
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.addGlobalVehicle(options)
     addTarget(vehicles, options, GetInvokingResource())
 end
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.removeGlobalVehicle(options)
     removeTarget(vehicles, options, GetInvokingResource())
 end
 
 local objects = {}
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.addGlobalObject(options)
     addTarget(objects, options, GetInvokingResource())
 end
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.removeGlobalObject(options)
     removeTarget(objects, options, GetInvokingResource())
 end
 
 local players = {}
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.addGlobalPlayer(options)
     addTarget(players, options, GetInvokingResource())
 end
 
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.removeGlobalPlayer(options)
     removeTarget(players, options, GetInvokingResource())
 end
@@ -140,7 +159,7 @@ end
 local models = {}
 
 ---@param arr number | number[]
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.addModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -182,7 +201,7 @@ end
 local entities = {}
 
 ---@param arr number | number[]
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.addEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -230,7 +249,7 @@ RegisterNetEvent('ox_target:removeEntity', api.removeEntity)
 local localEntities = {}
 
 ---@param arr number | number[]
----@param options table
+---@param options TargetOptions | TargetOptions[]
 function api.addLocalEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
