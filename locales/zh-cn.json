@@ -1,15 +1,15 @@
 {
-  "toggle_front_driver_door": "开关司机侧前门",
-  "toggle_front_passenger_door": "开关乘客侧前门",
-  "toggle_rear_driver_door": "开关驾驶侧后门",
-  "toggle_rear_passenger_door": "开关乘客侧后门",
-  "toggle_hood": "开关引擎盖",
-  "toggle_trunk": "开关后备箱",
-  "debug_box": "(Debug) Box",
-  "debug_sphere": "(Debug) Sphere",
-  "debug_police_car": "Police car",
+  "toggle_front_driver_door": "开关左前车门",
+  "toggle_front_passenger_door": "开关左后车门",
+  "toggle_rear_driver_door": "开关右前车门",
+  "toggle_rear_passenger_door": "开关右后车门",
+  "toggle_hood": "打开引擎盖",
+  "toggle_trunk": "打开后备箱",
+  "debug_box": "(Debug) 箱子",
+  "debug_sphere": "(Debug) 球",
+  "debug_police_car": "警车",
   "debug_ped": "(Debug) Ped",
-  "debug_vehicle": "(Debug) Vehicle",
-  "debug_object": "(Debug) Object",
-  "toggle_targeting": "开关目标选择"
+  "debug_vehicle": "(Debug) 车辆",
+  "debug_object": "(Debug) 对象",
+  "toggle_targeting": "交互菜单"
 }
