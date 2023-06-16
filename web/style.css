@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
 
 body {
   visibility: hidden;
@@ -14,7 +14,7 @@ p {
 }
 
 .material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 40;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 40;
 }
 
 #eye {
@@ -23,6 +23,11 @@ p {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 22pt;
+  fill: black;
+}
+
+.eye-hover {
+  fill: #cfd2da;
 }
 
 #options-wrapper {
@@ -37,7 +42,7 @@ p {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-family: 'Nunito';
+  font-family: "Nunito";
   background: linear-gradient(
     90deg,
     rgba(20, 20, 20, 0.7) 0%,
