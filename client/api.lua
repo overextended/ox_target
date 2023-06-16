@@ -15,6 +15,8 @@
 ---@field serverEvent? string
 ---@field command? string
 ---@field resource string
+---@field openMenu? string
+---@field menuName? string
 ---@field [string] any
 
 local api = setmetatable({}, {

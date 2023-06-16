@@ -33,6 +33,8 @@ local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local options = {}
 local currentTarget = {}
+local currentMenu
+local menuHistory = {}
 
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
@@ -44,6 +46,10 @@ local debug = GetConvarInt('ox_target:debug', 0) == 1
 ---@param entityHit number
 ---@param endCoords vector3
 local function shouldHide(option, distance, entityHit, endCoords)
+    if option.menuName ~= currentMenu then
+        return true
+    end
+
     if option.distance and distance > option.distance then
         return true
     end
@@ -143,6 +149,8 @@ local function startTargeting()
             end
 
             if lastZone ~= currentZone or entityHit ~= lastEntity then
+                currentMenu = nil
+
                 if next(options) then
                     table.wipe(options)
                     SendNuiMessage('{"event": "leftTarget"}')
@@ -213,6 +221,7 @@ local function startTargeting()
                 end
             end
 
+
             if newOptions and next(newOptions) then
                 options = newOptions
 
@@ -221,6 +230,20 @@ local function startTargeting()
                     SendNuiMessage('{"event": "leftTarget"}')
                 else
                     hasTarget = true
+
+                    if currentMenu then
+                        totalOptions += 1
+                        options.__builtin = {
+                            {
+                                icon = 'fa-solid fa-circle-chevron-left',
+                                label = locale('go_back'),
+                                name = 'builtin:goback',
+                                menuName = currentMenu,
+                                openMenu = 'home'
+                            },
+                        }
+                    end
+
                     SendNuiMessage(json.encode({
                         event = 'setTarget',
                         options = options
@@ -361,12 +384,31 @@ end
 
 RegisterNUICallback('select', function(data, cb)
     cb(1)
-    state.setNuiFocus(false)
 
     ---@type TargetOptions?
     local option = options?[data[1]][data[2]]
 
     if option then
+        if option.openMenu then
+            local menuDepth = #menuHistory
+
+            if option.name == 'builtin:goback' then
+                option.menuName = option.openMenu
+                option.openMenu = menuHistory[menuDepth]
+
+                if menuDepth > 0 then
+                    menuHistory[menuDepth] = nil
+                end
+            else
+                menuHistory[menuDepth + 1] = currentMenu
+            end
+
+            currentMenu = option.openMenu ~= 'home' and option.openMenu or nil
+        else
+            state.setNuiFocus(false)
+            state.setActive(false)
+        end
+
         if option.onSelect then
             option.onSelect(option.qtarget and currentTarget.entity or getResponse(option))
         elseif option.export then
@@ -378,9 +420,5 @@ RegisterNUICallback('select', function(data, cb)
         elseif option.command then
             ExecuteCommand(option.command)
         end
-    end
-
-    if IsNuiFocused() then
-        state.setActive(false)
     end
 end)
