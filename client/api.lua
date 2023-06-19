@@ -85,11 +85,24 @@ local function addTarget(target, options, resource)
     end
 
     ---@cast options TargetOptions[]
+
     local num = #target
 
     for i = 1, #options do
+        local option = options[i]
+        options.resource = resource or 'ox_target'
+
+        if not resource then
+            if option.canInteract then
+                option.canInteract = msgpack.unpack(msgpack.pack(option.canInteract))
+            end
+
+            if option.onSelect then
+                option.onSelect = msgpack.unpack(msgpack.pack(option.onSelect))
+            end
+        end
+
         num += 1
-        options[i].resource = resource or 'ox_target'
         target[num] = options[i]
     end
 end
