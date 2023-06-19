@@ -8,7 +8,7 @@
 ---@field groups? string | string[] | table<string, number>
 ---@field items? string | string[] | table<string, number>
 ---@field anyItem? boolean
----@field canInteract fun(entity?: number, distance: number, coords: vector3, name?: string, bone?: number)
+---@field canInteract fun(entity?: number, distance: number, coords: vector3, name?: string, bone?: number): boolean?
 ---@field onSelect? fun(data: TargetOptions | number)
 ---@field export? string
 ---@field event? string
@@ -78,10 +78,13 @@ local function addTarget(target, options, resource)
 
     local tableType = table.type(options)
 
-    if tableType ~= 'array' then
+    if tableType == 'hash' and options.label then
+        options = { options }
+    elseif tableType ~= 'array' then
         typeError('options', 'array', ('%s table'):format(tableType))
     end
 
+    ---@cast options TargetOptions[]
     local num = #target
 
     for i = 1, #options do
