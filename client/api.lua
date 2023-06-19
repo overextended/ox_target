@@ -90,7 +90,7 @@ local function addTarget(target, options, resource)
 
     for i = 1, #options do
         local option = options[i]
-        options.resource = resource or 'ox_target'
+        option.resource = resource or 'ox_target'
 
         if not resource then
             if option.canInteract then
