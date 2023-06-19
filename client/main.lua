@@ -180,6 +180,7 @@ local function startTargeting()
                 end
             end
 
+            ---@type table<string, TargetOptions[]>
             options = newOptions or options or {}
 
             if currentZone then

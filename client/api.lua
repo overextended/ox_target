@@ -110,6 +110,7 @@ local function removeTarget(target, remove, resource)
     end
 end
 
+---@type table<number, TargetOptions[]>
 local peds = {}
 
 ---@param options TargetOptions | TargetOptions[]
@@ -122,6 +123,7 @@ function api.removeGlobalPed(options)
     removeTarget(peds, options, GetInvokingResource())
 end
 
+---@type table<number, TargetOptions[]>
 local vehicles = {}
 
 ---@param options TargetOptions | TargetOptions[]
@@ -134,6 +136,7 @@ function api.removeGlobalVehicle(options)
     removeTarget(vehicles, options, GetInvokingResource())
 end
 
+---@type table<number, TargetOptions[]>
 local objects = {}
 
 ---@param options TargetOptions | TargetOptions[]
@@ -146,6 +149,7 @@ function api.removeGlobalObject(options)
     removeTarget(objects, options, GetInvokingResource())
 end
 
+---@type table<number, TargetOptions[]>
 local players = {}
 
 ---@param options TargetOptions | TargetOptions[]
@@ -158,6 +162,7 @@ function api.removeGlobalPlayer(options)
     removeTarget(players, options, GetInvokingResource())
 end
 
+---@type table<number, TargetOptions[]>
 local models = {}
 
 ---@param arr number | number[]
@@ -200,6 +205,7 @@ function api.removeModel(arr, options)
     end
 end
 
+---@type table<number, TargetOptions[]>
 local entities = {}
 
 ---@param arr number | number[]
@@ -248,6 +254,7 @@ end
 
 RegisterNetEvent('ox_target:removeEntity', api.removeEntity)
 
+---@type table<number, TargetOptions[]>
 local localEntities = {}
 
 ---@param arr number | number[]
