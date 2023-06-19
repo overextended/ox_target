@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
 
+:root {
+  --color-default: #cfd2da;
+  --color-hover: white;
+}
+
 body {
   visibility: hidden;
   user-select: none;
@@ -27,7 +32,7 @@ p {
 }
 
 .eye-hover {
-  fill: #cfd2da;
+  fill: var(--color-default);
 }
 
 #options-wrapper {
@@ -37,7 +42,7 @@ p {
 }
 
 .option-container {
-  color: #cfd2da;
+  color: var(--color-default);
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -69,7 +74,7 @@ p {
     rgba(57, 58, 63, 0) 100%
   );
   transform-origin: left top;
-  color: white;
+  color: var(--color-hover);
   margin-left: 4pt;
 }
 
@@ -78,6 +83,7 @@ p {
   line-height: 22pt;
   width: 14pt;
   margin: 5pt;
+  color: var(--color-default);
 }
 
 .option-label {
