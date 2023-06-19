@@ -288,9 +288,9 @@ local function startTargeting()
 
                     DisablePlayerFiring(cache.playerId, true)
                     DisableControlAction(0, 25, true)
-                    DisableControlAction(0, 140, true) 
-                    DisableControlAction(0, 141, true) 
-                    DisableControlAction(0, 142, true) 
+                    DisableControlAction(0, 140, true)
+                    DisableControlAction(0, 141, true)
+                    DisableControlAction(0, 142, true)
 
                     if state.isNuiFocused() then
                         DisableControlAction(0, 1, true)
@@ -407,7 +407,6 @@ RegisterNUICallback('select', function(data, cb)
             currentMenu = option.openMenu ~= 'home' and option.openMenu or nil
         else
             state.setNuiFocus(false)
-            state.setActive(false)
         end
 
         if option.onSelect then
@@ -421,5 +420,9 @@ RegisterNUICallback('select', function(data, cb)
         elseif option.command then
             ExecuteCommand(option.command)
         end
+    end
+
+    if not option?.openMenu and IsNuiFocused() then
+        state.setActive(false)
     end
 end)
