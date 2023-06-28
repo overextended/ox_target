@@ -11,14 +11,6 @@ require 'client.defaults'
 require 'client.compat.qtarget'
 require 'client.compat.qb-target'
 
-if utils.hasExport('ox_core.GetPlayerData') then
-    require 'client.framework.ox'
-elseif utils.hasExport('es_extended.getSharedObject') then
-    require 'client.framework.esx'
-elseif utils.hasExport('qb-core.GetCoreObject') then
-    require 'client.framework.qb'
-end
-
 local raycastFromCamera, getNearbyZones, drawZoneSprites, getCurrentZone, hasPlayerGotItems, hasPlayerGotGroup in utils
 local SendNuiMessage = SendNuiMessage
 local GetEntityCoords = GetEntityCoords
