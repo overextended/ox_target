@@ -18,15 +18,11 @@ local function setPlayerItems()
     end
 end
 
-local usingOxInventory
+local usingOxInventory = utils.hasExport('ox_inventory.Items')
 
-SetTimeout(0, function()
-    usingOxInventory = utils.hasExport('ox_inventory.Items')
-
-    if not usingOxInventory then
-        setPlayerItems()
-    end
-end)
+if not usingOxInventory then
+    setPlayerItems()
+end
 
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     playerData = QBCore.Functions.GetPlayerData()
