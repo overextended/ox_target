@@ -106,6 +106,11 @@ local function startTargeting()
     local hit, entityHit, endCoords, distance, currentZone, nearbyZones, lastEntity, entityType, entityModel, hasTick, hasTarget
 
     while state.isActive() do
+        if not state.isNuiFocused() and lib.progressActive() then
+            state.setActive(false)
+            break
+        end
+
         local playerCoords = GetEntityCoords(cache.ped)
         hit, entityHit, endCoords = raycastFromCamera(flag)
         distance = #(playerCoords - endCoords)
