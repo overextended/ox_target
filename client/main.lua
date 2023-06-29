@@ -11,7 +11,7 @@ require 'client.defaults'
 require 'client.compat.qtarget'
 require 'client.compat.qb-target'
 
-local raycastFromCamera, getNearbyZones, drawZoneSprites, getCurrentZone, hasPlayerGotItems, hasPlayerGotGroup in utils
+local raycastFromCamera, getNearbyZones, drawZoneSprites, getCurrentZone in utils
 local SendNuiMessage = SendNuiMessage
 local GetEntityCoords = GetEntityCoords
 local GetEntityType = GetEntityType
@@ -46,11 +46,11 @@ local function shouldHide(option, distance, entityHit, endCoords)
         return true
     end
 
-    if option.groups and not hasPlayerGotGroup(option.groups) then
+    if option.groups and not utils.hasPlayerGotGroup(option.groups) then
         return true
     end
 
-    if option.items and not hasPlayerGotItems(option.items, option.anyItem) then
+    if option.items and not utils.hasPlayerGotItems(option.items, option.anyItem) then
         return true
     end
 
