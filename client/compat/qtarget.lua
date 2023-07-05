@@ -101,7 +101,6 @@ exportHandler('AddCircleZone', function(name, center, radius, options, targetopt
 end)
 
 exportHandler('RemoveZone', function(id)
-    print('RemoveZone')
     api.removeZone(id)
 end)
 
