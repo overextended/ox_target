@@ -1,37 +1,21 @@
 lib.versionCheck('overextended/ox_target')
 lib.checkDependency('ox_lib', '3.0.0', true)
 
----@type table<number, EntityInterface>
+---@type table<number, number>
 local entityStates = {}
 
 ---@param netId number
 RegisterNetEvent('ox_target:setEntityHasOptions', function(netId)
-    local entity = Entity(NetworkGetEntityFromNetworkId(netId))
-    entity.state.hasTargetOptions = true
-    entityStates[netId] = entity
+    local entity = NetworkGetEntityFromNetworkId(netId)
+    if not DoesEntityExist(entity) then return end
+
+    local stateBag = Entity(NetworkGetEntityFromNetworkId(netId))
+    stateBag.state.hasTargetOptions = true
+    entityStates[entity] = netId
 end)
 
-CreateThread(function()
-    local arr = {}
-    local num = 0
-
-    while true do
-        Wait(10000)
-
-        for netId, entity in pairs(entityStates) do
-            if not DoesEntityExist(entity.__data) or not entity.state.hasTargetOptions then
-                entityStates[netId] = nil
-                num += 1
-
-                arr[num] = netId
-            end
-        end
-
-        if num then
-            TriggerClientEvent('ox_target:removeEntity', -1, arr)
-            table.wipe(arr)
-
-            num = 0
-        end
-    end
+AddEventHandler('entityRemoved', function(entity)
+    local netid = entityStates[entity]
+    if not netid then return end
+    TriggerClientEvent('ox_target:removeEntity', -1, netid)
 end)
