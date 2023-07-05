@@ -47,15 +47,26 @@ function api.addSphereZone(data)
     return lib.zones.sphere(data).id
 end
 
----@param id number
+---@param id number | string
 function api.removeZone(id)
-    local zone = Zones?[id]
+    if Zones then
+        if type(id) == 'string' then
+            local foundZone
 
-    if not zone then
-        return warn(('attempted to remove a zone that does not exists (id: %s)'):format(id))
+            for _, v in pairs(Zones) do
+                if v.name == id then
+                    foundZone = true
+                    v:remove()
+                end
+            end
+
+            if foundZone then return end
+        elseif Zones[id] then
+            return Zones[id]:remove()
+        end
     end
 
-    zone:remove()
+    warn(('attempted to remove a zone that does not exist (id: %s)'):format(id))
 end
 
 ---Throws a formatted type error
