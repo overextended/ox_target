@@ -27,7 +27,7 @@ CreateThread(function()
             end
         end
 
-        if num then
+        if num > 0 then
             TriggerClientEvent('ox_target:removeEntity', -1, arr)
             table.wipe(arr)
 
