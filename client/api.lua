@@ -14,7 +14,7 @@
 ---@field event? string
 ---@field serverEvent? string
 ---@field command? string
----@field resource string
+---@field resource? string
 ---@field openMenu? string
 ---@field menuName? string
 ---@field [string] any
@@ -90,7 +90,7 @@ local function addTarget(target, options, resource)
     local tableType = table.type(options)
 
     if tableType == 'hash' and options.label then
-        options = { options }
+        options = { options --[[@as TargetOptions]] }
     elseif tableType ~= 'array' then
         typeError('options', 'array', ('%s table'):format(tableType))
     end
