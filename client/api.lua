@@ -48,7 +48,8 @@ function api.addSphereZone(data)
 end
 
 ---@param id number | string
-function api.removeZone(id)
+---@param suppressWarning boolean?
+function api.removeZone(id, suppressWarning)
     if Zones then
         if type(id) == 'string' then
             local foundZone
@@ -65,6 +66,8 @@ function api.removeZone(id)
             return Zones[id]:remove()
         end
     end
+
+    if suppressWarning then return end
 
     warn(('attempted to remove a zone that does not exist (id: %s)'):format(id))
 end
