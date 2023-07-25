@@ -101,7 +101,7 @@ exportHandler('AddCircleZone', function(name, center, radius, options, targetopt
 end)
 
 exportHandler('RemoveZone', function(id)
-    api.removeZone(id)
+    api.removeZone(id, true)
 end)
 
 exportHandler('AddTargetBone', function(bones, options)
