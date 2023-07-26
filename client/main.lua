@@ -325,7 +325,7 @@ local function startTargeting()
 end
 
 do
-    ---@type CKeybind
+    ---@type KeybindProps
     local keybind = {
         name = 'ox_target',
         defaultKey = GetConvar('ox_target:defaultHotkey', 'LMENU'),
@@ -417,6 +417,8 @@ RegisterNUICallback('select', function(data, cb)
         elseif option.command then
             ExecuteCommand(option.command)
         end
+
+        if option.menuName == 'home' then return end
     end
 
     if not option?.openMenu and IsNuiFocused() then

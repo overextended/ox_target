@@ -8,7 +8,7 @@
 ---@field groups? string | string[] | table<string, number>
 ---@field items? string | string[] | table<string, number>
 ---@field anyItem? boolean
----@field canInteract fun(entity?: number, distance: number, coords: vector3, name?: string, bone?: number): boolean?
+---@field canInteract? fun(entity?: number, distance: number, coords: vector3, name?: string, bone?: number): boolean?
 ---@field onSelect? fun(data: TargetOptions | number)
 ---@field export? string
 ---@field event? string
