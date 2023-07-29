@@ -1,0 +1,15 @@
+{
+  "toggle_front_driver_door": "Åben/Luk forreste førerdør",
+  "toggle_front_passenger_door": "Åben/Luk forreste passagerdør",
+  "toggle_rear_driver_door": "Åben/Luk bageste førerdør",
+  "toggle_rear_passenger_door": "Åben/Luk bageste passagerdør",
+  "toggle_hood": "Åben/Luk motorhjelm",
+  "toggle_trunk": "Åben/Luk bagagerum",
+  "debug_box": "(Debug) Boks",
+  "debug_sphere": "(Debug) Kugle",
+  "debug_police_car": "Politi Bil",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Køretøj",
+  "debug_object": "(Debug) Objekt",
+  "toggle_targeting": "Slå targeting fra/til"
+}
