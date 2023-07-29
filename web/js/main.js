@@ -27,6 +27,14 @@ window.addEventListener("message", (event) => {
           });
         }
       }
+
+      if (event.data.zones) {
+        for (let i = 0; i < event.data.zones.length; i++) {
+          event.data.zones[i].forEach((data, id) => {
+            createOptions("zones", data, id + 1, i + 1);
+          });
+        }
+      }
     }
   }
 });

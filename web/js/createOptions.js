@@ -6,12 +6,12 @@ function onClick() {
   // when nuifocus is disabled after a click, the hover event is never released
   this.style.pointerEvents = "none";
 
-  fetchNui("select", [this.targetType, this.targetId]);
+  fetchNui("select", [this.targetType, this.targetId, this.zoneId]);
   // is there a better way to handle this? probably
   setTimeout(() => (this.style.pointerEvents = "auto"), 100);
 }
 
-export function createOptions(type, data, id) {
+export function createOptions(type, data, id, zoneId) {
   if (data.hide) return;
 
   const option = document.createElement("div");
@@ -23,6 +23,7 @@ export function createOptions(type, data, id) {
   option.className = "option-container";
   option.targetType = type;
   option.targetId = id;
+  option.zoneId = zoneId;
 
   option.addEventListener("click", onClick);
   optionsWrapper.appendChild(option);

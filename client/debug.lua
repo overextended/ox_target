@@ -1,5 +1,5 @@
 AddEventHandler('ox_target:debug', function(data)
-    if data.entity then
+    if data.entity and GetEntityType(data.entity) > 0 then
         data.archetype = GetEntityArchetypeName(data.entity)
         data.model = GetEntityModel(data.entity)
     end
@@ -10,11 +10,11 @@ end)
 if GetConvarInt('ox_target:debug', 0) ~= 1 then return end
 
 local ox_target = exports.ox_target
-local drawZones = false
+local drawZones = true
 
 ox_target:addBoxZone({
     coords = vec3(442.5363, -1017.666, 28.85637),
-    size = vec3(2, 2, 2),
+    size = vec3(3, 3, 3),
     rotation = 45,
     debug = drawZones,
     drawSprite = true,
@@ -30,7 +30,7 @@ ox_target:addBoxZone({
 
 ox_target:addSphereZone({
     coords = vec3(440.5363, -1015.666, 28.85637),
-    radius = 1,
+    radius = 3,
     debug = drawZones,
     drawSprite = true,
     options = {

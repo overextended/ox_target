@@ -31,67 +31,87 @@ function utils.getTexture()
     return lib.requestStreamedTextureDict('shared'), 'emptydot_32'
 end
 
-if GetConvarInt('ox_target:drawSprite', 1) == 1 then
-    local SetDrawOrigin = SetDrawOrigin
-    local DrawSprite = DrawSprite
-    local ClearDrawOrigin = ClearDrawOrigin
-    local colour = vector(155, 155, 155, 175)
-    local hover = vector(98, 135, 236, 255)
-    local inRange
-    local width = 0.02
-    local height = width * GetAspectRatio(false)
+local drawZoneSprites = GetConvarInt('ox_target:drawSprite', 1) == 1
+local SetDrawOrigin = SetDrawOrigin
+local DrawSprite = DrawSprite
+local ClearDrawOrigin = ClearDrawOrigin
+local colour = vector(155, 155, 155, 175)
+local hover = vector(98, 135, 236, 255)
+local currentZones = {}
+local previousZones = {}
+local drawZones = {}
+local drawN = 0
+local width = 0.02
+local height = width * GetAspectRatio(false)
 
-    ---@param coords vector3
-    ---@return CZone[] | false | nil, CZone?
-    function utils.getNearbyZones(coords)
-        if not Zones then return end
+---@param coords vector3
+---@return CZone[], boolean
+function utils.getNearbyZones(coords)
+    if not Zones then return currentZones, false end
 
-        inRange = {}
-        local n = 0
-        local newZone
+    local n = 0
+    drawN = 0
+    previousZones, currentZones = currentZones, table.wipe(previousZones)
 
-        for _, zone in pairs(Zones) do
-            local contains = zone:contains(coords)
+    for _, zone in pairs(Zones) do
+        local contains = zone:contains(coords)
 
-            if zone.drawSprite ~= false and (contains or (zone.distance or 7) < 7) then
-                zone.colour = contains and hover or nil
-                n += 1
-                inRange[n] = zone
-            end
-
-            if not newZone and contains then
-                newZone = zone
-            end
+        if contains then
+            n += 1
+            currentZones[n] = zone
         end
 
-        return n > 0 and inRange, newZone
-    end
-
-    function utils.drawZoneSprites(dict, texture)
-        for i = 1, #inRange do
-            local zone = inRange[i]
-            local spriteColour = zone.colour or colour
-
-            if zone.drawSprite ~= false then
-                SetDrawOrigin(zone.coords.x, zone.coords.y, zone.coords.z)
-                DrawSprite(dict, texture, 0, 0, width, height, 0, spriteColour.r, spriteColour.g, spriteColour.b, spriteColour.a)
-            end
-        end
-
-        ClearDrawOrigin()
-    end
-else
-    ---@param coords vector3
-    ---@return CZone?
-    function utils.getCurrentZone(coords)
-        if not Zones then return end
-
-        for _, zone in pairs(Zones) do
-            if zone:contains(coords) then
-                return zone
-            end
+        if drawZoneSprites and zone.drawSprite ~= false and (contains or (zone.distance or 7) < 7) then
+            drawN += 1
+            drawZones[drawN] = zone
+            zone.colour = contains and hover or nil
         end
     end
+
+    if n > 0 then
+        local previousN = #previousZones
+
+        if n ~= previousN then
+            return currentZones, true
+        end
+
+        for i = 1, n do
+            local zoneA = currentZones[i]
+            local found = false
+
+            for j = 1, previousN do
+                local zoneB = previousZones[j]
+
+                if zoneA == zoneB then
+                    found = true
+                    break
+                end
+            end
+
+            if not found then
+                return currentZones, true
+            end
+        end
+    end
+
+    return currentZones, false
+end
+
+function utils.drawZoneSprites(dict, texture)
+    if drawN == 0 then return end
+
+    for i = 1, drawN do
+        local zone = drawZones[i]
+        local spriteColour = zone.colour or colour
+
+        if zone.drawSprite ~= false then
+            SetDrawOrigin(zone.coords.x, zone.coords.y, zone.coords.z)
+            DrawSprite(dict, texture, 0, 0, width, height, 0, spriteColour.r, spriteColour.g, spriteColour.b,
+                spriteColour.a)
+        end
+    end
+
+    ClearDrawOrigin()
 end
 
 function utils.hasExport(export)
