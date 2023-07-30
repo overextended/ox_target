@@ -27,6 +27,7 @@ local options = {}
 local currentTarget = {}
 local currentMenu
 local menuHistory = {}
+local nearbyZones
 
 -- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
@@ -103,7 +104,8 @@ local function startTargeting()
     state.setActive(true)
 
     local flag = 511
-    local hit, entityHit, endCoords, distance, lastEntity, entityType, entityModel, hasTick, hasTarget
+    local hit, entityHit, endCoords, distance, lastEntity, entityType, entityModel, hasTick, hasTarget, zonesChanged
+    local zones = {}
 
     while state.isActive() do
         if not state.isNuiFocused() and lib.progressActive() then
@@ -137,7 +139,7 @@ local function startTargeting()
 
         if hit and distance < 7 then
             local newOptions
-            local nearbyZones, zonesChanged = getNearbyZones(endCoords)
+            nearbyZones, zonesChanged = getNearbyZones(endCoords)
 
             if entityHit ~= lastEntity then
                 currentMenu = nil
@@ -191,35 +193,35 @@ local function startTargeting()
 
                     if option.hide ~= hide then
                         option.hide = hide
+                        newOptions = true
                     end
 
                     if hide then hidden += 1 end
                 end
             end
 
-            local zones = (zonesChanged or newOptions and nearbyZones[1]) and {}
+            if zonesChanged then table.wipe(zones) end
 
-            if zones then
-                for i = 1, #nearbyZones do
-                    local zoneOptions = nearbyZones[i].options
-                    local optionCount = #zoneOptions
-                    totalOptions += optionCount
-                    zones[i] = zoneOptions
+            for i = 1, #nearbyZones do
+                local zoneOptions = nearbyZones[i].options
+                local optionCount = #zoneOptions
+                totalOptions += optionCount
+                zones[i] = zoneOptions
 
-                    for j = 1, optionCount do
-                        local option = zoneOptions[j]
-                        local hide = shouldHide(option, distance, entityHit, endCoords)
+                for j = 1, optionCount do
+                    local option = zoneOptions[j]
+                    local hide = shouldHide(option, distance, entityHit, endCoords)
 
-                        if option.hide ~= hide then
-                            option.hide = hide
-                        end
-
-                        if hide then hidden += 1 end
+                    if option.hide ~= hide then
+                        option.hide = hide
+                        newOptions = true
                     end
+
+                    if hide then hidden += 1 end
                 end
             end
 
-            if zones or newOptions and next(options) then
+            if newOptions then
                 if hidden == totalOptions then
                     hasTarget = false
                     SendNuiMessage('{"event": "leftTarget"}')
@@ -317,6 +319,8 @@ local function startTargeting()
     SendNuiMessage('{"event": "visible", "state": false}')
     table.wipe(currentTarget)
     table.wipe(options)
+
+    if nearbyZones then table.wipe(nearbyZones) end
 end
 
 do
@@ -378,7 +382,7 @@ end
 RegisterNUICallback('select', function(data, cb)
     cb(1)
 
-    local zone = data[3] and Zones[data[3]]
+    local zone = data[3] and nearbyZones[data[3]]
 
     ---@type TargetOptions?
     local option = zone and zone.options[data[2]] or options[data[1]][data[2]]
