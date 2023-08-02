@@ -173,7 +173,7 @@ local function startTargeting()
                 end
             end
 
-            ---@type table<string, TargetOptions[]>
+            ---@type table<string, OxTargetOption[]>
             options = newOptions or options or {}
             newOptions = (newOptions or zonesChanged or entityHit ~= lastEntity) and true
             lastEntity = entityHit
@@ -384,7 +384,7 @@ RegisterNUICallback('select', function(data, cb)
 
     local zone = data[3] and nearbyZones[data[3]]
 
-    ---@type TargetOptions?
+    ---@type OxTargetOption?
     local option = zone and zone.options[data[2]] or options[data[1]][data[2]]
 
     if option then
