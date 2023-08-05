@@ -92,8 +92,37 @@ local function shouldHide(option, distance, entityHit, endCoords)
         end
     end
 
+    local offset = option.offset
+
+    if offset then
+        local _type = type(offset)
+
+        if _type == 'vector3' then
+            if #(endCoords - GetOffsetFromEntityInWorldCoords(entityHit, offset.x, offset.y, offset.z)) > (option.distance or 1) then
+                return true
+            end
+        elseif _type == 'table' then
+            local closestOffset, offsetDistance
+
+            for j = 1, #offset do
+                local dist = #(endCoords - GetOffsetFromEntityInWorldCoords(entityHit, offset.x, offset.y, offset.z))
+
+                if dist <= (offsetDistance or 1) then
+                    closestOffset = offset
+                    offsetDistance = dist
+                end
+            end
+
+            if closestOffset then
+                offset = closestOffset
+            else
+                return true
+            end
+        end
+    end
+
     if option.canInteract then
-        local success, resp = pcall(option.canInteract, entityHit, distance, endCoords, option.name, bone)
+        local success, resp = pcall(option.canInteract, entityHit, distance, endCoords, option.name, bone, offset)
         return not success or not resp
     end
 end
