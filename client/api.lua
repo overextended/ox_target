@@ -8,9 +8,18 @@ local api = setmetatable({}, {
     end
 })
 
+local function debugWarning(msg)
+    local trace = Citizen.InvokeNative(`FORMAT_STACK_TRACE` & 0xFFFFFFFF, nil, 0, Citizen.ResultAsString())
+    local _, _, src = string.strsplit('\n', trace, 4)
+
+    warn(('%s ^0%s\n'):format(msg, src:gsub(".-%(", '(')))
+end
+
 ---@param data OxTargetPolyZone
 ---@return number
 function api.addPolyZone(data)
+    if data.debug then debugWarning('Creating new PolyZone with debug enabled.') end
+
     data.resource = GetInvokingResource()
     return lib.zones.poly(data).id
 end
@@ -18,6 +27,8 @@ end
 ---@param data OxTargetBoxZone
 ---@return number
 function api.addBoxZone(data)
+    if data.debug then debugWarning('Creating new BoxZone with debug enabled.') end
+
     data.resource = GetInvokingResource()
     return lib.zones.box(data).id
 end
@@ -25,6 +36,8 @@ end
 ---@param data OxTargetSphereZone
 ---@return number
 function api.addSphereZone(data)
+    if data.debug then debugWarning('Creating new SphereZone with debug enabled.') end
+
     data.resource = GetInvokingResource()
     return lib.zones.sphere(data).id
 end
