@@ -31,7 +31,8 @@ function utils.getTexture()
     return lib.requestStreamedTextureDict('shared'), 'emptydot_32'
 end
 
-local drawZoneSprites = GetConvarInt('ox_target:drawSprite', 1) == 1
+-- SetDrawOrigin is limited to 32 calls per frame. Set as 0 to disable.
+local drawZoneSprites = GetConvarInt('ox_target:drawSprite', 24)
 local SetDrawOrigin = SetDrawOrigin
 local DrawSprite = DrawSprite
 local ClearDrawOrigin = ClearDrawOrigin
@@ -43,6 +44,8 @@ local drawZones = {}
 local drawN = 0
 local width = 0.02
 local height = width * GetAspectRatio(false)
+
+if drawZoneSprites == 0 then drawZoneSprites = -1 end
 
 ---@param coords vector3
 ---@return CZone[], boolean
@@ -61,7 +64,7 @@ function utils.getNearbyZones(coords)
             currentZones[n] = zone
         end
 
-        if drawZoneSprites and zone.drawSprite ~= false and (contains or (zone.distance or 7) < 7) then
+        if drawN <= drawZoneSprites and zone.drawSprite ~= false and (contains or (zone.distance or 7) < 7) then
             drawN += 1
             drawZones[drawN] = zone
             zone.colour = contains and hover or nil
