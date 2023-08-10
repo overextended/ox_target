@@ -68,13 +68,13 @@ function utils.getNearbyZones(coords)
         end
     end
 
+    local previousN = #previousZones
+
+    if n ~= previousN then
+        return currentZones, true
+    end
+
     if n > 0 then
-        local previousN = #previousZones
-
-        if n ~= previousN then
-            return currentZones, true
-        end
-
         for i = 1, n do
             local zoneA = currentZones[i]
             local found = false
