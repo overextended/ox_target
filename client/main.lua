@@ -95,8 +95,17 @@ local function shouldHide(option, distance, entityHit, endCoords)
     local offset = option.offset
 
     if offset and type(offset) == 'vector3' then
-        if #(endCoords - GetOffsetFromEntityInWorldCoords(entityHit, offset.x, offset.y, offset.z)) > (option.distance or 1) then
-            return true
+        if option.absoluteOffset then
+            if #(endCoords - GetOffsetFromEntityInWorldCoords(entityHit, offset.x, offset.y, offset.z)) > 1 then
+                return true
+            end
+        else
+            local min, max = GetModelDimensions(GetEntityModel(entityHit))
+            offset =  (max - min) * offset + min
+
+            if #(endCoords - GetOffsetFromEntityInWorldCoords(entityHit, offset.x, offset.y, offset.z)) > 1 then
+                return true
+            end
         end
     end
 
