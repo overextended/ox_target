@@ -122,7 +122,7 @@ local function shouldHide(option, distance, entityHit, endCoords)
     end
 
     if option.canInteract then
-        local success, resp = pcall(option.canInteract, entityHit, distance, endCoords, option.name, bone, offset)
+        local success, resp = pcall(option.canInteract, entityHit, distance, endCoords, option.name, bone)
         return not success or not resp
     end
 end
