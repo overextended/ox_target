@@ -23,6 +23,8 @@ local GetEntityModel = GetEntityModel
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
+local GetModelDimensions = GetModelDimensions
+local GetOffsetFromEntityInWorldCoords = GetOffsetFromEntityInWorldCoords
 local options = {}
 local currentTarget = {}
 local currentMenu
@@ -36,9 +38,11 @@ local debug = GetConvarInt('ox_target:debug', 0) == 1
 
 ---@param option table
 ---@param distance number
----@param entityHit number
 ---@param endCoords vector3
-local function shouldHide(option, distance, entityHit, endCoords)
+---@param entityHit? number
+---@param entityType? number
+---@param entityModel? number | false
+local function shouldHide(option, distance, endCoords, entityHit, entityType, entityModel)
     if option.menuName ~= currentMenu then
         return true
     end
@@ -55,9 +59,13 @@ local function shouldHide(option, distance, entityHit, endCoords)
         return true
     end
 
-    local bone = option.bones
+    local bone = entityModel and option.bones or nil
 
     if bone then
+        ---@cast entityHit number
+        ---@cast entityType number
+        ---@cast entityModel number
+
         local _type = type(bone)
 
         if _type == 'string' then
@@ -89,6 +97,25 @@ local function shouldHide(option, distance, entityHit, endCoords)
             else
                 return true
             end
+        end
+    end
+
+    local offset = entityModel and option.offset or nil
+
+    if offset then
+        ---@cast entityHit number
+        ---@cast entityType number
+        ---@cast entityModel number
+
+        if not option.absoluteOffset then
+            local min, max = GetModelDimensions(entityModel)
+            offset = (max - min) * offset + min
+        end
+
+        offset = GetOffsetFromEntityInWorldCoords(entityHit, offset.x, offset.y, offset.z)
+
+        if #(endCoords - offset) > (option.offsetSize or 1) then
+            return true
         end
     end
 
@@ -189,7 +216,7 @@ local function startTargeting()
 
                 for i = 1, optionCount do
                     local option = v[i]
-                    local hide = shouldHide(option, distance, entityHit, endCoords)
+                    local hide = shouldHide(option, distance, endCoords, entityHit, entityType, entityModel)
 
                     if option.hide ~= hide then
                         option.hide = hide
@@ -210,7 +237,7 @@ local function startTargeting()
 
                 for j = 1, optionCount do
                     local option = zoneOptions[j]
-                    local hide = shouldHide(option, distance, entityHit, endCoords)
+                    local hide = shouldHide(option, distance, endCoords)
 
                     if option.hide ~= hide then
                         option.hide = hide
