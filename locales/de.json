@@ -1,15 +1,16 @@
 {
-  "toggle_front_driver_door": "Vordere Fahrertür umschalten",
-  "toggle_front_passenger_door": "Vordere Beifahrertür umschalten",
-  "toggle_rear_driver_door": "Hintere Fahrertür umschalten",
-  "toggle_rear_passenger_door": "Hintere Beifahrertür umschalten",
-  "toggle_hood": "Motorhaube umschalten",
-  "toggle_trunk": "Kofferraum umschalten",
+  "toggle_front_driver_door": "Fahrertür auf-/schließen",
+  "toggle_front_passenger_door": "Beifahrertür auf-/schließen",
+  "toggle_rear_driver_door": "Hintere Fahrertür auf-/schließen",
+  "toggle_rear_passenger_door": "Hintere Beifahrertür auf-/schließen",
+  "toggle_hood": "Motorhaube auf-/schließen",
+  "toggle_trunk": "Kofferraum auf-/schließen",
   "debug_box": "(Debug) Box",
   "debug_sphere": "(Debug) Sphäre",
-  "debug_police_car": "Polizeiauto",
+  "debug_police_car": "(Debug) Polizeifahrzeug",
   "debug_ped": "(Debug) Ped",
   "debug_vehicle": "(Debug) Fahrzeug",
   "debug_object": "(Debug) Objekt",
-  "toggle_targeting": "Zielen umschalten"
+  "toggle_targeting": "Anvisieren ein-/ausschalten"
+  "go_back": "Zurück"
 }
