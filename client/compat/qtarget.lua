@@ -57,6 +57,14 @@ local api = require 'client.api'
 exportHandler('AddBoxZone', function(name, center, length, width, options, targetoptions)
     local z = center.z
 
+    if not options.minZ then
+        options.minZ = -100
+    end
+
+    if not options.maxZ then
+        options.maxZ = 800
+    end
+
     if not options.useZ then
         z = z + math.abs(options.maxZ - options.minZ) / 2
         center = vec3(center.x, center.y, z)
