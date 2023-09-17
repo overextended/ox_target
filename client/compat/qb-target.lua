@@ -269,3 +269,13 @@ end)
 exportHandler('RemoveGlobalPlayer', function(labels)
     api.removeGlobalPlayer(labels)
 end)
+
+local utils = require 'client.utils'
+
+exportHandler('AddEntityZone', function()
+    utils.warn('AddEntityZone is not supported by ox_target - try using addEntity/addLocalEntity.')
+end)
+
+exportHandler('RemoveTargetBone', function()
+    utils.warn('RemoveTargetBone is not supported by ox_target.')
+end)
