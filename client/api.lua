@@ -1,6 +1,8 @@
 ---@class OxTargetOption
 ---@field resource? string
 
+local utils = require 'client.utils'
+
 local api = setmetatable({}, {
     __newindex = function(self, index, value)
         rawset(self, index, value)
@@ -8,35 +10,28 @@ local api = setmetatable({}, {
     end
 })
 
-local function debugWarning(msg)
-    local trace = Citizen.InvokeNative(`FORMAT_STACK_TRACE` & 0xFFFFFFFF, nil, 0, Citizen.ResultAsString())
-    local _, _, src = string.strsplit('\n', trace, 4)
-
-    warn(('%s ^0%s\n'):format(msg, src:gsub(".-%(", '(')))
-end
-
----@param data OxTargetPolyZone
+---@param data OxTargetPolyZone | table
 ---@return number
 function api.addPolyZone(data)
-    if data.debug then debugWarning('Creating new PolyZone with debug enabled.') end
+    if data.debug then utils.warn('Creating new PolyZone with debug enabled.') end
 
     data.resource = GetInvokingResource()
     return lib.zones.poly(data).id
 end
 
----@param data OxTargetBoxZone
+---@param data OxTargetBoxZone | table
 ---@return number
 function api.addBoxZone(data)
-    if data.debug then debugWarning('Creating new BoxZone with debug enabled.') end
+    if data.debug then utils.warn('Creating new BoxZone with debug enabled.') end
 
     data.resource = GetInvokingResource()
     return lib.zones.box(data).id
 end
 
----@param data OxTargetSphereZone
+---@param data OxTargetSphereZone | table
 ---@return number
 function api.addSphereZone(data)
-    if data.debug then debugWarning('Creating new SphereZone with debug enabled.') end
+    if data.debug then utils.warn('Creating new SphereZone with debug enabled.') end
 
     data.resource = GetInvokingResource()
     return lib.zones.sphere(data).id

@@ -200,4 +200,11 @@ SetTimeout(0, function()
     end
 end)
 
+function utils.warn(msg)
+    local trace = Citizen.InvokeNative(`FORMAT_STACK_TRACE` & 0xFFFFFFFF, nil, 0, Citizen.ResultAsString())
+    local _, _, src = string.strsplit('\n', trace, 4)
+
+    warn(('%s ^0%s\n'):format(msg, src:gsub(".-%(", '(')))
+end
+
 return utils
