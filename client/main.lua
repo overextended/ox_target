@@ -237,7 +237,7 @@ local function startTargeting()
 
                 for j = 1, optionCount do
                     local option = zoneOptions[j]
-                    local hide = shouldHide(option, distance, endCoords)
+                    local hide = shouldHide(option, distance, endCoords, entityHit)
 
                     if option.hide ~= hide then
                         option.hide = hide
