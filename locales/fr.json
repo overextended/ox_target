@@ -11,5 +11,6 @@
   "debug_ped": "(Debug) Ped",
   "debug_vehicle": "(Debug) Véhicule",
   "debug_object": "(Debug) Objet",
-  "toggle_targeting": "Afficher le système d'interaction"
+  "toggle_targeting": "Afficher le système d'interaction",
+  "go_back": "Retour"
 }
