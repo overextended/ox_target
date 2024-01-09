@@ -15,6 +15,11 @@ local function toggleDoor(vehicle, door)
     end
 end
 
+RegisterNetEvent('ox_target:toggleEntityDoor', function(netId, door)
+    local entity = NetToVeh(netId)
+    toggleDoor(entity, door)
+end)
+
 api.addGlobalVehicle({
     {
         name = 'ox_target:driverF',
@@ -34,7 +39,13 @@ api.addGlobalVehicle({
             end
         end,
         onSelect = function(data)
-            toggleDoor(data.entity, 0)
+            local entity = data.entity
+            local owner = NetworkGetEntityOwner(entity)
+            if owner == cache.playerId then
+                toggleDoor(entity, 0)
+            else
+                TriggerServerEvent('ox_target:toggleEntityDoor', VehToNet(entity), 0)
+            end
         end
     },
     {
@@ -54,7 +65,13 @@ api.addGlobalVehicle({
             end
         end,
         onSelect = function(data)
-            toggleDoor(data.entity, 1)
+            local entity = data.entity
+            local owner = NetworkGetEntityOwner(entity)
+            if owner == cache.playerId then
+                toggleDoor(entity, 1)
+            else
+                TriggerServerEvent('ox_target:toggleEntityDoor', VehToNet(entity), 1)
+            end
         end
     },
     {
@@ -74,7 +91,13 @@ api.addGlobalVehicle({
             end
         end,
         onSelect = function(data)
-            toggleDoor(data.entity, 2)
+            local entity = data.entity
+            local owner = NetworkGetEntityOwner(entity)
+            if owner == cache.playerId then
+                toggleDoor(entity, 2)
+            else
+                TriggerServerEvent('ox_target:toggleEntityDoor', VehToNet(entity), 2)
+            end
         end
     },
     {
@@ -94,7 +117,13 @@ api.addGlobalVehicle({
             end
         end,
         onSelect = function(data)
-            toggleDoor(data.entity, 3)
+            local entity = data.entity
+            local owner = NetworkGetEntityOwner(entity)
+            if owner == cache.playerId then
+                toggleDoor(entity, 3)
+            else
+                TriggerServerEvent('ox_target:toggleEntityDoor', VehToNet(entity), 3)
+            end
         end
     },
     {
@@ -108,7 +137,13 @@ api.addGlobalVehicle({
             return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
-            toggleDoor(data.entity, 4)
+            local entity = data.entity
+            local owner = NetworkGetEntityOwner(entity)
+            if owner == cache.playerId then
+                toggleDoor(entity, 4)
+            else
+                TriggerServerEvent('ox_target:toggleEntityDoor', VehToNet(entity), 4)
+            end
         end
     },
     {
@@ -122,7 +157,13 @@ api.addGlobalVehicle({
             return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.9
         end,
         onSelect = function(data)
-            toggleDoor(data.entity, 5)
+            local entity = data.entity
+            local owner = NetworkGetEntityOwner(entity)
+            if owner == cache.playerId then
+                toggleDoor(entity, 5)
+            else
+                TriggerServerEvent('ox_target:toggleEntityDoor', VehToNet(entity), 5)
+            end
         end
     }
 })
