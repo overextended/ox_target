@@ -34,7 +34,7 @@ local function canInteractWithDoor(entity, coords, door, boneId)
 
     boneId = GetEntityBoneIndexByName(entity, 'door_' .. boneName)
 
-    if IsVehicleDoorDamaged(entity, 0) then return end
+    if IsVehicleDoorDamaged(entity, door) then return end
 
     if boneId ~= -1 then
         return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or
