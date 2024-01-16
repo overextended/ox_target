@@ -11,6 +11,16 @@ RegisterNetEvent('ox_target:setEntityHasOptions', function(netId)
     entityStates[netId] = entity
 end)
 
+---@param netId number
+---@param door number
+RegisterNetEvent('ox_target:toggleEntityDoor', function(netId, door)
+    local entity = NetworkGetEntityFromNetworkId(netId)
+    if not DoesEntityExist(entity) then return end
+
+    local owner = NetworkGetEntityOwner(entity)
+    TriggerClientEvent('ox_target:toggleEntityDoor', owner, netId, door)
+end)
+
 CreateThread(function()
     local arr = {}
     local num = 0
