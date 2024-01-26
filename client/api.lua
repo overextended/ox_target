@@ -136,7 +136,7 @@ local function addTarget(target, options, resource)
     for i = 1, #options do
         local option = options[i]
 
-        if not resource then
+        if resource == 'ox_target' then
             if option.canInteract then
                 option.canInteract = msgpack.unpack(msgpack.pack(option.canInteract))
             end
