@@ -34,6 +34,7 @@ files {
 	'client/state.lua',
 	'client/debug.lua',
 	'client/defaults.lua',
+	'client/framework/nd.lua',
 	'client/framework/ox.lua',
 	'client/framework/esx.lua',
 	'client/framework/qb.lua',
