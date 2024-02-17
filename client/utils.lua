@@ -197,6 +197,8 @@ SetTimeout(0, function()
         require 'client.framework.esx'
     elseif utils.hasExport('qb-core.GetCoreObject') then
         require 'client.framework.qb'
+    elseif utils.hasExport('ND_Core.getPlayer') then
+        require 'client.framework.nd'
     end
 end)
 
