@@ -463,8 +463,4 @@ function api.disableTargeting(value)
     state.setDisabled(value)
 end
 
-function api.isActive()
-    return state.isActive()
-end
-
 return api
