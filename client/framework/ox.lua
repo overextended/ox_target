@@ -6,5 +6,5 @@ local player = Ox.GetPlayer()
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function utils.hasPlayerGotGroup(filter)
-    return player.hasGroup(filter)
+    return player.getGroup(filter)
 end

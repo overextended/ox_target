@@ -191,7 +191,7 @@ SetTimeout(0, function()
         end)
     end
 
-    if utils.hasExport('ox_core.GetPlayerData') then
+    if utils.hasExport('ox_core.GetPlayer') then
         require 'client.framework.ox'
     elseif utils.hasExport('es_extended.getSharedObject') then
         require 'client.framework.esx'
