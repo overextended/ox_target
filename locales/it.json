@@ -1,0 +1,16 @@
+{
+  "toggle_front_driver_door": "Apri/Chiudi portiera anteriore sinistra",
+  "toggle_front_passenger_door": "Apri/Chiudi portiera anteriore destra",
+  "toggle_rear_driver_door": "Apri/Chiudi portiera posteriore sinistra",
+  "toggle_rear_passenger_door": "Apri/Chiudi portiera posteriore destra",
+  "toggle_hood": "Apri/Chiudi Cofano",
+  "toggle_trunk": "Apri/Chiudi Bagagliaio",
+  "debug_box": "(Debug) Box",
+  "debug_sphere": "(Debug) Sphere",
+  "debug_police_car": "Auto Polizia",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Vehicle",
+  "debug_object": "(Debug) Object",
+  "toggle_targeting": "Apri/Chiudi targeting",
+  "go_back": "Indietro"
+}
