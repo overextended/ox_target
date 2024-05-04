@@ -10,12 +10,41 @@ local api = setmetatable({}, {
     end
 })
 
+---Throws a formatted type error
+---@param variable string
+---@param expected string
+---@param received string
+local function typeError(variable, expected, received)
+    error(("expected %s to have type '%s' (received %s)"):format(variable, expected, received))
+end
+
+---Checks options and throws an error on type mismatch
+---@param options? OxTargetOption | OxTargetOption[]
+---@return OxTargetOption[]
+local function checkOptions(options)
+    local optionsType = type(options)
+    if optionsType ~= 'table' then
+        typeError('options', 'table', optionsType)
+    end
+
+    local tableType = table.type(options)
+
+    if tableType == 'hash' and options.label then
+        options = { options }
+    elseif tableType ~= 'array' then
+        typeError('options', 'array', ('%s table'):format(tableType))
+    end
+
+    return options --[[ @as OxTargetOption[] ]]
+end
+
 ---@param data OxTargetPolyZone | table
 ---@return number
 function api.addPolyZone(data)
     if data.debug then utils.warn('Creating new PolyZone with debug enabled.') end
 
     data.resource = GetInvokingResource()
+    data.options = checkOptions(data.options)
     return lib.zones.poly(data).id
 end
 
@@ -25,6 +54,7 @@ function api.addBoxZone(data)
     if data.debug then utils.warn('Creating new BoxZone with debug enabled.') end
 
     data.resource = GetInvokingResource()
+    data.options = checkOptions(data.options)
     return lib.zones.box(data).id
 end
 
@@ -34,6 +64,7 @@ function api.addSphereZone(data)
     if data.debug then utils.warn('Creating new SphereZone with debug enabled.') end
 
     data.resource = GetInvokingResource()
+    data.options = checkOptions(data.options)
     return lib.zones.sphere(data).id
 end
 
@@ -60,14 +91,6 @@ function api.removeZone(id, suppressWarning)
     if suppressWarning then return end
 
     warn(('attempted to remove a zone that does not exist (id: %s)'):format(id))
-end
-
----Throws a formatted type error
----@param variable string
----@param expected string
----@param received string
-local function typeError(variable, expected, received)
-    error(("expected %s to have type '%s' (received %s)"):format(variable, expected, received))
 end
 
 ---@param target table
@@ -98,21 +121,7 @@ end
 ---@param options OxTargetOption | OxTargetOption[]
 ---@param resource string
 local function addTarget(target, options, resource)
-    local optionsType = type(options)
-
-    if optionsType ~= 'table' then
-        typeError('options', 'table', optionsType)
-    end
-
-    local tableType = table.type(options)
-
-    if tableType == 'hash' and options.label then
-        options = { options --[[@as OxTargetOption]] }
-    elseif tableType ~= 'array' then
-        typeError('options', 'array', ('%s table'):format(tableType))
-    end
-
-    ---@cast options OxTargetOption[]
+    options = checkOptions(options)
 
     local checkNames = {}
 
