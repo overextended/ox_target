@@ -131,8 +131,46 @@ local function startTargeting()
     state.setActive(true)
 
     local flag = 511
-    local hit, entityHit, endCoords, distance, lastEntity, entityType, entityModel, hasTick, hasTarget, zonesChanged
+    local hit, entityHit, endCoords, distance, lastEntity, entityType, entityModel, hasTarget, zonesChanged
     local zones = {}
+
+    CreateThread(function()
+        local dict, texture = utils.getTexture()
+        local lastCoords
+
+        while state.isActive() do
+            lastCoords = endCoords == vec0 and lastCoords or endCoords or vec0
+
+            if debug then
+                DrawMarker(28, lastCoords.x, lastCoords.y, lastCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2,
+                    0.2,
+                    ---@diagnostic disable-next-line: param-type-mismatch
+                    255, 42, 24, 100, false, false, 0, true, false, false, false)
+            end
+
+            utils.drawZoneSprites(dict, texture)
+            DisablePlayerFiring(cache.playerId, true)
+            DisableControlAction(0, 25, true)
+            DisableControlAction(0, 140, true)
+            DisableControlAction(0, 141, true)
+            DisableControlAction(0, 142, true)
+
+            if state.isNuiFocused() then
+                DisableControlAction(0, 1, true)
+                DisableControlAction(0, 2, true)
+
+                if not hasTarget or options and IsDisabledControlJustPressed(0, 25) then
+                    state.setNuiFocus(false, false)
+                end
+            elseif hasTarget and IsDisabledControlJustPressed(0, mouseButton) then
+                state.setNuiFocus(true, true)
+            end
+
+            Wait(0)
+        end
+
+        SetStreamedTextureDictAsNoLongerNeeded(dict)
+    end)
 
     while state.isActive() do
         if not state.isNuiFocused() and lib.progressActive() then
@@ -164,128 +202,122 @@ local function startTargeting()
             end
         end
 
-        if hit and endCoords ~= vec0 then
-            local newOptions
-            nearbyZones, zonesChanged = utils.getNearbyZones(endCoords)
+        if not hit and hasTarget and hasTarget > 1 then
+            SendNuiMessage('{"event": "leftTarget"}')
 
-            if entityHit ~= lastEntity then
-                currentMenu = nil
+            if debug and lastEntity > 0 then SetEntityDrawOutline(lastEntity, false) end
+            if options then options:wipe() end
 
-                if next(options) then
-                    options:wipe()
-                    SendNuiMessage('{"event": "leftTarget"}')
+            lastEntity = nil
+            hasTarget = false
+        end
+
+        nearbyZones, zonesChanged = utils.getNearbyZones(endCoords)
+
+        if entityHit > 0 and entityHit ~= lastEntity then
+            currentMenu = nil
+
+            if flag ~= 511 then
+                entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
+            end
+
+            if lastEntity ~= entityHit and debug then
+                if lastEntity then
+                    SetEntityDrawOutline(lastEntity, false)
                 end
 
-                if flag ~= 511 then
-                    entityHit = HasEntityClearLosToEntity(entityHit, cache.ped, 7) and entityHit or 0
-                end
-
-                if lastEntity ~= entityHit and debug then
-                    if lastEntity then
-                        SetEntityDrawOutline(lastEntity, false)
-                    end
-
-                    if entityType ~= 1 then
-                        SetEntityDrawOutline(entityHit, true)
-                    end
-                end
-
-                if entityHit ~= 0 then
-                    local success, result = pcall(GetEntityModel, entityHit)
-                    entityModel = success and result
-
-                    if entityModel then
-                        newOptions = getTargetOptions(entityHit, entityType, entityModel)
-                    end
+                if entityType ~= 1 then
+                    SetEntityDrawOutline(entityHit, true)
                 end
             end
 
-            options = newOptions or options
-            newOptions = (newOptions or zonesChanged or entityHit ~= lastEntity) and true
-            lastEntity = entityHit
-            currentTarget.entity = entityHit
-            currentTarget.coords = endCoords
-            currentTarget.distance = distance
-            local hidden = 0
-            local totalOptions = 0
+            if entityHit ~= 0 then
+                local success, result = pcall(GetEntityModel, entityHit)
+                entityModel = success and result
 
-            for _, v in pairs(options) do
-                local optionCount = #v
-                totalOptions += optionCount
-
-                for i = 1, optionCount do
-                    local option = v[i]
-                    local hide = shouldHide(option, distance, endCoords, entityHit, entityType, entityModel)
-
-                    if option.hide ~= hide then
-                        option.hide = hide
-                        newOptions = true
-                    end
-
-                    if hide then hidden += 1 end
+                if entityModel then
+                    options = getTargetOptions(entityHit, entityType, entityModel)
                 end
             end
+        end
 
-            if zonesChanged then table.wipe(zones) end
+        local newOptions = (zonesChanged or entityHit ~= lastEntity) and true
+        lastEntity = entityHit
+        currentTarget.entity = entityHit
+        currentTarget.coords = endCoords
+        currentTarget.distance = distance
+        local hidden = 0
+        local totalOptions = 0
 
-            for i = 1, #nearbyZones do
-                local zoneOptions = nearbyZones[i].options
-                local optionCount = #zoneOptions
-                totalOptions += optionCount
-                zones[i] = zoneOptions
+        for k, v in pairs(options) do
+            local optionCount = #v
+            local dist = k == '__global' and 0 or distance
+            totalOptions += optionCount
 
-                for j = 1, optionCount do
-                    local option = zoneOptions[j]
-                    local hide = shouldHide(option, distance, endCoords, entityHit)
+            for i = 1, optionCount do
+                local option = v[i]
+                local hide = shouldHide(option, dist, endCoords, entityHit, entityType, entityModel)
 
-                    if option.hide ~= hide then
-                        option.hide = hide
-                        newOptions = true
-                    end
-
-                    if hide then hidden += 1 end
+                if option.hide ~= hide then
+                    option.hide = hide
+                    newOptions = true
                 end
+
+                if hide then hidden += 1 end
+            end
+        end
+
+        if zonesChanged then table.wipe(zones) end
+
+        for i = 1, #nearbyZones do
+            local zoneOptions = nearbyZones[i].options
+            local optionCount = #zoneOptions
+            totalOptions += optionCount
+            zones[i] = zoneOptions
+
+            for j = 1, optionCount do
+                local option = zoneOptions[j]
+                local hide = shouldHide(option, distance, endCoords, entityHit)
+
+                if option.hide ~= hide then
+                    option.hide = hide
+                    newOptions = true
+                end
+
+                if hide then hidden += 1 end
+            end
+        end
+
+        if newOptions then
+            if hasTarget == 1 and options.size > 1 then
+                hasTarget = true
             end
 
-            if newOptions then
-                if hidden == totalOptions then
+            if hasTarget and hidden == totalOptions then
+                if hasTarget and hasTarget ~= 1 then
                     hasTarget = false
                     SendNuiMessage('{"event": "leftTarget"}')
-                else
-                    hasTarget = true
-
-                    if currentMenu then
-                        totalOptions += 1
-                        table.insert(options.__global, 1,
-                            {
-                                icon = 'fa-solid fa-circle-chevron-left',
-                                label = locale('go_back'),
-                                name = 'builtin:goback',
-                                menuName = currentMenu,
-                                openMenu = 'home'
-                            })
-                    end
-
-                    SendNuiMessage(json.encode({
-                        event = 'setTarget',
-                        options = options,
-                        zones = zones,
-                    }, { sort_keys = true }))
                 end
-            end
-        else
-            if hasTarget then
-                hasTarget = false
-                SendNuiMessage('{"event": "leftTarget"}')
-            end
+            elseif hasTarget ~= 1 and hidden ~= totalOptions then
+                hasTarget = options.size
 
-            if lastEntity then
-                if debug then SetEntityDrawOutline(lastEntity, false) end
-                if options then options:wipe() end
+                if currentMenu then
+                    totalOptions += 1
+                    table.insert(options.__global, 1,
+                        {
+                            icon = 'fa-solid fa-circle-chevron-left',
+                            label = locale('go_back'),
+                            name = 'builtin:goback',
+                            menuName = currentMenu,
+                            openMenu = 'home'
+                        })
+                end
 
-                lastEntity = nil
-            else
-                Wait(50)
+                SendNuiMessage(json.encode({
+                    event = 'setTarget',
+                    options = options,
+                    zones = zones,
+                }, { sort_keys = true }))
             end
         end
 
@@ -293,48 +325,11 @@ local function startTargeting()
             state.setActive(false)
         end
 
-        if not hasTick then
-            hasTick = true
-            local dict, texture = utils.getTexture()
-
-            CreateThread(function()
-                while state.isActive() do
-                    if debug then
-                        DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2,
-                            ---@diagnostic disable-next-line: param-type-mismatch
-                            255, 42, 24, 100, false, false, 0, true, false, false, false)
-                    end
-
-                    utils.drawZoneSprites(dict, texture)
-                    DisablePlayerFiring(cache.playerId, true)
-                    DisableControlAction(0, 25, true)
-                    DisableControlAction(0, 140, true)
-                    DisableControlAction(0, 141, true)
-                    DisableControlAction(0, 142, true)
-
-                    if state.isNuiFocused() then
-                        DisableControlAction(0, 1, true)
-                        DisableControlAction(0, 2, true)
-
-                        if not hasTarget or options and IsDisabledControlJustPressed(0, 25) then
-                            state.setNuiFocus(false, false)
-                        end
-                    elseif hasTarget and IsDisabledControlJustPressed(0, mouseButton) then
-                        state.setNuiFocus(true, true)
-                    end
-
-                    Wait(0)
-                end
-
-                SetStreamedTextureDictAsNoLongerNeeded(dict)
-            end)
-        end
-
-        if not hasTarget then
+        if not hasTarget or hasTarget == 1 then
             flag = flag == 511 and 26 or 511
         end
 
-        Wait(60)
+        Wait(hit and 50 or 100)
     end
 
     if lastEntity and debug then

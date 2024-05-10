@@ -413,10 +413,13 @@ end)
 local NetworkGetEntityIsNetworked = NetworkGetEntityIsNetworked
 local NetworkGetNetworkIdFromEntity = NetworkGetNetworkIdFromEntity
 
+---@class OxTargetOptions
 local options_mt = {}
 options_mt.__index = options_mt
+options_mt.size = 1
 
 function options_mt:wipe()
+    options_mt.size = 1
     self.globalTarget = nil
     self.model = nil
     self.entity = nil
@@ -449,6 +452,7 @@ function api.getTargetOptions(entity, _type, model)
         if IsPedAPlayer(entity) then
             options:wipe()
             options.globalTarget = players
+            options_mt.size += 1
 
             return options
         end
@@ -460,6 +464,11 @@ function api.getTargetOptions(entity, _type, model)
     options.model = models[model]
     options.entity = netId and entities[netId] or nil
     options.localEntity = localEntities[entity]
+    options_mt.size += 1
+
+    if options.model then options_mt.size += 1 end
+    if options.entity then options_mt.size += 1 end
+    if options.localEntity then options_mt.size += 1 end
 
     return options
 end
