@@ -19,10 +19,11 @@ local function typeError(variable, expected, received)
 end
 
 ---Checks options and throws an error on type mismatch
----@param options? OxTargetOption | OxTargetOption[]
+---@param options OxTargetOption | OxTargetOption[]
 ---@return OxTargetOption[]
 local function checkOptions(options)
     local optionsType = type(options)
+
     if optionsType ~= 'table' then
         typeError('options', 'table', optionsType)
     end
@@ -35,7 +36,7 @@ local function checkOptions(options)
         typeError('options', 'array', ('%s table'):format(tableType))
     end
 
-    return options --[[ @as OxTargetOption[] ]]
+    return options
 end
 
 ---@param data OxTargetPolyZone | table
