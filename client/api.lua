@@ -413,36 +413,55 @@ end)
 local NetworkGetEntityIsNetworked = NetworkGetEntityIsNetworked
 local NetworkGetNetworkIdFromEntity = NetworkGetNetworkIdFromEntity
 
----@param entity number
----@param _type number
----@param model number
----@return table
-function api.getEntityOptions(entity, _type, model)
+local options_mt = {}
+options_mt.__index = options_mt
+
+function options_mt:wipe()
+    self.globalTarget = nil
+    self.model = nil
+    self.entity = nil
+    self.localEntity = nil
+end
+
+local global = {}
+
+---@param options OxTargetOption | OxTargetOption[]
+function api.addGlobalOption(options)
+    addTarget(global, options, GetInvokingResource())
+end
+
+---@param options string | string[]
+function api.removeGlobalOption(options)
+    removeTarget(global, options, GetInvokingResource())
+end
+
+local options = setmetatable({
+    __global = global
+}, options_mt)
+
+---@param entity? number
+---@param _type? number
+---@param model? number
+function api.getTargetOptions(entity, _type, model)
+    if not entity then return options end
+
     if _type == 1 then
         if IsPedAPlayer(entity) then
-            return {
-                global = players
-            }
+            options:wipe()
+            options.globalTarget = players
+
+            return options
         end
     end
 
     local netId = NetworkGetEntityIsNetworked(entity) and NetworkGetNetworkIdFromEntity(entity)
-    local global
 
-    if _type == 1 then
-        global = peds
-    elseif _type == 2 then
-        global = vehicles
-    else
-        global = objects
-    end
+    options.globalTarget = _type == 1 and peds or _type == 2 and vehicles or objects
+    options.model = models[model]
+    options.entity = netId and entities[netId] or nil
+    options.localEntity = localEntities[entity]
 
-    return {
-        global = global,
-        model = models[model],
-        entity = netId and entities[netId] or nil,
-        localEntity = localEntities[entity],
-    }
+    return options
 end
 
 local state = require 'client.state'

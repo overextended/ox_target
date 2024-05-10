@@ -4,7 +4,7 @@ lib.locale()
 
 local utils = require 'client.utils'
 local state = require 'client.state'
-local getEntityOptions = require 'client.api'.getEntityOptions
+local getTargetOptions = require 'client.api'.getTargetOptions
 
 require 'client.debug'
 require 'client.defaults'
@@ -24,7 +24,7 @@ local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local GetModelDimensions = GetModelDimensions
 local GetOffsetFromEntityInWorldCoords = GetOffsetFromEntityInWorldCoords
-local options = {}
+local options = getTargetOptions()
 local currentTarget = {}
 local currentMenu
 local menuHistory = {}
@@ -172,7 +172,7 @@ local function startTargeting()
                 currentMenu = nil
 
                 if next(options) then
-                    table.wipe(options)
+                    options:wipe()
                     SendNuiMessage('{"event": "leftTarget"}')
                 end
 
@@ -195,13 +195,12 @@ local function startTargeting()
                     entityModel = success and result
 
                     if entityModel then
-                        newOptions = getEntityOptions(entityHit, entityType, entityModel)
+                        newOptions = getTargetOptions(entityHit, entityType, entityModel)
                     end
                 end
             end
 
-            ---@type table<string, OxTargetOption[]>
-            options = newOptions or options or {}
+            options = newOptions or options
             newOptions = (newOptions or zonesChanged or entityHit ~= lastEntity) and true
             lastEntity = entityHit
             currentTarget.entity = entityHit
@@ -257,15 +256,14 @@ local function startTargeting()
 
                     if currentMenu then
                         totalOptions += 1
-                        options.__builtin = {
+                        table.insert(options.__global, 1,
                             {
                                 icon = 'fa-solid fa-circle-chevron-left',
                                 label = locale('go_back'),
                                 name = 'builtin:goback',
                                 menuName = currentMenu,
                                 openMenu = 'home'
-                            },
-                        }
+                            })
                     end
 
                     SendNuiMessage(json.encode({
@@ -283,7 +281,7 @@ local function startTargeting()
 
             if lastEntity then
                 if debug then SetEntityDrawOutline(lastEntity, false) end
-                if options then table.wipe(options) end
+                if options then options:wipe() end
 
                 lastEntity = nil
             else
@@ -346,7 +344,7 @@ local function startTargeting()
     state.setNuiFocus(false)
     SendNuiMessage('{"event": "visible", "state": false}')
     table.wipe(currentTarget)
-    table.wipe(options)
+    options:wipe()
 
     if nearbyZones then table.wipe(nearbyZones) end
 end
