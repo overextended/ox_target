@@ -11,7 +11,6 @@ require 'client.defaults'
 require 'client.compat.qtarget'
 require 'client.compat.qb-target'
 
-local raycastFromCamera, getNearbyZones, drawZoneSprites in utils
 local SendNuiMessage = SendNuiMessage
 local GetEntityCoords = GetEntityCoords
 local GetEntityType = GetEntityType
@@ -35,8 +34,9 @@ local nearbyZones
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
 local mouseButton = GetConvarInt('ox_target:leftClick', 1) == 1 and 24 or 25
 local debug = GetConvarInt('ox_target:debug', 0) == 1
+local vec0 = vec3(0, 0, 0)
 
----@param option table
+---@param option OxTargetOption
 ---@param distance number
 ---@param endCoords vector3
 ---@param entityHit? number
@@ -47,7 +47,7 @@ local function shouldHide(option, distance, endCoords, entityHit, entityType, en
         return true
     end
 
-    if option.distance and distance > option.distance then
+    if distance > (option.distance or 7) then
         return true
     end
 
@@ -141,7 +141,7 @@ local function startTargeting()
         end
 
         local playerCoords = GetEntityCoords(cache.ped)
-        hit, entityHit, endCoords = raycastFromCamera(flag)
+        hit, entityHit, endCoords = lib.raycast.fromCamera(flag, 4, 20)
         distance = #(playerCoords - endCoords)
 
         if entityHit ~= 0 and entityHit ~= lastEntity then
@@ -151,7 +151,7 @@ local function startTargeting()
 
         if entityType == 0 then
             local _flag = flag == 511 and 26 or 511
-            local _hit, _entityHit, _endCoords = raycastFromCamera(_flag)
+            local _hit, _entityHit, _endCoords = lib.raycast.fromCamera(flag, 4, 20)
             local _distance = #(playerCoords - _endCoords)
 
             if _distance < distance then
@@ -164,9 +164,9 @@ local function startTargeting()
             end
         end
 
-        if hit and distance < 7 then
+        if hit and endCoords ~= vec0 then
             local newOptions
-            nearbyZones, zonesChanged = getNearbyZones(endCoords)
+            nearbyZones, zonesChanged = utils.getNearbyZones(endCoords)
 
             if entityHit ~= lastEntity then
                 currentMenu = nil
@@ -272,7 +272,7 @@ local function startTargeting()
                         event = 'setTarget',
                         options = options,
                         zones = zones,
-                    }, { sort_keys=true }))
+                    }, { sort_keys = true }))
                 end
             end
         else
@@ -302,11 +302,12 @@ local function startTargeting()
             CreateThread(function()
                 while state.isActive() do
                     if debug then
-                        ---@diagnostic disable-next-line: param-type-mismatch
-                        DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24, 100, false, false, 0, true, false, false, false)
+                        DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2,
+                            ---@diagnostic disable-next-line: param-type-mismatch
+                            255, 42, 24, 100, false, false, 0, true, false, false, false)
                     end
 
-                    drawZoneSprites(dict, texture)
+                    utils.drawZoneSprites(dict, texture)
                     DisablePlayerFiring(cache.playerId, true)
                     DisableControlAction(0, 25, true)
                     DisableControlAction(0, 140, true)
@@ -390,7 +391,8 @@ local function getResponse(option, server)
     response.distance = currentTarget.distance
 
     if server then
-        response.entity = response.entity ~= 0 and NetworkGetEntityIsNetworked(response.entity) and NetworkGetNetworkIdFromEntity(response.entity) or 0
+        response.entity = response.entity ~= 0 and NetworkGetEntityIsNetworked(response.entity) and
+            NetworkGetNetworkIdFromEntity(response.entity) or 0
     end
 
     response.icon = nil
