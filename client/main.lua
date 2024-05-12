@@ -189,7 +189,7 @@ local function startTargeting()
 
         if entityType == 0 then
             local _flag = flag == 511 and 26 or 511
-            local _hit, _entityHit, _endCoords = lib.raycast.fromCamera(flag, 4, 20)
+            local _hit, _entityHit, _endCoords = lib.raycast.fromCamera(_flag, 4, 20)
             local _distance = #(playerCoords - _endCoords)
 
             if _distance < distance then
