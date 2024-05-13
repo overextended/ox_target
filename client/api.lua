@@ -432,12 +432,12 @@ end
 function options_mt:set(entity, _type, model)
     if not entity then return options end
 
-    if _type == 1 then
-        if IsPedAPlayer(entity) then
-            self:wipe()
-            self.globalTarget = players
-            options_mt.size += 1
-        end
+    if _type == 1 and IsPedAPlayer(entity) then
+        self:wipe()
+        self.globalTarget = players
+        options_mt.size += 1
+
+        return
     end
 
     local netId = NetworkGetEntityIsNetworked(entity) and NetworkGetNetworkIdFromEntity(entity)
