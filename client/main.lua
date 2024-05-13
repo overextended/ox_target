@@ -4,7 +4,7 @@ lib.locale()
 
 local utils = require 'client.utils'
 local state = require 'client.state'
-local getTargetOptions = require 'client.api'.getTargetOptions
+local options = require 'client.api'.getTargetOptions()
 
 require 'client.debug'
 require 'client.defaults'
@@ -24,7 +24,6 @@ local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
 local GetModelDimensions = GetModelDimensions
 local GetOffsetFromEntityInWorldCoords = GetOffsetFromEntityInWorldCoords
-local options = getTargetOptions()
 local currentTarget = {}
 local currentMenu
 local menuHistory = {}
@@ -202,19 +201,12 @@ local function startTargeting()
             end
         end
 
-        if not hit and hasTarget and hasTarget > 1 then
-            SendNuiMessage('{"event": "leftTarget"}')
-
-            if debug and lastEntity > 0 then SetEntityDrawOutline(lastEntity, false) end
-            if options then options:wipe() end
-
-            lastEntity = nil
-            hasTarget = false
-        end
-
         nearbyZones, zonesChanged = utils.getNearbyZones(endCoords)
 
-        if entityHit > 0 and entityHit ~= lastEntity then
+        local entityChanged = entityHit ~= lastEntity
+        local newOptions = (zonesChanged or entityChanged) and true
+
+        if entityHit > 0 and entityChanged then
             currentMenu = nil
 
             if flag ~= 511 then
@@ -231,17 +223,26 @@ local function startTargeting()
                 end
             end
 
-            if entityHit ~= 0 then
+            if entityHit > 0 then
                 local success, result = pcall(GetEntityModel, entityHit)
                 entityModel = success and result
-
-                if entityModel then
-                    options = getTargetOptions(entityHit, entityType, entityModel)
-                end
             end
         end
 
-        local newOptions = (zonesChanged or entityHit ~= lastEntity) and true
+        if hasTarget and (zonesChanged or entityChanged and hasTarget > 1) then
+            SendNuiMessage('{"event": "leftTarget"}')
+            
+            if entityChanged then options:wipe() end
+
+            if debug and lastEntity > 0 then SetEntityDrawOutline(lastEntity, false) end
+
+            hasTarget = false
+        end
+
+        if newOptions and entityModel and entityHit > 0 then
+            options:set(entityHit, entityType, entityModel)
+        end
+
         lastEntity = entityHit
         currentTarget.entity = entityHit
         currentTarget.coords = endCoords

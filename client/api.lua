@@ -426,6 +426,33 @@ function options_mt:wipe()
     self.localEntity = nil
 end
 
+---@param entity? number
+---@param _type? number
+---@param model? number
+function options_mt:set(entity, _type, model)
+    if not entity then return options end
+
+    if _type == 1 then
+        if IsPedAPlayer(entity) then
+            self:wipe()
+            self.globalTarget = players
+            options_mt.size += 1
+        end
+    end
+
+    local netId = NetworkGetEntityIsNetworked(entity) and NetworkGetNetworkIdFromEntity(entity)
+
+    self.globalTarget = _type == 1 and peds or _type == 2 and vehicles or objects
+    self.model = models[model]
+    self.entity = netId and entities[netId] or nil
+    self.localEntity = localEntities[entity]
+    options_mt.size += 1
+
+    if self.model then options_mt.size += 1 end
+    if self.entity then options_mt.size += 1 end
+    if self.localEntity then options_mt.size += 1 end
+end
+
 local global = {}
 
 ---@param options OxTargetOption | OxTargetOption[]
@@ -448,29 +475,18 @@ local options = setmetatable({
 function api.getTargetOptions(entity, _type, model)
     if not entity then return options end
 
-    if _type == 1 then
-        if IsPedAPlayer(entity) then
-            options:wipe()
-            options.globalTarget = players
-            options_mt.size += 1
-
-            return options
-        end
+    if IsPedAPlayer(entity) then
+        return {
+            global = players,
+        }
     end
 
-    local netId = NetworkGetEntityIsNetworked(entity) and NetworkGetNetworkIdFromEntity(entity)
-
-    options.globalTarget = _type == 1 and peds or _type == 2 and vehicles or objects
-    options.model = models[model]
-    options.entity = netId and entities[netId] or nil
-    options.localEntity = localEntities[entity]
-    options_mt.size += 1
-
-    if options.model then options_mt.size += 1 end
-    if options.entity then options_mt.size += 1 end
-    if options.localEntity then options_mt.size += 1 end
-
-    return options
+    return {
+        global = _type == 1 and peds or _type == 2 and vehicles or objects,
+        model = models[model],
+        entity = netId and entities[netId] or nil,
+        localEntity = localEntities[entity],
+    }
 end
 
 local state = require 'client.state'
