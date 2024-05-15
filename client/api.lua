@@ -42,7 +42,7 @@ end
 function api.zoneExists(id)
     if not Zones or (type(id) ~= 'number' and type(id) ~= 'string') then return false end
 
-    if type(id) == 'number' and Zones[id] return true end
+    if type(id) == 'number' and Zones[id] then return true end
 
     for key, zone in pairs(Zones) do
         if type(id) == 'string' and zone.name == id then return true end
