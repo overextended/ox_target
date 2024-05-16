@@ -1,0 +1,16 @@
+{
+  "toggle_front_driver_door": "Abrir a porta do motorista dianteira",
+  "toggle_front_passenger_door": "Abrir a porta dianteira do passageiro",
+  "toggle_rear_driver_door": "Abrir a porta traseira do motorista",
+  "toggle_rear_passenger_door": "Abrir a porta traseira do passageiro",
+  "toggle_hood": "Abrir o capô",
+  "toggle_trunk": "Abrir o porta-malas",
+  "debug_box": "(Debug) Caixa",
+  "debug_sphere": "(Debug) Esfera",
+  "debug_police_car": "Carro de polícia",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Veículo",
+  "debug_object": "(Debug) Objeto",
+  "toggle_targeting": "Alternar mira",
+  "go_back": "Voltar"
+}

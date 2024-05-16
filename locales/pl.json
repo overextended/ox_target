@@ -10,6 +10,7 @@
   "debug_police_car": "Radiowóz",
   "debug_ped": "(Debug) Ped",
   "debug_vehicle": "(Debug) Pojazd",
-  "debug_object": "(Debug) Objekt",
-  "toggle_targeting": "Przełącz targetowanie"
+  "debug_object": "(Debug) Obiekt",
+  "toggle_targeting": "Przełącz celowanie",
+  "go_back": "Wróć"
 }

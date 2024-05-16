@@ -9,12 +9,12 @@ local utils = require 'client.utils'
 local playerItems = utils.getItems()
 
 local function setPlayerItems()
-    if not playerData?.items then return end
+    if not playerData or not playerData.items then return end
 
     table.wipe(playerItems)
 
     for _, item in pairs(playerData.items) do
-        playerItems[item.name] = (playerItems[item.name] or 0) + item.amount
+        playerItems[item.name] = (playerItems[item.name] or 0) + (item.amount or 0)
     end
 end
 

@@ -78,3 +78,12 @@ ox_target:addGlobalObject({
         label = locale('debug_object'),
     }
 })
+
+ox_target:addGlobalOption({
+    {
+        name = 'global',
+        event = 'ox_target:debug',
+        icon = 'fa-solid fa-globe',
+        label = locale('debug_global'),
+    }
+})
