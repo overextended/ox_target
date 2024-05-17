@@ -430,7 +430,7 @@ end
 ---@param _type? number
 ---@param model? number
 function options_mt:set(entity, _type, model)
-    if not entity then return options end
+    if not entity then return end
 
     if _type == 1 and IsPedAPlayer(entity) then
         self:wipe()
@@ -453,6 +453,7 @@ function options_mt:set(entity, _type, model)
     if self.localEntity then options_mt.size += 1 end
 end
 
+---@type OxTargetOption[]
 local global = {}
 
 ---@param options OxTargetOption | OxTargetOption[]
@@ -480,6 +481,8 @@ function api.getTargetOptions(entity, _type, model)
             global = players,
         }
     end
+
+    local netId = NetworkGetEntityIsNetworked(entity) and NetworkGetNetworkIdFromEntity(entity)
 
     return {
         global = _type == 1 and peds or _type == 2 and vehicles or objects,

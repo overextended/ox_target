@@ -17,7 +17,6 @@ local GetEntityType = GetEntityType
 local HasEntityClearLosToEntity = HasEntityClearLosToEntity
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
 local GetEntityBonePosition_2 = GetEntityBonePosition_2
-local next = next
 local GetEntityModel = GetEntityModel
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
