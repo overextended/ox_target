@@ -424,6 +424,10 @@ function options_mt:wipe()
     self.model = nil
     self.entity = nil
     self.localEntity = nil
+
+    if self.__global[1]?.name == 'builtin:goback' then
+        table.remove(self.__global, 1)
+    end
 end
 
 ---@param entity? number
@@ -466,6 +470,7 @@ function api.removeGlobalOption(options)
     removeTarget(global, options, GetInvokingResource())
 end
 
+---@class OxTargetOptions
 local options = setmetatable({
     __global = global
 }, options_mt)

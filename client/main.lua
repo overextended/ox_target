@@ -230,7 +230,7 @@ local function startTargeting()
 
         if hasTarget and (zonesChanged or entityChanged and hasTarget > 1) then
             SendNuiMessage('{"event": "leftTarget"}')
-            
+
             if entityChanged then options:wipe() end
 
             if debug and lastEntity > 0 then SetEntityDrawOutline(lastEntity, false) end
