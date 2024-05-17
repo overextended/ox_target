@@ -429,6 +429,8 @@ RegisterNUICallback('select', function(data, cb)
 
             menuChanged = true
             currentMenu = option.openMenu ~= 'home' and option.openMenu or nil
+
+            options:wipe()
         else
             state.setNuiFocus(false)
         end
