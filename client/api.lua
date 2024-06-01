@@ -69,6 +69,20 @@ function api.addSphereZone(data)
     return lib.zones.sphere(data).id
 end
 
+---@param id number | string The ID of the zone to check. It can be either a number or a string representing the zone's index or name, respectively.
+---@return boolean returns true if the zone with the specified ID exists, otherwise false.
+function api.zoneExists(id)
+    if not Zones or (type(id) ~= 'number' and type(id) ~= 'string') then return false end
+
+    if type(id) == 'number' and Zones[id] then return true end
+
+    for key, zone in pairs(Zones) do
+        if type(id) == 'string' and zone.name == id then return true end
+    end
+
+    return false
+end
+
 ---@param id number | string
 ---@param suppressWarning boolean?
 function api.removeZone(id, suppressWarning)
