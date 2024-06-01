@@ -302,7 +302,7 @@ local function startTargeting()
             elseif menuChanged or hasTarget ~= 1 and hidden ~= totalOptions then
                 hasTarget = options.size
 
-                if currentMenu and options.__global[1] and options.__global[1].name ~= 'builtin:goback' then
+                if currentMenu and options.__global[1]?.name ~= 'builtin:goback' then
                     table.insert(options.__global, 1,
                         {
                             icon = 'fa-solid fa-circle-chevron-left',
