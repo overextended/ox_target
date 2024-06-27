@@ -30,7 +30,7 @@ end
 ---@param useOffset boolean?
 ---@return boolean?
 local function canInteractWithDoor(entity, coords, door, useOffset)
-    if not GetIsDoorValid(entity, door) or GetVehicleDoorLockStatus(entity) > 1 or IsVehicleDoorDamaged(entity, door) then return end
+    if not GetIsDoorValid(entity, door) or GetVehicleDoorLockStatus(entity) > 1 or IsVehicleDoorDamaged(entity, door) or IsPedInAnyVehicle(PlayerPedId(), false) then return end
 
     if useOffset then return true end
 
