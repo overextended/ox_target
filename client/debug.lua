@@ -20,7 +20,7 @@ ox_target:addBoxZone({
     drawSprite = true,
     options = {
         {
-            name = 'box',
+            name = 'debug_box',
             event = 'ox_target:debug',
             icon = 'fa-solid fa-cube',
             label = locale('debug_box'),
@@ -35,7 +35,7 @@ ox_target:addSphereZone({
     drawSprite = true,
     options = {
         {
-            name = 'sphere',
+            name = 'debug_sphere',
             event = 'ox_target:debug',
             icon = 'fa-solid fa-circle',
             label = locale('debug_sphere'),
@@ -45,7 +45,7 @@ ox_target:addSphereZone({
 
 ox_target:addModel(`police`, {
     {
-        name = 'police',
+        name = 'debug_model',
         event = 'ox_target:debug',
         icon = 'fa-solid fa-handcuffs',
         label = locale('debug_police_car'),
@@ -54,7 +54,7 @@ ox_target:addModel(`police`, {
 
 ox_target:addGlobalPed({
     {
-        name = 'ped',
+        name = 'debug_ped',
         event = 'ox_target:debug',
         icon = 'fa-solid fa-male',
         label = locale('debug_ped'),
@@ -63,7 +63,7 @@ ox_target:addGlobalPed({
 
 ox_target:addGlobalVehicle({
     {
-        name = 'vehicle',
+        name = 'debug_vehicle',
         event = 'ox_target:debug',
         icon = 'fa-solid fa-car',
         label = locale('debug_vehicle'),
@@ -72,9 +72,28 @@ ox_target:addGlobalVehicle({
 
 ox_target:addGlobalObject({
     {
-        name = 'object',
+        name = 'debug_object',
         event = 'ox_target:debug',
         icon = 'fa-solid fa-bong',
         label = locale('debug_object'),
+    }
+})
+
+ox_target:addGlobalOption({
+    {
+        name = 'debug_global',
+        icon = 'fa-solid fa-globe',
+        label = locale('debug_global'),
+        openMenu = 'debug_global'
+    }
+})
+
+ox_target:addGlobalOption({
+    {
+        name = 'debug_global2',
+        event = 'ox_target:debug',
+        icon = 'fa-solid fa-globe',
+        label = locale('debug_global') .. ' 2',
+        menuName = 'debug_global'
     }
 })

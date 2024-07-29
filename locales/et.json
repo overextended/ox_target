@@ -11,5 +11,6 @@
   "debug_ped": "(Debug) Ped",
   "debug_vehicle": "(Debug) Sõiduk",
   "debug_object": "(Debug) Objekt",
-  "toggle_targeting": "Näita kolmandat silma"
+  "toggle_targeting": "Näita kolmandat silma",
+  "go_back": "Mine tagasi"
 }
