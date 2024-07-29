@@ -71,6 +71,30 @@ local function typeError(variable, expected, received)
 end
 
 ---@param target table
+---@param remove string | string[]
+---@param resource string
+---@param showWarning? boolean
+local function removeTarget(target, remove, resource, showWarning)
+    if type(remove) ~= 'table' then remove = { remove } end
+
+    for i = #target, 1, -1 do
+        local option = target[i]
+
+        if option.resource == resource then
+            for j = #remove, 1, -1 do
+                if option.name == remove[j] then
+                    table.remove(target, i)
+
+                    if showWarning then
+                        utils.warn(("Replacing existing target option '%s'."):format(option.name))
+                    end
+                end
+            end
+        end
+    end
+end
+
+---@param target table
 ---@param options OxTargetOption | OxTargetOption[]
 ---@param resource string
 local function addTarget(target, options, resource)
@@ -90,13 +114,29 @@ local function addTarget(target, options, resource)
 
     ---@cast options OxTargetOption[]
 
+    local checkNames = {}
+
+    resource = resource or 'ox_target'
+
+    for i = 1, #options do
+        local option = options[i]
+        option.resource = resource
+
+        if option.name then
+            checkNames[#checkNames + 1] = option.name
+        end
+    end
+
+    if checkNames[1] then
+        removeTarget(target, checkNames, resource, true)
+    end
+
     local num = #target
 
     for i = 1, #options do
         local option = options[i]
-        option.resource = resource or 'ox_target'
 
-        if not resource then
+        if resource == 'ox_target' then
             if option.canInteract then
                 option.canInteract = msgpack.unpack(msgpack.pack(option.canInteract))
             end
@@ -108,25 +148,6 @@ local function addTarget(target, options, resource)
 
         num += 1
         target[num] = options[i]
-    end
-end
-
----@param target table
----@param remove string | string[]
----@param resource string
-local function removeTarget(target, remove, resource)
-    if type(remove) ~= 'table' then remove = { remove } end
-
-    for i = #target, 1, -1 do
-        local option = target[i]
-
-        if option.resource == resource then
-            for j = #remove, 1, -1 do
-                if option.name == remove[j] then
-                    table.remove(target, i)
-                end
-            end
-        end
     end
 end
 
