@@ -120,6 +120,10 @@ end
 function utils.hasExport(export)
     local resource, exportName = string.strsplit('.', export)
 
+    if GetResourceState(resource) ~= 'started' then
+        return false
+    end
+
     return pcall(function()
         return exports[resource][exportName]
     end)
