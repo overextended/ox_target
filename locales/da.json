@@ -1,15 +1,17 @@
 {
-  "toggle_front_driver_door": "Åben/Luk forreste førerdør",
-  "toggle_front_passenger_door": "Åben/Luk forreste passagerdør",
-  "toggle_rear_driver_door": "Åben/Luk bageste førerdør",
-  "toggle_rear_passenger_door": "Åben/Luk bageste passagerdør",
-  "toggle_hood": "Åben/Luk motorhjelm",
-  "toggle_trunk": "Åben/Luk bagagerum",
+  "toggle_front_driver_door": "Skift forreste førerdør",
+  "toggle_front_passenger_door": "Skift forreste passagerdør",
+  "toggle_rear_driver_door": "Skift bageste førerdør",
+  "toggle_rear_passenger_door": "Skift bageste passagerdør",
+  "toggle_hood": "Skift motorhjelm",
+  "toggle_trunk": "Skift bagagerum",
   "debug_box": "(Debug) Boks",
   "debug_sphere": "(Debug) Kugle",
-  "debug_police_car": "Politi Bil",
-  "debug_ped": "(Debug) Ped",
+  "debug_police_car": "Politibil",
+  "debug_ped": "(Debug) Person",
   "debug_vehicle": "(Debug) Køretøj",
   "debug_object": "(Debug) Objekt",
-  "toggle_targeting": "Slå targeting fra/til"
+  "debug_global": "(Debug) Global",
+  "toggle_targeting": "Skift målretning",
+  "go_back": "Gå tilbage"
 }
