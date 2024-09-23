@@ -91,7 +91,7 @@ function api.removeZone(id, suppressWarning)
             local foundZone
 
             for _, v in pairs(Zones) do
-                if v.name == id then
+                if v.options[1].name == id then
                     foundZone = true
                     v:remove()
                 end
