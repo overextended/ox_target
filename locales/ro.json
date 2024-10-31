@@ -1,0 +1,17 @@
+{
+  "toggle_front_driver_door": "Comută ușa șoferului",
+  "toggle_front_passenger_door": "Comută ușa pasagerului",
+  "toggle_rear_driver_door": "Comută ușa din spatele șoferului",
+  "toggle_rear_passenger_door": "Comută ușa pasagerului din spate",
+  "toggle_hood": "Comută capota",
+  "toggle_trunk": "Comută portbagajul",
+  "debug_box": "(Debug) Cutie",
+  "debug_sphere": "(Debug) Sferă",
+  "debug_police_car": "Mașină de poliție",
+  "debug_ped": "(Debug) Pedestrian",
+  "debug_vehicle": "(Debug) Vehicul",
+  "debug_object": "(Debug) Obiect",
+  "debug_global": "(Debug) Global",
+  "toggle_targeting": "Foloseste ochiul",
+  "go_back": "Întoarce-te"
+}
