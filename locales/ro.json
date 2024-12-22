@@ -1,0 +1,17 @@
+{
+	"toggle_front_driver_door": "Deschide/Închide ușă șofer",
+	"toggle_front_passenger_door": "Deschide/Închide ușă pasager față",
+	"toggle_rear_driver_door": "Deschide/Închide ușă pasager stânga",
+	"toggle_rear_passenger_door": "Deschide/Închide ușă pasager dreapta",
+	"toggle_hood": "Deschide/Închide capota",
+	"toggle_trunk": "Deschide/Închide portbagajul",
+	"debug_box": "(Debug) Cub",
+	"debug_sphere": "(Debug) Sferă",
+	"debug_police_car": "Mașină de poliție",
+	"debug_ped": "(Debug) Ped",
+	"debug_vehicle": "(Debug) Vehicul",
+	"debug_object": "(Debug) Obiect",
+	"debug_global": "(Debug) Global",
+	"toggle_targeting": "Modul de interactiune",
+	"go_back": "Înapoi"
+}
