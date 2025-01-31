@@ -38,7 +38,7 @@ local function canInteractWithDoor(entity, coords, door, useOffset)
 
     if not boneName then return false end
 
-    boneId = GetEntityBoneIndexByName(entity, 'door_' .. boneName)
+    local boneId = GetEntityBoneIndexByName(entity, 'door_' .. boneName)
 
     if boneId ~= -1 then
         return #(coords - GetEntityBonePosition_2(entity, boneId)) < 0.5 or
