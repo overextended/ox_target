@@ -5,11 +5,13 @@
   "toggle_rear_passenger_door": "开关右后车门",
   "toggle_hood": "打开引擎盖",
   "toggle_trunk": "打开后备箱",
-  "debug_box": "(Debug) 箱子",
-  "debug_sphere": "(Debug) 球",
+  "debug_box": "(Debug) 矩形区域",
+  "debug_sphere": "(Debug) 球形区域",
   "debug_police_car": "警车",
-  "debug_ped": "(Debug) Ped",
+  "debug_ped": "(Debug) 角色实体",
   "debug_vehicle": "(Debug) 车辆",
-  "debug_object": "(Debug) 对象",
-  "toggle_targeting": "交互菜单"
+  "debug_object": "(Debug) 物体",
+  "debug_global": "(Debug) 全局对象",
+  "toggle_targeting": "交互菜单",
+  "go_back": "返回"
 }
