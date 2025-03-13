@@ -289,7 +289,7 @@ local function startTargeting()
         end
 
         if newOptions then
-            if hasTarget == 1 and options.size > 1 then
+            if hasTarget == 1 and (totalOptions - hidden) > 1 then
                 hasTarget = true
             end
 
