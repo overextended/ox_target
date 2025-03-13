@@ -111,6 +111,10 @@ function utils.drawZoneSprites(dict, texture)
         local spriteColour = zone.colour or colour
 
         if zone.drawSprite ~= false then
+            -- This is a stupid dist check because of weird sprite popups
+            local dist = #(GetEntityCoords(cache.ped) - zone.coords.xyz)
+            if dist >= zone.distance or 2.5 then return end
+
             SetDrawOrigin(zone.coords.x, zone.coords.y, zone.coords.z)
             DrawSprite(dict, texture, 0, 0, width, height, 0, spriteColour.r, spriteColour.g, spriteColour.b,
                 spriteColour.a)
