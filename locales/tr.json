@@ -1,0 +1,17 @@
+{
+  "toggle_front_driver_door": "Ön sürücü tarafı kapısını aç/kapa",
+  "toggle_front_passenger_door": "Ön yolcu tarafı kapısını aç/kapa",
+  "toggle_rear_driver_door": "Arka sürücü tarafı kapısını aç/kapa",
+  "toggle_rear_passenger_door": "Arka yolcu tarafı kapısını aç/kapa",
+  "toggle_hood": "Kaputu aç/kapa",
+  "toggle_trunk": "Bagajı aç/kapa",
+  "debug_box": "(Debug) Kutu",
+  "debug_sphere": "(Debug) Küre",
+  "debug_police_car": "Polis arabası",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Araç",
+  "debug_object": "(Debug) Nesne",
+  "debug_global": "(Debug) Genel",
+  "toggle_targeting": "Hedeflemeyi aç/kapa",
+  "go_back": "Geri dön"
+}
