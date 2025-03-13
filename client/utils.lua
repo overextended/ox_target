@@ -18,7 +18,8 @@ function utils.raycastFromCamera(flag)
 
     while true do
         Wait(0)
-        local retval, hit, endCoords, surfaceNormal, materialHash, entityHit = GetShapeTestResultIncludingMaterial(handle)
+        local retval, hit, endCoords, surfaceNormal, materialHash, entityHit = GetShapeTestResultIncludingMaterial(
+        handle)
 
         if retval ~= 1 then
             ---@diagnostic disable-next-line: return-type-mismatch
@@ -53,10 +54,12 @@ function utils.getNearbyZones(coords)
     if not Zones then return currentZones, false end
 
     local n = 0
+    local nearbyZones = lib.zones.getNearbyZones()
     drawN = 0
     previousZones, currentZones = currentZones, table.wipe(previousZones)
 
-    for _, zone in pairs(Zones) do
+    for i = 1, #nearbyZones do
+        local zone = nearbyZones[i]
         local contains = zone:contains(coords)
 
         if contains then
