@@ -338,7 +338,7 @@ function api.addLocalEntity(arr, options)
 
             addTarget(localEntities[entityId], options, resource)
         else
-            print(("No entity with id '%s' exists."):format(entityId))
+             lib.print.warn(("No entity with id '%s' exists in %s."):format(entityId, resource))
         end
     end
 end
