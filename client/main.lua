@@ -107,7 +107,7 @@ local function shouldHide(option, distance, endCoords, entityHit, entityType, en
 
         if not option.absoluteOffset then
             local min, max = GetModelDimensions(entityModel)
-            offset = (max - min) * offset + min
+            offset = (max - min) * vec3(offset.x, offset.y, offset.z) + min
         end
 
         offset = GetOffsetFromEntityInWorldCoords(entityHit, offset.x, offset.y, offset.z)
