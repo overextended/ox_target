@@ -191,3 +191,11 @@ end)
 exportHandler('RemovePlayer', function(labels)
     api.removeGlobalPlayer(labels)
 end)
+
+exportHandler('AddGlobalPlayer', function(options)
+    api.addGlobalPlayer(convert(options))
+end)
+
+exportHandler('RemoveGlobalPlayer', function(labels)
+    api.removeGlobalPlayer(labels)
+end)
