@@ -376,6 +376,19 @@ CreateThread(function()
     end
 end)
 
+---@type OxTargetOption[]
+local global = {}
+
+---@param options OxTargetOption | OxTargetOption[]
+function api.addGlobalOption(options)
+    addTarget(global, options, GetInvokingResource())
+end
+
+---@param options string | string[]
+function api.removeGlobalOption(options)
+    removeTarget(global, options, GetInvokingResource())
+end
+
 ---@param resource string
 ---@param target table
 local function removeResourceGlobals(resource, target)
@@ -412,7 +425,7 @@ end
 
 ---@param resource string
 AddEventHandler('onClientResourceStop', function(resource)
-    removeResourceGlobals(resource, { peds, vehicles, objects, players })
+    removeResourceGlobals(resource, { peds, vehicles, objects, players, global })
     removeResourceTargets(resource, { models, entities, localEntities })
 
     if Zones then
@@ -469,19 +482,6 @@ function options_mt:set(entity, _type, model)
     if self.model then options_mt.size += 1 end
     if self.entity then options_mt.size += 1 end
     if self.localEntity then options_mt.size += 1 end
-end
-
----@type OxTargetOption[]
-local global = {}
-
----@param options OxTargetOption | OxTargetOption[]
-function api.addGlobalOption(options)
-    addTarget(global, options, GetInvokingResource())
-end
-
----@param options string | string[]
-function api.removeGlobalOption(options)
-    removeTarget(global, options, GetInvokingResource())
 end
 
 ---@class OxTargetOptions
