@@ -1,0 +1,17 @@
+{
+  "toggle_front_driver_door": "Öppna/stäng främre förardörr",
+  "toggle_front_passenger_door": "Öppna/stäng främre passagerardörr",
+  "toggle_rear_driver_door": "Öppna/stäng bakre förardörr",
+  "toggle_rear_passenger_door": "Öppna/stäng bakre passagerardörr",
+  "toggle_hood": "Öppna/stäng motorhuv",
+  "toggle_trunk": "Öppna/stäng bagagelucka",
+  "debug_box": "(Debug) Låda",
+  "debug_sphere": "(Debug) Sfär",
+  "debug_police_car": "Polisbil",
+  "debug_ped": "(Debug) Ped",
+  "debug_vehicle": "(Debug) Fordon",
+  "debug_object": "(Debug) Objekt",
+  "debug_global": "(Debug) Global",
+  "toggle_targeting": "Växla Target",
+  "go_back": "Gå tillbaka"
+}

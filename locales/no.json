@@ -1,0 +1,10 @@
+{
+  "toggle_front_driver_door": "Åpne/lukke førerdør",
+  "toggle_front_passenger_door": "Åpne/lukke passasjerdør",
+  "toggle_rear_driver_door": "Åpne/lukke venstre bakdør",
+  "toggle_rear_passenger_door": "Åpne/lukke høyre bakdør",
+  "toggle_hood": "Åpne/lukke panser",
+  "toggle_trunk": "Åpne/lukke bagasjerom",
+  "toggle_targeting": "Sikt",
+  "go_back": "Tilbake"
+}

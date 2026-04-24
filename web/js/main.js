@@ -5,19 +5,20 @@ const body = document.body;
 const eye = document.getElementById("eyeSvg");
 
 window.addEventListener("message", (event) => {
-  optionsWrapper.innerHTML = "";
-
   switch (event.data.event) {
     case "visible": {
+      optionsWrapper.innerHTML = "";
       body.style.visibility = event.data.state ? "visible" : "hidden";
       return eye.classList.remove("eye-hover");
     }
 
     case "leftTarget": {
+      optionsWrapper.innerHTML = "";
       return eye.classList.remove("eye-hover");
     }
 
     case "setTarget": {
+      optionsWrapper.innerHTML = "";
       eye.classList.add("eye-hover");
 
       if (event.data.options) {
