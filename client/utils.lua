@@ -47,6 +47,7 @@ local width = 0.02
 local height = width * GetAspectRatio(false)
 
 if drawZoneSprites == 0 then drawZoneSprites = -1 end
+if drawZoneSprites == 1 then drawZoneSprites = 24 end
 
 ---@param coords vector3
 ---@return CZone[], boolean
