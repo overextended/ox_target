@@ -2,7 +2,6 @@
 fx_version 'cerulean'
 use_experimental_fxv2_oal 'yes'
 nui_callback_strict_mode 'true'
-lua54 'yes'
 game 'gta5'
 
 -- Resource Information
@@ -10,17 +9,17 @@ name 'ox_target'
 author 'Overextended'
 version '1.18.1'
 repository 'https://github.com/overextended/ox_target'
-description ''
+description 'Standalone "third-eye" targeting resource.'
 
 -- Manifest
 ui_page 'web/index.html'
 
 shared_scripts {
-    '@ox_lib/init.lua',
+    '@ox_lib/init.lua'
 }
 
 client_scripts {
-    'client/main.lua',
+    'client/main.lua'
 }
 
 server_scripts {
@@ -39,7 +38,7 @@ files {
     'client/framework/ox.lua',
     'client/framework/esx.lua',
     'client/framework/qbx.lua',
-    'client/compat/qtarget.lua',
+    'client/compat/qtarget.lua'
 }
 
 provide 'qtarget'
