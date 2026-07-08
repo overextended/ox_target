@@ -183,6 +183,8 @@ local function startTargeting()
         if entityHit ~= 0 and entityHit ~= lastEntity then
             local success, result = pcall(GetEntityType, entityHit)
             entityType = success and result or 0
+        elseif entityHit == 0 then
+            entityType = 0
         end
 
         if entityType == 0 then
@@ -205,6 +207,14 @@ local function startTargeting()
         local entityChanged = entityHit ~= lastEntity
         local newOptions = (zonesChanged or entityChanged or menuChanged) and true
 
+        if entityChanged then
+            options:wipe()
+
+            if entityHit == 0 then
+                entityModel = nil
+            end
+        end
+
         if entityHit > 0 and entityChanged then
             currentMenu = nil
 
@@ -225,13 +235,14 @@ local function startTargeting()
             if entityHit > 0 then
                 local success, result = pcall(GetEntityModel, entityHit)
                 entityModel = success and result
+            else
+                entityType = 0
+                entityModel = nil
             end
         end
 
         if hasTarget and (zonesChanged or entityChanged and hasTarget > 1) then
             SendNuiMessage('{"event": "leftTarget"}')
-
-            if entityChanged then options:wipe() end
 
             if debug and lastEntity > 0 then SetEntityDrawOutline(lastEntity, false) end
 
